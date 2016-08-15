@@ -1,0 +1,22 @@
+.game-container {
+    min-width: 400px;
+    min-height: 600px;
+}
+
+#board {
+    width: 100%;
+    height: 100%;
+}
+
+.square {
+    width: 12.5%;
+    height: 8%;
+}
+
+.black-square {
+    background-color: navy;
+}
+
+.white-square {
+    background-color: yellow;
+}

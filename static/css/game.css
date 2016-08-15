@@ -1,22 +1,73 @@
-.game-container {
-    min-width: 400px;
-    min-height: 600px;
+.game-panel {
+    background-image: url("/static/img/wood.jpg");
 }
 
-#board {
+.non-board-grid {
+    border: solid white 1px;
+}
+
+.piece-grid {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.square {
+    border: 1px solid black;
+}
+
+.content-block {
+    padding-top: 30px;
+}
+
+#color-setup-select {
+    background-color: white;
+}
+
+.piece-grid td {
+    width: 12.5%;
+    position: relative;
+}
+
+.piece-grid td:not(.piece-square) :after {
+    content: '';
+    display: block;
+    margin-top: 100%;
+}
+
+.piece-grid .capture {
+    background-color: green;
+}
+
+.piece-grid .piece-selection {
+    background-color: red;
+}
+
+.piece {
     width: 100%;
     height: 100%;
 }
 
-.square {
-    width: 12.5%;
-    height: 8%;
+#scoreboard {
+    width: 70%;
+    margin: 0 auto;
+    font: 20px "Arial Black", Gadget, sans-serif;
 }
 
-.black-square {
-    background-color: navy;
+#scoreboard td {
+    border: white solid 1px;
+    padding-left: 10px;
 }
 
-.white-square {
-    background-color: yellow;
+#scoreboard .score-name-cell {
+    background-color: black;
+    color: white;
+}
+
+#scoreboard .score-score-cell {
+    background-color: blue;
+    color: yellow;
+}
+
+#scoreboard .current-turn {
+    border: yellow solid 3px;
 }

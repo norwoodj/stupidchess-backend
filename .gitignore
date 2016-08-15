@@ -1,0 +1,7 @@
+dist/
+node_modules/
+*.pyc
+__pycache__
+server/build
+*.egg-info
+*.iml

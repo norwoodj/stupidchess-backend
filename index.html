@@ -7,34 +7,10 @@
     <title>Stupid Chess</title>
 
     <link href="//cdn.muicss.com/mui-0.6.8/css/mui.min.css" rel="stylesheet" type="text/css"/>
-    <link href="/static/css/main.css" rel="stylesheet" type="text/css"/>
-    <link href="/static/css/game.css" rel="stylesheet" type="text/css"/>
+    <link href="src/css/main.css" rel="stylesheet" type="text/css"/>
+    <link href="src/css/game.css" rel="stylesheet" type="text/css"/>
 
-    <script src="//cdn.muicss.com/mui-0.6.8/js/mui.min.js"></script>
-    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-
-    <script src="static/js/controller/game-controller.js"></script>
-    <script src="static/js/factory/piece-factory.js"></script>
-    <script src="static/js/factory/move-factory.js"></script>
-
-    <script src="static/js/model/board-setup-state.js"></script>
-    <script src="static/js/model/display-state.js"></script>
-    <script src="static/js/model/game-state.js"></script>
-    <script src="static/js/model/square-selection-state.js"></script>
-
-    <script src="static/js/service/game-service.js"></script>
-
-    <script src="static/js/views/board.js"></script>
-    <script src="static/js/views/board-shapes.js"></script>
-    <script src="static/js/views/captures.js"></script>
-    <script src="static/js/views/color-setup-select.js"></script>
-    <script src="static/js/views/common.js"></script>
-    <script src="static/js/views/piece-place-select.js"></script>
-    <script src="static/js/views/scoreboard.js"></script>
-    <script src="static/js/views/side-drawer.js"></script>
-
-    <script src="static/js/util.js"></script>
-    <script src="static/js/game.js"></script>
+    <script src="dist/bundle.js"></script>
 </head>
 <body>
 <div id="sidedrawer" class="mui--no-user-select">
@@ -58,45 +34,7 @@
 <div id="content-wrapper">
     <div class="mui--appbar-height"></div>
     <div class="mui-container">
-        <div class="mui-panel game-panel">
-            <div class="row">
-                <div class="content-block mui-col-md-8 mui-col-xs-12">
-                    <table id="board" class="piece-grid"></table>
-                </div>
-                <div class="content-block mui-col-md-4 mui-col-xs-12">
-                    <div class="row">
-                        <table id="scoreboard"></table>
-                    </div>
-                    <div class="row">
-                        <div class="content-block mui-col-md-12 mui-col-xs-6">
-                            <table id="black-captures" class="piece-grid non-board-grid"></table>
-                        </div>
-                        <div class="content-block mui-col-md-12 mui-col-xs-6">
-                            <table id="white-captures" class="piece-grid non-board-grid"></table>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="content-block mui-col-md-12 mui-col-md-offset-0 mui-col-xs-6 mui-col-xs-offset-3">
-                            <table id="piece-select" class="piece-grid non-board-grid"></table>
-                        </div>
-                    </div>
-                    <div class="row">
-                    <div class="row">
-                        <div class="content-block mui-col-md-12">
-                            <div id="color-setup-select"
-                                 class="mui-col-md-12 mui-col-md-offset-0 offset-mui-col-xs-4 mui-col-xs-offset-4">
-                                <form>
-                                    <div class="mui-select">
-                                        <label>Select Color to Setup</label>
-                                        <select></select>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="game-panel" class="mui-panel"></div>
     </div>
 </body>
 </html>

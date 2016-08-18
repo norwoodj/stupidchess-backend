@@ -1,25 +1,34 @@
-function GameState() {
-    this.pieces = new Map();
-}
+export default class GameState {
+    constructor() {
+        this.pieces = new Map();
+        this.gameType = 'NONE';
+        this.captures = [];
+        this.currentTurn = 'BLACK';
+        this.blackUsername = 'Black';
+        this.whiteUsername = 'White';
+        this.blackScore = 0;
+        this.whiteScore = 0;
+        this.piecesToBePlaced = [];
+        this.possiblePlacements = [];
+    }
 
-GameState.prototype = {
-    hasPieceOnSquare: function (square) {
+    hasPieceOnSquare(square) {
         return this.pieces.has(square);
-    },
+    }
 
-    getPieceOnSquare: function (square) {
+    getPieceOnSquare(square) {
         return this.pieces.get(square);
-    },
+    }
 
-    mustPlacePiece: function () {
+    mustPlacePiece() {
         return this.piecesToBePlaced.length > 0;
-    },
+    }
 
-    inBoardSetupMode: function () {
+    inBoardSetupMode() {
         return this.mustPlacePiece() && this.piecesToBePlaced.length > 1;
-    },
+    }
 
-    getColorsSettingUp: function () {
+    getColorsSettingUp() {
         var blackPiece = false;
         var whitePiece = false;
         var colorsSettingUp = [];
@@ -28,16 +37,16 @@ GameState.prototype = {
             if (piece.color == 'BLACK' && !blackPiece) {
                 colorsSettingUp[colorsSettingUp.length] = 'BLACK';
                 blackPiece = true;
-            } else if (piece.color == 'WHITE') {
+            } else if (piece.color == 'WHITE' && !whitePiece) {
                 colorsSettingUp[colorsSettingUp.length] = 'WHITE';
                 whitePiece = true;
             }
         });
 
         return colorsSettingUp;
-    },
+    }
 
-    updateFromApiResponse: function (apiResponse) {
+    updateFromApiResponse(apiResponse) {
         this.gameType = apiResponse.gameType;
         this.captures = apiResponse.captures;
         this.currentTurn = apiResponse.currentTurn;
@@ -51,4 +60,4 @@ GameState.prototype = {
         this.pieces.clear();
         apiResponse.pieces.forEach(piece => this.pieces.set(piece.square, piece));
     }
-};
+}

@@ -13,3 +13,5 @@ function getMoveObjectForPlacePiece(square, piece) {
         square: square
     };
 }
+
+export {getMoveObjectForPieceMove, getMoveObjectForPlacePiece};

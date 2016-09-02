@@ -2,8 +2,9 @@ import React from 'react';
 import {toTitleCase} from '../util';
 
 
-export default class ColorSetupSelect extends React.Component {
+class ColorSetupSelect extends React.Component {
     render() {
+        console.log('ColorSetupSelect');
         if (!this.props.gameState.inBoardSetupMode()) {
             return null;
         }
@@ -28,3 +29,5 @@ ColorSetupSelect.propTypes = {
     boardSetupState: React.PropTypes.object.isRequired,
     colorChangeHandler: React.PropTypes.func.isRequired
 };
+
+export {ColorSetupSelect};

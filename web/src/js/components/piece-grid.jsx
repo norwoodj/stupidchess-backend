@@ -3,8 +3,7 @@ import getPieceImage from '../factories/piece-factory';
 import {range} from '../util';
 
 
-export default class PieceGridSquare extends React.Component {
-
+class PieceGridSquare extends React.Component {
     getSquareClassName() {
        return `${this.props.defaultClass} ${this.props.piece != null ? 'piece-square' : ''}`;
     }
@@ -14,6 +13,7 @@ export default class PieceGridSquare extends React.Component {
     }
 
     render() {
+        console.log('PieceGridSquare');
         return (
             <td className={this.getSquareClassName()} onClick={this.props.clickHandler}>
                 <div>{this.getPieceImage()}</div>
@@ -29,7 +29,7 @@ PieceGridSquare.propTypes = {
 };
 
 
-export default class PieceGrid extends React.Component {
+class PieceGrid extends React.Component {
     getPieceForIndex(index) {
         let pieceList = this.getPieceList();
         return index < pieceList.length
@@ -53,6 +53,7 @@ export default class PieceGrid extends React.Component {
     }
 
     render() {
+        console.log('PieceGrid');
         if (!this.shouldDisplay()) {
             return null;
         }
@@ -70,3 +71,5 @@ export default class PieceGrid extends React.Component {
         );
     }
 }
+
+export {PieceGrid};

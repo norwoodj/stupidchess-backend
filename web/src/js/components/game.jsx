@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Board from './board';
-import CaptureGrid from './capture-grid';
-import Scoreboard from './scoreboard'
-import ColorSetupSelect from './color-setup-select'
-import PieceSelectGrid from './piece-select-grid'
+import {Board} from './board';
+import {CaptureGrid} from './capture-grid';
+import {Scoreboard} from './scoreboard'
+import {ColorSetupSelect} from './color-setup-select'
+import {PieceSelectGrid} from './piece-select-grid'
 
 import BoardSetupState from '../models/board-setup-state';
 import DisplayState from '../models/display-state';
@@ -15,19 +15,20 @@ import GameService from '../services/game-service';
 import {getMoveObjectForPieceMove, getMoveObjectForPlacePiece} from '../factories/move-factory';
 
 
-export default class Game extends React.Component {
+class Game extends React.Component {
     constructor() {
         super();
-        this.state = {
-            gameState: new GameState(),
-            boardSetupState: new BoardSetupState(),
-            displayState: new DisplayState(),
-            squareSelectionState: new SquareSelectionState()
-        };
-    }
+        this.gameState = new GameState();
+        this.boardSetupState = new BoardSetupState();
+        this.displayState = new DisplayState();
+        this.squareSelectionState = new SquareSelectionState();
 
-    refresh() {
-        this.setState(this.state);
+        this.state = {
+            gameState: this.gameState,
+            boardSetupState: this.boardSetupState,
+            displayState: this.displayState,
+            squareSelectionState: this.squareSelectionState,
+        };
     }
 
     componentDidMount() {
@@ -47,86 +48,94 @@ export default class Game extends React.Component {
 
     retrieveNewGameState() {
         this.gameService.getGameByUuid(this.gameUuid).then((gameResponse) => {
-            if (gameResponse.lastMove != this.state.gameState.lastMove) {
-                this.state.gameState.updateFromApiResponse(gameResponse);
-                this.state.squareSelectionState.clear();
+            if (gameResponse.lastMove != this.gameState.lastMove) {
+                this.gameState.updateFromApiResponse(gameResponse);
+                this.squareSelectionState.clear();
 
-                if (this.state.gameState.inBoardSetupMode()) {
-                    this.state.boardSetupState.updateFromColorsSettingUp(this.state.gameState.getColorsSettingUp());
+                if (this.gameState.inBoardSetupMode()) {
+                    this.boardSetupState.updateFromColorsSettingUp(this.gameState.getColorsSettingUp());
                 }
 
-                this.refresh();
+                this.setState({
+                    gameState: this.gameState,
+                    boardSetupState: this.boardSetupState,
+                    displayState: this.displayState,
+                    squareSelectionState: this.squareSelectionState,
+                })
             }
-        })
+        });
     }
 
     handleColorSetupSelect(colorSelected) {
-        this.state.boardSetupState.setUpBoard(colorSelected);
-        this.state.squareSelectionState.clear();
-        this.refresh();
+        this.boardSetupState.setUpBoard(colorSelected);
+        this.squareSelectionState.clear();
+        this.setState({
+            squareSelectionState: this.squareSelectionState,
+            boardSetupState: this.boardSetupState,
+        });
     }
 
     handleBoardClick(square) {
-        if (this.state.gameState.inBoardSetupMode()) {
+        if (this.gameState.inBoardSetupMode()) {
             this.handleBoardClickInSetupMode(square);
-        } else if (this.state.squareSelectionState.anySquareSelected()) {
+        } else if (this.squareSelectionState.anySquareSelected()) {
             this.handleClickWhilePieceSelected(square);
-        } else if (this.state.gameState.hasPieceOnSquare(square)) {
+        } else if (this.gameState.hasPieceOnSquare(square)) {
             this.handleClickOnPieceSquareNothingSelected(square);
         }
     }
 
     handleBoardClickInSetupMode(square) {
-        if (this.state.gameState.hasPieceOnSquare(square)) {
+        if (this.gameState.hasPieceOnSquare(square)) {
             return;
         }
 
-        if (this.state.squareSelectionState.isSquareSelected(square)) {
-            this.state.squareSelectionState.clear();
-        } else if (this.state.boardSetupState.getCurrentBoardBeingSetUp() == 'BLACK' && Game.isInBlackSetupZone(square)) {
-            this.state.squareSelectionState.setSelected(square);
-        } else if (this.state.boardSetupState.getCurrentBoardBeingSetUp() == 'WHITE' && Game.isInWhiteSetupZone(square)) {
-            this.state.squareSelectionState.setSelected(square);
+        if (this.squareSelectionState.isSquareSelected(square)) {
+            this.squareSelectionState.clear();
+        } else if (this.boardSetupState.getCurrentBoardBeingSetUp() == 'BLACK' && Game.isInBlackSetupZone(square)) {
+            this.squareSelectionState.setSelected(square);
+        } else if (this.boardSetupState.getCurrentBoardBeingSetUp() == 'WHITE' && Game.isInWhiteSetupZone(square)) {
+            this.squareSelectionState.setSelected(square);
         }
 
-        this.refresh();
+        this.setState({squareSelectionState: this.squareSelectionState});
     }
 
     handleClickWhilePieceSelected(square) {
-        if (this.state.squareSelectionState.isSquareSelected(square)) {
-            this.state.squareSelectionState.clear();
-            this.refresh();
-        } else if (this.state.squareSelectionState.isSquarePossibleMove(square) || !this.state.squareSelectionState.isSquarePossibleCapture(square)) {
+        if (this.squareSelectionState.isSquareSelected(square)) {
+            this.squareSelectionState.clear();
+            this.setState({squareSelectionState: this.squareSelectionState})
+        } else if (this.squareSelectionState.isSquarePossibleMove(square) || !this.squareSelectionState.isSquarePossibleCapture(square)) {
             var movePieceMove = getMoveObjectForPieceMove(square);
             this.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
         }
     }
 
     handleClickOnPieceSquareNothingSelected(square) {
-        var piece = this.state.gameState.getPieceOnSquare(square);
-        if (piece.color != this.state.gameState.currentTurn) {
+        var piece = this.gameState.getPieceOnSquare(square);
+        if (piece.color != this.gameState.currentTurn) {
             return;
         }
 
         this.gameService.getPossibleMoves(this.gameUuid, square).then((possibleMoves) => {
             if (possibleMoves.length > 0) {
                 possibleMoves.forEach(possibleMove => {
-                    this.state.squareSelectionState.addPossibleMove(possibleMove.move);
-                    possibleMove.captures.forEach(possibleCapture => this.state.squareSelectionState.addPossibleCapture(possibleCapture));
+                    this.squareSelectionState.addPossibleMove(possibleMove.move);
+                    possibleMove.captures.forEach(possibleCapture => this.squareSelectionState.addPossibleCapture(possibleCapture));
                 });
 
-                this.state.squareSelectionState.setSelected(square);
-                this.refresh();
+                this.squareSelectionState.setSelected(square);
+                this.setState({squareSelectionState: this.squareSelectionState})
             }
         });
     }
 
     handlePlacePieceSelection(piece) {
-        if (!this.state.squareSelectionState.anySquareSelected()) {
+        if (!this.squareSelectionState.anySquareSelected()) {
             return;
         }
 
-        var placeMove = getMoveObjectForPlacePiece(this.state.squareSelectionState.getSelected(), piece);
+        var placeMove = getMoveObjectForPlacePiece(this.squareSelectionState.getSelected(), piece);
         this.gameService.makeMove(this.gameUuid, placeMove).then(() => this.retrieveNewGameState());
     }
 
@@ -139,6 +148,7 @@ export default class Game extends React.Component {
     }
 
     render() {
+        console.log('Game');
         return (
             <div>
                 <div className="row">
@@ -186,3 +196,5 @@ Game.propTypes = {
     httpService: React.PropTypes.func.isRequired,
     gameUuid: React.PropTypes.string.isRequired
 };
+
+export {Game};

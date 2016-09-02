@@ -3,7 +3,7 @@ import getPieceImage from '../factories/piece-factory'
 import {getHalfBoardShapeForColor, getBoardShapeForGameType} from '../factories/board-shapes-factory'
 
 
-export default class Board extends React.Component {
+class Board extends React.Component {
     getBorderForSquare(square) {
         if (this.props.squareSelectionState.isSquarePossibleCapture(square)) {
             return this.props.displayState.getPossibleCaptureBorder();
@@ -49,6 +49,7 @@ export default class Board extends React.Component {
     }
 
     render() {
+        console.log('Board');
         let boardShape = this.props.gameState.inBoardSetupMode()
             ? getHalfBoardShapeForColor(this.props.boardSetupState.getCurrentBoardBeingSetUp())
             : getBoardShapeForGameType(this.props.gameState.gameType);
@@ -80,3 +81,5 @@ Board.propTypes = {
     squareSelectionState: React.PropTypes.object.isRequired,
     clickHandler: React.PropTypes.func.isRequired
 };
+
+export {Board};

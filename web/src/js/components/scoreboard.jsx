@@ -1,12 +1,14 @@
 import React from 'react';
 
-export default class Scoreboard extends React.Component {
+
+class Scoreboard extends React.Component {
 
     getScoreCellClass(color, defaultClass) {
         return `${defaultClass} ${color == this.props.gameState.currentTurn ? 'current-turn' : ''}`;
     }
 
     render() {
+        console.log('Scoreboard');
         return (
             <table id="scoreboard">
                 <thead>
@@ -37,3 +39,5 @@ export default class Scoreboard extends React.Component {
 Scoreboard.propTypes = {
     gameState: React.PropTypes.object.isRequired
 };
+
+export {Scoreboard};

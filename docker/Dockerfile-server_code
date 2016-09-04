@@ -1,0 +1,6 @@
+FROM python:3.5
+MAINTAINER John Norwood
+
+COPY server /var/lib/johnmalcolmnorwood/stupidchess/server
+WORKDIR /var/lib/johnmalcolmnorwood/stupidchess/server
+RUN python setup.py install

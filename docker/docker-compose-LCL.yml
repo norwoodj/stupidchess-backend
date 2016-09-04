@@ -1,0 +1,15 @@
+version: '2'
+services:
+  server_code:
+    image: stupidchess-server_code:0.0.0-dev
+    volumes:
+      - '/usr/local/lib/python3.5/site-packages'
+  stupidchess-uwsgi:
+    image: stupidchess-uwsgi:0.0.0-dev
+    entrypoint: 'uwsgi --py-autoreload 1 --ini /etc/uwsgi/uwsgi.ini:local'
+    volumes:
+      - '../server:/var/lib/johnmalcolmnorwood/stupidchess/server'
+    volumes_from:
+      - server_code
+    ports:
+      - '8000:8000'

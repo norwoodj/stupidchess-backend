@@ -1,0 +1,8 @@
+FROM python:3.5
+MAINTAINER John Norwood
+
+RUN pip install uwsgi
+COPY etc/uwsgi.ini /etc/uwsgi/uwsgi.ini
+
+EXPOSE 8000
+ENTRYPOINT ["uwsgi", "--ini", "/etc/uwsgi/uwsgi.ini"]

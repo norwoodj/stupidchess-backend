@@ -1,5 +1,9 @@
 version: '2'
 services:
+  frontend_code:
+    image: stupidchess-frontend_code:0.0.0-dev
+    volumes:
+      - '/var/lib/johnmalcolmnorwood/stupidchess/dist'
   server_code:
     image: stupidchess-server_code:0.0.0-dev
     volumes:
@@ -7,6 +11,7 @@ services:
   stupidchess-uwsgi:
     image: stupidchess-uwsgi:0.0.0-dev
     volumes_from:
+      - frontend_code
       - server_code
     ports:
       - '8000:8000'

@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: './src/js/game.jsx',
@@ -8,9 +9,15 @@ module.exports = {
     },
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'bundle.js',
-        publicPath: 'dist/'
+        filename: 'js/bundle.js',
     },
+    plugins: [
+        new CopyWebpackPlugin([
+            { from: 'src/html' },
+            { from: 'src/css', to: 'css/' },
+            { from: 'src/img', to: 'img/' }
+        ])
+    ],
     module: {
         preLoaders: [
             {

@@ -4,12 +4,13 @@ source common.sh
 
 
 function usage {
-    echo "${0} <commands>"
+    echo "${0} <images>"
     echo
-    echo "Commands:"
-    echo "  all:         Build all assets and docker images"
-    echo "  server_code: Build the server code data image"
-    echo "  uwsgi:       Build the uwsgi server image"
+    echo "Images:"
+    echo "  all:           Build all assets and docker images"
+    echo "  frontend_code: Build the frontend code data image"
+    echo "  server_code:   Build the server code data image"
+    echo "  uwsgi:         Build the uwsgi server image"
 }
 
 function build_image {
@@ -18,6 +19,9 @@ function build_image {
 
     version=`get_version ${image_name}`
     log_line "Building '${image_name}' version '${version}'"
+
+    log_line "Building '${image_name}' assets before packaging image"
+    build_assets ${image_name}
 
     image_tag="${PROJECT_NAME}-${image_name}:${version}"
     log_line "Building '${image_name}' docker image, using tag '${image_tag}'"

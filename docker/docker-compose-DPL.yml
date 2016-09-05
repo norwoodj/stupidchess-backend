@@ -2,16 +2,16 @@ version: '2'
 services:
   frontend_code:
     image: stupidchess-frontend_code:0.0.0-dev
-    volumes:
-      - '/var/lib/johnmalcolmnorwood/stupidchess/dist'
-  server_code:
-    image: stupidchess-server_code:0.0.0-dev
-    volumes:
-      - '/usr/local/lib/python3.5/site-packages'
-  stupidchess-uwsgi:
-    image: stupidchess-uwsgi:0.0.0-dev
+  nginx:
+    image: stupidchess-nginx:0.0.0-dev
     volumes_from:
       - frontend_code
-      - server_code
+      - uwsgi
     ports:
-      - '8000:8000'
+      - '80:80'
+  server_code:
+    image: stupidchess-server_code:0.0.0-dev
+  uwsgi:
+    image: stupidchess-uwsgi:0.0.0-dev
+    volumes_from:
+      - server_code

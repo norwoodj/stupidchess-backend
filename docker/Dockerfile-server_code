@@ -4,3 +4,4 @@ MAINTAINER John Norwood
 COPY server /var/lib/johnmalcolmnorwood/stupidchess/server
 WORKDIR /var/lib/johnmalcolmnorwood/stupidchess/server
 RUN python setup.py install
+VOLUME /usr/local/lib/python3.5/site-packages

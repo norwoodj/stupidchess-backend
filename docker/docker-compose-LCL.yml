@@ -1,20 +1,27 @@
 version: '2'
 services:
-  frontend_code:
-    image: stupidchess-frontend_code:0.0.0-dev
+  nginx:
+    image: stupidchess-nginx:0.0.0-dev
+    entrypoint: 'nginx -c /etc/nginx/local/nginx.conf -g "daemon off;"'
     volumes:
-      - '/var/lib/johnmalcolmnorwood/stupidchess/dist'
+      - '../etc/nginx:/etc/nginx/local'
+    volumes_from:
+      - webpack_builder
+      - uwsgi
+    ports:
+      - '80:80'
   server_code:
     image: stupidchess-server_code:0.0.0-dev
-    volumes:
-      - '/usr/local/lib/python3.5/site-packages'
   uwsgi:
     image: stupidchess-uwsgi:0.0.0-dev
     entrypoint: 'uwsgi --ini /etc/uwsgi/uwsgi.ini:local'
     volumes:
       - '../server:/var/lib/johnmalcolmnorwood/stupidchess/server'
+      - '../etc/uwsgi:/etc/uwsgi'
     volumes_from:
-      - frontend_code
       - server_code
-    ports:
-      - '8000:8000'
+  webpack_builder:
+    image: stupidchess-webpack_builder:0.0.0-dev
+    volumes:
+      - '../web/src:/var/lib/johnmalcolmnorwood/stupidchess/src'
+    entrypoint: 'webpack --watch'

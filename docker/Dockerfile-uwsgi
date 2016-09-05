@@ -2,7 +2,7 @@ FROM python:3.5
 MAINTAINER John Norwood
 
 RUN pip install uwsgi
-COPY etc/uwsgi.ini /etc/uwsgi/uwsgi.ini
+COPY etc/uwsgi/uwsgi.ini /etc/uwsgi/uwsgi.ini
 
-EXPOSE 8000
+VOLUME /tmp
 ENTRYPOINT ["uwsgi", "--ini", "/etc/uwsgi/uwsgi.ini"]

@@ -9,7 +9,7 @@ module.exports = {
     },
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'js/bundle.js',
+        filename: 'js/bundle.js'
     },
     plugins: [
         new CopyWebpackPlugin([

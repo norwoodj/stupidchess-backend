@@ -48,6 +48,7 @@ class Game extends React.Component {
 
     retrieveNewGameState() {
         this.gameService.getGameByUuid(this.gameUuid).then((gameResponse) => {
+            console.log(gameResponse);
             if (gameResponse.lastMove != this.gameState.lastMove) {
                 this.gameState.updateFromApiResponse(gameResponse);
                 this.squareSelectionState.clear();
@@ -60,10 +61,10 @@ class Game extends React.Component {
                     gameState: this.gameState,
                     boardSetupState: this.boardSetupState,
                     displayState: this.displayState,
-                    squareSelectionState: this.squareSelectionState,
+                    squareSelectionState: this.squareSelectionState
                 })
             }
-        });
+        }, (error) => console.log(error));
     }
 
     handleColorSetupSelect(colorSelected) {
@@ -92,9 +93,7 @@ class Game extends React.Component {
 
         if (this.squareSelectionState.isSquareSelected(square)) {
             this.squareSelectionState.clear();
-        } else if (this.boardSetupState.getCurrentBoardBeingSetUp() == 'BLACK' && Game.isInBlackSetupZone(square)) {
-            this.squareSelectionState.setSelected(square);
-        } else if (this.boardSetupState.getCurrentBoardBeingSetUp() == 'WHITE' && Game.isInWhiteSetupZone(square)) {
+        } else if (this.gameState.squareNeedsPiecePlaced(square)) {
             this.squareSelectionState.setSelected(square);
         }
 
@@ -137,14 +136,6 @@ class Game extends React.Component {
 
         var placeMove = getMoveObjectForPlacePiece(this.squareSelectionState.getSelected(), piece);
         this.gameService.makeMove(this.gameUuid, placeMove).then(() => this.retrieveNewGameState());
-    }
-
-    static isInBlackSetupZone(square) {
-        return square < 30;
-    }
-
-    static isInWhiteSetupZone(square) {
-        return square > 90;
     }
 
     render() {

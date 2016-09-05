@@ -11,7 +11,6 @@ setup(
         'console_scripts': []
     },
     install_requires=[
-        'flask',
-        'pymongo',
+        'flask-mongoengine',
     ],
 )

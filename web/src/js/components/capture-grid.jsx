@@ -17,7 +17,7 @@ class CaptureGrid extends PieceGrid {
     }
 
     getGridShape() {
-        return getCaptureShapeForGameType(this.props.gameState.gameType);
+        return getCaptureShapeForGameType(this.props.gameState.type);
     }
 
     getClickHandler() {

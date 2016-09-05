@@ -10,8 +10,8 @@ class PieceSelectGrid extends PieceGrid {
 
     getPieceList() {
         return this.props.gameState.inBoardSetupMode()
-            ? this.props.gameState.piecesToBePlaced.filter(piece => piece.color == this.props.boardSetupState.getCurrentBoardBeingSetUp())
-            : this.props.gameState.piecesToBePlaced;
+            ? this.props.gameState.possiblePiecesToBePlaced.filter(piece => piece.color == this.props.boardSetupState.getCurrentBoardBeingSetUp())
+            : this.props.gameState.possiblePiecesToBePlaced;
     }
 
     shouldDisplay() {

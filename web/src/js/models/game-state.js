@@ -1,15 +1,16 @@
 export default class GameState {
     constructor() {
         this.pieces = new Map();
-        this.gameType = 'NONE';
+        this.type = 'NONE';
         this.captures = [];
         this.currentTurn = 'BLACK';
         this.blackUsername = 'Black';
         this.whiteUsername = 'White';
+        this.lastMove = -1;
         this.blackScore = 0;
         this.whiteScore = 0;
-        this.piecesToBePlaced = [];
-        this.possiblePlacements = [];
+        this.possiblePiecesToBePlaced = [];
+        this.squaresToBePlaced = new Set();
     }
 
     hasPieceOnSquare(square) {
@@ -21,11 +22,11 @@ export default class GameState {
     }
 
     mustPlacePiece() {
-        return this.piecesToBePlaced.length > 0;
+        return this.squaresToBePlaced.size > 0;
     }
 
     inBoardSetupMode() {
-        return this.mustPlacePiece() && this.piecesToBePlaced.length > 1;
+        return this.squaresToBePlaced.size > 1;
     }
 
     getColorsSettingUp() {
@@ -33,7 +34,7 @@ export default class GameState {
         var whitePiece = false;
         var colorsSettingUp = [];
 
-        this.piecesToBePlaced.forEach(piece => {
+        this.possiblePiecesToBePlaced.forEach(piece => {
             if (piece.color == 'BLACK' && !blackPiece) {
                 colorsSettingUp[colorsSettingUp.length] = 'BLACK';
                 blackPiece = true;
@@ -46,18 +47,25 @@ export default class GameState {
         return colorsSettingUp;
     }
 
+    squareNeedsPiecePlaced(square) {
+        return this.squaresToBePlaced.has(square);
+    }
+
     updateFromApiResponse(apiResponse) {
-        this.gameType = apiResponse.gameType;
+        this.type = apiResponse.type;
         this.captures = apiResponse.captures;
         this.currentTurn = apiResponse.currentTurn;
         this.blackUsername = apiResponse.blackUsername;
         this.whiteUsername = apiResponse.whiteUsername;
+        this.lastMove = apiResponse.lastMove;
         this.blackScore = apiResponse.blackScore;
         this.whiteScore = apiResponse.whiteScore;
-        this.piecesToBePlaced = apiResponse.piecesToBePlaced;
-        this.possiblePlacements = apiResponse.possiblePlacements;
+        this.possiblePiecesToBePlaced = apiResponse.possiblePiecesToBePlaced;
 
         this.pieces.clear();
         apiResponse.pieces.forEach(piece => this.pieces.set(piece.square, piece));
+
+        this.squaresToBePlaced.clear();
+        apiResponse.squaresToBePlaced.forEach(square => this.squaresToBePlaced.add(square));
     }
 }

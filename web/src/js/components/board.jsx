@@ -52,7 +52,7 @@ class Board extends React.Component {
         console.log('Board');
         let boardShape = this.props.gameState.inBoardSetupMode()
             ? getHalfBoardShapeForColor(this.props.boardSetupState.getCurrentBoardBeingSetUp())
-            : getBoardShapeForGameType(this.props.gameState.gameType);
+            : getBoardShapeForGameType(this.props.gameState.type);
 
         let squareIndex = 0;
 

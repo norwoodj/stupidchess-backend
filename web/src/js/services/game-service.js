@@ -8,30 +8,12 @@ export default class GameService {
     }
 
     getGameByUuid(gameUuid) {
-        console.log(gameUuid);
-
-        return new Promise((resolve) => {
-            resolve({
-                gameType: 'STUPID_CHESS',
-                lastMove: 2,
-                placePieceRequired: true,
-                pieces: [
-                    {type: 'KING', color: 'BLACK', square: 1},
-                    {type: 'QUEEN', color: 'WHITE', square: 116}
-                ],
-                captures: [],
-                currentTurn: null,
-                blackUsername: 'John',
-                blackScore: 2,
-                whiteUsername: 'Erin',
-                whiteScore: 1,
-                piecesToBePlaced: [
-                    {type: 'KING', color: 'BLACK', square: 1},
-                    {type: 'QUEEN', color: 'WHITE', square: 116}
-                ],
-                possiblePlacements: [
-                    1,2,3,4
-                ]
+        return new Promise((resolve, reject) => {
+            this.http.ajax({
+                type: 'GET',
+                url: `/api/game/${gameUuid}`,
+                success: game => resolve(game),
+                error: (error) => reject(error)
             });
         });
     }

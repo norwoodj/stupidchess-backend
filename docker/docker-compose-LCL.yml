@@ -1,5 +1,11 @@
 version: '2'
 services:
+  mongo:
+    image: mongo:3.2
+    volumes:
+      - '/var/lib/mongo-3.2/data/db:/data/db'
+    ports:
+      - '27017:27017'
   nginx:
     image: stupidchess-nginx:0.0.0-dev
     entrypoint: 'nginx -c /etc/nginx/local/nginx.conf -g "daemon off;"'
@@ -14,6 +20,8 @@ services:
     image: stupidchess-server_code:0.0.0-dev
   uwsgi:
     image: stupidchess-uwsgi:0.0.0-dev
+    links:
+      - mongo
     entrypoint: 'uwsgi --ini /etc/uwsgi/uwsgi.ini:local'
     volumes:
       - '../server:/var/lib/johnmalcolmnorwood/stupidchess/server'

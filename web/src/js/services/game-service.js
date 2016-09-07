@@ -37,9 +37,15 @@ export default class GameService {
     }
 
     makeMove(gameUuid, move) {
-        console.log(gameUuid);
-        console.log('Making move');
-        console.log(move);
-        return new Promise((resolve) => resolve('yay'));
+        return new Promise(
+            (resolve, reject) => {
+                this.http.post(
+                    `/api/game/${gameUuid}/move/`,
+                    JSON.stringify(move),
+                    (response) => resolve(response),
+                    'json',
+                ).fail((error) => reject(error));
+            }
+        );
     }
 }

@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
-from flask import Blueprint, request, Response
-from com.johnmalcolmnorwood.stupidchess.models.game import Game
+from flask import Blueprint, request, Response, current_app
 from com.johnmalcolmnorwood.stupidchess.factories.game_factory import GameFactory
+from com.johnmalcolmnorwood.stupidchess.models.move import Move
 
 game_blueprint = Blueprint('game', __name__)
 
@@ -20,10 +20,21 @@ def post_game():
 
 @game_blueprint.route('/')
 def get_games():
-    return Game.objects.to_json()
+    context = current_app.cxt
+    return context.game_service.find().to_json()
 
 
 @game_blueprint.route('/<game_uuid>')
 def get_game_by_uuid(game_uuid):
-    game = Game.objects.get_or_404(_id=game_uuid).to_json()
-    return Response(response=game, status=200, content_type='application/json')
+    context = current_app.cxt
+    game = context.game_service.find_one(_id=game_uuid)
+    return Response(response=game.to_json(), status=200, content_type='application/json')
+
+
+@game_blueprint.route('/<game_uuid>/move/', methods=['POST'])
+def post_move_to_game(game_uuid):
+    context = current_app.cxt
+    move = Move.from_json(request.json['move'])
+    context.move_service.apply_move(move, game_uuid)
+
+    return Response(response='Done', status=200, content_type='application/json')

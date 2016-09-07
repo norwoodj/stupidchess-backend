@@ -1,8 +1,8 @@
-function getMoveObjectForPieceMove(start, end) {
+function getMoveObjectForPieceMove(startSquare, destinationSquare) {
     return {
         type: 'MOVE',
-        start: start,
-        end: end
+        startSquare: startSquare,
+        destinationSquare: destinationSquare
     };
 }
 
@@ -10,7 +10,7 @@ function getMoveObjectForPlacePiece(square, piece) {
     return {
         type: 'PLACE',
         piece: piece,
-        square: square
+        destinationSquare: square
     };
 }
 

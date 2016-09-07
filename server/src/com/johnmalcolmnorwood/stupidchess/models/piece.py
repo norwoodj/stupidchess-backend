@@ -8,3 +8,4 @@ class Piece(EmbeddedDocument):
     type = StringField(required=True, regex=PIECE_TYPE_REGEX)
     color = StringField(required=True, regex=COLOR_REGEX)
     square = IntField()
+    index = IntField()

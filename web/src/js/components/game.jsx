@@ -48,7 +48,6 @@ class Game extends React.Component {
 
     retrieveNewGameState() {
         this.gameService.getGameByUuid(this.gameUuid).then((gameResponse) => {
-            console.log(gameResponse);
             if (gameResponse.lastMove != this.gameState.lastMove) {
                 this.gameState.updateFromApiResponse(gameResponse);
                 this.squareSelectionState.clear();
@@ -72,7 +71,7 @@ class Game extends React.Component {
         this.squareSelectionState.clear();
         this.setState({
             squareSelectionState: this.squareSelectionState,
-            boardSetupState: this.boardSetupState,
+            boardSetupState: this.boardSetupState
         });
     }
 

@@ -10,4 +10,4 @@ class BaseDocument(Document):
     createTimestamp = DateTimeField(required=True, default=datetime.utcnow)
     lastUpdateTimestamp = DateTimeField(required=True, default=datetime.utcnow)
 
-    meta = {'allow_inheritance': True}
+    meta = {'abstract': True}

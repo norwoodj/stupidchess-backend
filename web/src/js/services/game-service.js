@@ -39,12 +39,14 @@ export default class GameService {
     makeMove(gameUuid, move) {
         return new Promise(
             (resolve, reject) => {
-                this.http.post(
-                    `/api/game/${gameUuid}/move/`,
-                    JSON.stringify(move),
-                    (response) => resolve(response),
-                    'json',
-                ).fail((error) => reject(error));
+                this.http.ajax({
+                    type: 'POST',
+                    url: `/api/game/${gameUuid}/move/`,
+                    data: JSON.stringify(move),
+                    contentType: 'application/json',
+                    success: (response) => resolve(response),
+                    error: (error) => reject(error)
+                });
             }
         );
     }

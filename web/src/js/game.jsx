@@ -6,7 +6,7 @@ import {Game} from './components/game';
 
 $(() => {
     ReactDOM.render(
-        <Game httpService={$} gameUuid="0fa0f3e7-c7c1-475e-98e8-0e80a66d4367"/>,
+        <Game httpService={$} gameUuid="6fd8f576-9bce-4adc-8491-ff2ae3f94072"/>,
         document.getElementById('game-panel')
     );
 });

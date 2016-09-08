@@ -1,5 +1,5 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.move_type import MoveType
+from com.johnmalcolmnorwood.stupidchess.models.move import MoveType
 
 
 class MoveApplicationService:
@@ -12,28 +12,38 @@ class MoveApplicationService:
             self.__apply_place_move(move, game_uuid)
 
     def __apply_place_move(self, move, game_uuid):
+        piece_to_be_placed_match = {
+            'color': move.piece.color,
+            'type': move.piece.type,
+            'index': move.piece.index,
+        }
+
         query = {
-            '__raw__': {
-                '_id': game_uuid,
-                'squaresToBePlaced': move.destinationSquare,
-                'possiblePiecesToBePlaced': {
-                    '$elemMatch': {'color': move.piece.color, 'type': move.piece.type},
-                },
-            },
+            '_id': game_uuid,
+            'squaresToBePlaced': move.destinationSquare,
+            'possiblePiecesToBePlaced': {'$elemMatch': piece_to_be_placed_match},
         }
 
         updates = {
-            '__raw__': {
-                '$pull': {
-                    'squaresToBePlaced.$': move.destinationSquare,
-                    'possiblePiecesToBePlaced': {'$elemMatch': {'color': move.piece.color, 'type': move.piece.type},
-                    },
-                },
-            }
+            '$pull': {
+                'squaresToBePlaced': move.destinationSquare,
+                'possiblePiecesToBePlaced': piece_to_be_placed_match,
+            },
+            '$push': {
+                'pieces': {
+                    'color': move.piece.color,
+                    'type': move.piece.type,
+                    'square': move.destinationSquare,
+                }
+            },
+            '$inc': {'lastMove': 1},
         }
 
-        self.__mongo_game_service.update(
-            query=query,
-            updates=
+        move.save()
+
+        result = self.__mongo_game_service.update(
+            query={'__raw__': query},
+            updates={'__raw__': updates},
         )
 
+        print(result)

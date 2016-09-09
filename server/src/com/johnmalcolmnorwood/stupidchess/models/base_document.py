@@ -10,4 +10,7 @@ class BaseDocument(Document):
     createTimestamp = DateTimeField(required=True, default=datetime.utcnow)
     lastUpdateTimestamp = DateTimeField(required=True, default=datetime.utcnow)
 
+    def get_id(self):
+        return self._id
+
     meta = {'abstract': True}

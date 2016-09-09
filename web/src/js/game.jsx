@@ -2,11 +2,14 @@ import $ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Game} from './components/game';
+import {getQueryParam} from './util';
 
 
 $(() => {
+    let gameUuid = getQueryParam('gameuuid');
+
     ReactDOM.render(
-        <Game httpService={$} gameUuid="6fd8f576-9bce-4adc-8491-ff2ae3f94072"/>,
+        <Game httpService={$} gameUuid={gameUuid}/>,
         document.getElementById('game-panel')
     );
 });

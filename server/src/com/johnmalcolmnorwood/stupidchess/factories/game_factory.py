@@ -16,16 +16,31 @@ STUPID_CHESS_INTIAL_SQUARES_TO_BE_PLACED = [
     114, 115, 116, 117,
 ]
 
-STUPID_CHESS_INTIAL_PIECES_TO_BE_PLACED = [
-    Piece(type=PieceType.KING, color=Color.BLACK, index=0),
-    Piece(type=PieceType.QUEEN, color=Color.WHITE, index=0),
+STUPID_CHESS_INTIAL_PIECES_FOR_SIDE = [
+    PieceType.KING,
+    PieceType.QUEEN,
+    PieceType.BISHOP,
+    PieceType.BISHOP,
+    PieceType.CASTLE,
+    PieceType.CASTLE,
+    PieceType.PONY,
+    PieceType.PAWN,
+    PieceType.PAWN,
+    PieceType.PAWN,
+    PieceType.PAWN,
+    PieceType.PAWN,
+]
+
+STUPID_CHESS_INITIAL_PIECES_TO_BE_PLACED = [
+    Piece(type=piece_type, color=color, index=idx)
+    for idx, piece_type in enumerate(STUPID_CHESS_INTIAL_PIECES_FOR_SIDE) for color in (Color.BLACK, Color.WHITE)
 ]
 
 
 def get_new_stupid_chess_game():
     return Game(
         type=GameType.STUPID_CHESS,
-        possiblePiecesToBePlaced=STUPID_CHESS_INTIAL_PIECES_TO_BE_PLACED,
+        possiblePiecesToBePlaced=STUPID_CHESS_INITIAL_PIECES_TO_BE_PLACED,
         squaresToBePlaced=STUPID_CHESS_INTIAL_SQUARES_TO_BE_PLACED,
         currentTurn=Color.BLACK,
         blackScore=1,

@@ -1,7 +1,10 @@
 #!/usr/local/bin/python
 from flask import Blueprint, request, Response, current_app
 from com.johnmalcolmnorwood.stupidchess.factories.game_factory import get_new_game_for_game_type
+from com.johnmalcolmnorwood.stupidchess.services.move_application_service import MoveApplicationService
 from com.johnmalcolmnorwood.stupidchess.models.move import Move
+from com.johnmalcolmnorwood.stupidchess.models.game import Game
+from com.johnmalcolmnorwood.stupidchess.utils import make_api_response
 
 game_blueprint = Blueprint('game', __name__)
 
@@ -12,29 +15,39 @@ def post_game():
     game = get_new_game_for_game_type(game_request['type'])
 
     if game is None:
-        return Response(status=400, response={'message': 'Invalid game type "{}"'.format(game_request['type'])})
+        return make_api_response(400, 'Invalid game type "{}"')
 
     game.save()
-    return Response(status=201, response={'message': 'Saved new game'})
+    return make_api_response(201, 'Successfully created game')
 
 
 @game_blueprint.route('/')
 def get_games():
-    context = current_app.cxt
-    return context.mongo_game_service.find().to_json()
+    games = Game.objects.exclude('createTimestamp', 'lastUpdateTimestamp')
+    return games.to_json()
 
 
 @game_blueprint.route('/<game_uuid>')
 def get_game_by_uuid(game_uuid):
-    context = current_app.cxt
-    game = context.mongo_game_service.find_one(_id=game_uuid)
+    game = Game.objects.exclude('createTimestamp', 'lastUpdateTimestamp').get_or_404(_id=game_uuid)
     return Response(response=game.to_json(), status=200, content_type='application/json')
 
 
 @game_blueprint.route('/<game_uuid>/move/', methods=['POST'])
 def post_move_to_game(game_uuid):
-    context = current_app.cxt
     move = Move.from_json(request.json)
-    context.move_application_service.apply_move(move, game_uuid)
+    current_app.context.move_application_service.apply_move(move, game_uuid)
 
-    return 'Done'
+    return make_api_response(201, 'Successfully made move')
+
+
+@game_blueprint.route('/<game_uuid>/move/possible')
+def get_possible_moves(game_uuid):
+    if 'square' not in request.params:
+        return make_api_response(400, "Must supply 'square' query parameter to get possible moves from that square")
+
+    fields = ['pieces', 'currentTurn', 'blackScore', 'whiteScore', 'squaresToBePlaced']
+    game = Game.objects.only(*fields).get_or_404(_id=game_uuid)
+    square = int(request.params.get('square'))
+    possible_moves = current_app.context.possible_move_service.get_possible_moves_from_square(square, game)
+    return Response(response=possible_moves, status=200, content_type='application/json')

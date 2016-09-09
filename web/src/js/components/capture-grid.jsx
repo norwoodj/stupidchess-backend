@@ -8,8 +8,9 @@ class CaptureGrid extends PieceGrid {
         return 'capture';
     }
 
-    getPieceList() {
-        return this.props.gameState.captures.filter(piece => piece.color == this.props.captureColor);
+    getPieceForIndex(index) {
+        let piecesForColor = this.props.gameState.captures.filter(piece => piece.color == this.props.captureColor);
+        return (piecesForColor.length > index) ? piecesForColor[index] : null;
     }
 
     shouldDisplay() {

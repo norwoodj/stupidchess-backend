@@ -4,14 +4,18 @@ import {getPieceSelectShapeForSetupMode} from '../factories/board-shapes-factory
 
 
 class PieceSelectGrid extends PieceGrid {
-    getDefaultClassName() {
-        return 'piece-selection';
+    getPieceForIndex(index) {
+        if (this.props.gameState.inBoardSetupMode()) {
+            var pieces = this.props.gameState.possiblePiecesToBePlaced
+                .filter(piece => (piece.color == this.props.boardSetupState.getCurrentBoardBeingSetUp() && piece.index == index));
+            return (pieces.length > 0) ? pieces[0] : null;
+        } else{
+            return this.props.gameState.possiblePiecesToBePlaced[index];
+        }
     }
 
-    getPieceList() {
-        return this.props.gameState.inBoardSetupMode()
-            ? this.props.gameState.possiblePiecesToBePlaced.filter(piece => piece.color == this.props.boardSetupState.getCurrentBoardBeingSetUp())
-            : this.props.gameState.possiblePiecesToBePlaced;
+    getDefaultClassName() {
+        return 'piece-selection';
     }
 
     shouldDisplay() {
@@ -23,7 +27,11 @@ class PieceSelectGrid extends PieceGrid {
     }
 
     getClickHandler() {
-        return piece => this.props.pieceSelectionCallback(piece);
+        return piece => {
+            if (piece != null) {
+                this.props.pieceSelectionCallback(piece);
+            }
+        }
     }
 }
 

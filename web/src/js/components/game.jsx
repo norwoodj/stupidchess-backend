@@ -76,6 +76,10 @@ class Game extends React.Component {
     }
 
     handleBoardClick(square) {
+        if (square == null) {
+            return;
+        }
+
         if (this.gameState.inBoardSetupMode()) {
             this.handleBoardClickInSetupMode(square);
         } else if (this.squareSelectionState.anySquareSelected()) {

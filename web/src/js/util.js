@@ -11,4 +11,9 @@ function range(size) {
     return range;
 }
 
-export {toTitleCase, range};
+function getQueryParam(parameter) {
+    var match = new RegExp('[?&]' + parameter + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+export {toTitleCase, range, getQueryParam};

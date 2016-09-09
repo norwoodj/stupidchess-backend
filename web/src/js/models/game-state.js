@@ -6,7 +6,7 @@ export default class GameState {
         this.currentTurn = 'BLACK';
         this.blackUsername = 'Black';
         this.whiteUsername = 'White';
-        this.lastMove = -1;
+        this.lastMove = -2;
         this.blackScore = 0;
         this.whiteScore = 0;
         this.possiblePiecesToBePlaced = [];
@@ -26,7 +26,7 @@ export default class GameState {
     }
 
     inBoardSetupMode() {
-        return this.squaresToBePlaced.size > 1;
+        return this.type == 'STUPID_CHESS' && this.lastMove < 23;
     }
 
     getColorsSettingUp() {

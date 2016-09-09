@@ -10,16 +10,16 @@ class GameType:
     CHECKERS = 'CHECKERS'
 
 
-GAME_TYPE_REGEX = '{}|{}|{}'.format(
-        GameType.STUPID_CHESS,
-        GameType.CHESS,
-        GameType.CHECKERS,
-)
+GAME_TYPE_REGEX = '|'.join([
+    GameType.STUPID_CHESS,
+    GameType.CHESS,
+    GameType.CHECKERS,
+])
 
 
 class Game(BaseDocument):
     type = StringField(required=True, regex=GAME_TYPE_REGEX)
-    lastMove = IntField(required=True, default=0)
+    lastMove = IntField(required=True, default=-1)
     pieces = EmbeddedDocumentListField(document_type=Piece, default=list)
     captures = EmbeddedDocumentListField(document_type=Piece, default=list)
     currentTurn = StringField(required=True, regex=COLOR_REGEX)

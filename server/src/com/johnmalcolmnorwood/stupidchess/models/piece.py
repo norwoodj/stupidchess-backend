@@ -7,15 +7,26 @@ class Color:
     WHITE = 'WHITE'
 
 
-COLOR_REGEX = '{}|{}'.format(Color.BLACK, Color.WHITE)
+COLOR_REGEX = '|'.join([Color.BLACK, Color.WHITE])
 
 
 class PieceType:
     KING = 'KING'
     QUEEN = 'QUEEN'
+    BISHOP = 'BISHOP'
+    PONY = 'PONY'
+    CASTLE = 'CASTLE'
+    PAWN = 'PAWN'
 
 
-PIECE_TYPE_REGEX = '{}|{}'.format(PieceType.KING, PieceType.QUEEN)
+PIECE_TYPE_REGEX = '|'.join([
+    PieceType.KING,
+    PieceType.QUEEN,
+    PieceType.BISHOP,
+    PieceType.PONY,
+    PieceType.CASTLE,
+    PieceType.PAWN,
+])
 
 
 class Piece(EmbeddedDocument):

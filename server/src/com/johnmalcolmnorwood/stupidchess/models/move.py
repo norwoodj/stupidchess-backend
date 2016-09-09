@@ -1,5 +1,5 @@
 #!/usr/local/bin/python
-from mongoengine import StringField, IntField, EmbeddedDocumentField
+from mongoengine import StringField, IntField, EmbeddedDocumentField, ListField
 from com.johnmalcolmnorwood.stupidchess.models.piece import Piece
 from com.johnmalcolmnorwood.stupidchess.models.base_document import BaseDocument
 
@@ -9,17 +9,20 @@ class MoveType:
     MOVE = 'MOVE'
 
 
-MOVE_TYPE_REGEX = '{}|{}'.format(MoveType.PLACE, MoveType.MOVE)
+MOVE_TYPE_REGEX = '|'.join([MoveType.PLACE, MoveType.MOVE])
 
 
 class Move(BaseDocument):
     type = StringField(required=True, regex=MOVE_TYPE_REGEX)
     startSquare = IntField()
     destinationSquare = IntField(required=True)
+    index = IntField(required=True)
     piece = EmbeddedDocumentField(Piece)
+    captures = ListField(IntField(), default=None)
+    gameUuid = StringField(required=True)
 
     @staticmethod
-    def from_json(json):
+    def from_json(json, **kwargs):
         return Move(
             type=json.get('type'),
             startSquare=json.get('startSquare'),

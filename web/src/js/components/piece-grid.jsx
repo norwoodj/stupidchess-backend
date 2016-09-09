@@ -30,13 +30,6 @@ PieceGridSquare.propTypes = {
 
 
 class PieceGrid extends React.Component {
-    getPieceForIndex(index) {
-        let pieceList = this.getPieceList();
-        return index < pieceList.length
-            ? pieceList[index]
-            : null;
-    }
-
     getPieceGridSquareForIndices(rowIndex, cellIndex, gridShape) {
         let index = rowIndex * gridShape.columns + cellIndex;
         let piece = this.getPieceForIndex(index);

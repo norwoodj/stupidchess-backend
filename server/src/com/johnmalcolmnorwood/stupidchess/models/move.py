@@ -18,7 +18,7 @@ class Move(BaseDocument):
     destinationSquare = IntField(required=True)
     index = IntField(required=True)
     piece = EmbeddedDocumentField(Piece)
-    captures = ListField(IntField(), default=None)
+    captures = ListField(EmbeddedDocumentField(Piece), default=None)
     gameUuid = StringField(required=True)
 
     @staticmethod

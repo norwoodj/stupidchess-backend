@@ -122,8 +122,8 @@ class Game extends React.Component {
         this.gameService.getPossibleMoves(this.gameUuid, square).then((possibleMoves) => {
             if (possibleMoves.length > 0) {
                 possibleMoves.forEach(possibleMove => {
-                    this.squareSelectionState.addPossibleMove(possibleMove.move);
-                    possibleMove.captures.forEach(possibleCapture => this.squareSelectionState.addPossibleCapture(possibleCapture));
+                    this.squareSelectionState.addPossibleMove(possibleMove.destinationSquare);
+                    possibleMove.captures.forEach(possibleCapture => this.squareSelectionState.addPossibleCapture(possibleCapture.square));
                 });
 
                 this.squareSelectionState.setSelected(square);

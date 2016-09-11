@@ -6,10 +6,9 @@ class KingMoveGenerator(PieceMoveGenerator):
     DIRECTIONS = (-10, -9, 1, 11, 10, 9, -1, -11)
 
     def get_possible_moves(self):
-        for d in KingMoveGenerator.DIRECTIONS:
-            if self.__possible_move_game_state:
-                return []
+        possible_moves_including_off_board = map(
+            self.possible_move_game_state.get_move_to_square_offset,
+            KingMoveGenerator.DIRECTIONS,
+        )
 
-
-
-
+        return filter(lambda move: move is not None, possible_moves_including_off_board)

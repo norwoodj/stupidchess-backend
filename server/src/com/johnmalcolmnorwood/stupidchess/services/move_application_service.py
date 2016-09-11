@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 from com.johnmalcolmnorwood.stupidchess.models.move import Move, MoveType
-from com.johnmalcolmnorwood.stupidchess.models.piece import Piece
 from com.johnmalcolmnorwood.stupidchess.models.game import Game
+from com.johnmalcolmnorwood.stupidchess.utils import get_piece_for_move_db_object
 
 
 class MoveApplicationService(object):
@@ -96,8 +96,6 @@ class MoveApplicationService(object):
             '$inc': {'lastMove': len(moves)},
             '$currentDate': {'lastUpdateTimestamp': True},
         }
-        from pprint import pprint
-        pprint(updates)
 
         Game.objects(_id=game.get_id()).update(__raw__=updates)
 
@@ -169,10 +167,7 @@ class MoveApplicationService(object):
 
     @staticmethod
     def __get_move_for_insert(move):
-        move_piece = Piece(
-            type=move.piece.type,
-            color=move.piece.color,
-        )
+        move_piece = get_piece_for_move_db_object(move.piece)
 
         return Move(
             type=move.type,

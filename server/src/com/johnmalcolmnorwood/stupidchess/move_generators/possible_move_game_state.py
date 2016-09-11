@@ -1,6 +1,7 @@
 #!/usr/local/bin/python
 from com.johnmalcolmnorwood.stupidchess.models.move import Move, MoveType
 from com.johnmalcolmnorwood.stupidchess.models.game import GameType
+from com.johnmalcolmnorwood.stupidchess.utils import get_piece_for_move_db_object
 
 
 class PossibleMoveGameState:
@@ -51,16 +52,12 @@ class PossibleMoveGameState:
 
         piece_on_square = self.get_piece_on_square(new_square)
         captures = [piece_on_square] if self.can_capture_on_square(new_square) else []
-        move_object = Move(
+
+        return Move(
             startSquare=self.__piece_being_moved.square,
             destinationSquare=new_square,
             type=MoveType.MOVE,
-            piece=self.__piece_being_moved,
+            piece=get_piece_for_move_db_object(self.__piece_being_moved),
             captures=captures,
-
         )
-
-        return {
-            'move': Move(),
-        }
 

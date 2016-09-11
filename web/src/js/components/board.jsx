@@ -4,20 +4,16 @@ import {getHalfBoardShapeForColor, getBoardShapeForGameType} from '../factories/
 
 
 class Board extends React.Component {
-    getBorderForSquare(square) {
-        if (this.props.squareSelectionState.isSquarePossibleCapture(square)) {
-            return this.props.displayState.getPossibleCaptureBorder();
-        } else if (this.props.squareSelectionState.isSquarePossibleMove(square)) {
-            return this.props.displayState.getPossibleMoveBorder();
-        } else {
-            return '';
-        }
-    }
-
     getBackgroundForSquare(square) {
-        return this.props.squareSelectionState.isSquareSelected(square)
-            ? this.props.displayState.getSelectedBackground()
-            : this.props.displayState.getSquareColor(square);
+        if (this.props.squareSelectionState.isSquareSelected(square)) {
+            return this.props.displayState.getSelectedBackground();
+        } else if (this.props.squareSelectionState.isSquarePossibleCapture(square)) {
+            return this.props.displayState.getPossibleCaptureBackground();
+        } else if (this.props.squareSelectionState.isSquarePossibleMove(square)) {
+            return this.props.displayState.getPossibleMoveBackground();
+        } else {
+            return this.props.displayState.getSquareColor(square);
+        }
     }
 
     getClassForSquare(square) {
@@ -43,8 +39,7 @@ class Board extends React.Component {
         }
 
         return {
-            background: this.getBackgroundForSquare(square),
-            border: this.getBorderForSquare(square)
+            background: this.getBackgroundForSquare(square)
         }
     }
 

@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
+import json
 from flask import Blueprint, request, Response, current_app
 from com.johnmalcolmnorwood.stupidchess.factories.game_factory import get_new_game_for_game_type
-from com.johnmalcolmnorwood.stupidchess.services.move_application_service import MoveApplicationService
 from com.johnmalcolmnorwood.stupidchess.models.move import Move
 from com.johnmalcolmnorwood.stupidchess.models.game import Game
 from com.johnmalcolmnorwood.stupidchess.utils import make_api_response
@@ -41,13 +41,24 @@ def post_move_to_game(game_uuid):
     return make_api_response(201, 'Successfully made move')
 
 
+def get_possible_move_json_element(possible_move):
+    return {
+        'captures': [{'color': c.color, 'type': c.type, 'square': c.square} for c in possible_move.captures],
+        'startSquare': possible_move.startSquare,
+        'destinationSquare': possible_move.destinationSquare,
+    }
+
+
 @game_blueprint.route('/<game_uuid>/move/possible')
 def get_possible_moves(game_uuid):
-    if 'square' not in request.params:
+    if 'square' not in request.args:
         return make_api_response(400, "Must supply 'square' query parameter to get possible moves from that square")
 
-    fields = ['pieces', 'currentTurn', 'blackScore', 'whiteScore', 'squaresToBePlaced']
-    game = Game.objects.only(*fields).get_or_404(_id=game_uuid)
-    square = int(request.params.get('square'))
+    exclusions = ['createTimestamp', 'lastUpdateTimestamp', 'possiblePiecesToBePlaced', 'captures', '_id', 'lastMove']
+    game = Game.objects.exclude(*exclusions).get_or_404(_id=game_uuid)
+    square = int(request.args.get('square'))
     possible_moves = current_app.context.possible_move_service.get_possible_moves_from_square(square, game)
-    return Response(response=possible_moves, status=200, content_type='application/json')
+
+    move_json_response = json.dumps([get_possible_move_json_element(m) for m in possible_moves])
+
+    return Response(response=move_json_response, status=200, content_type='application/json')

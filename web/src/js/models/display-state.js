@@ -15,11 +15,11 @@ export default class DisplayState {
         return this.selectedColor;
     }
 
-    getPossibleMoveBorder() {
-        return `2px dashed ${this.possibleMoveColor}`;
+    getPossibleMoveBackground() {
+        return this.possibleMoveColor;
     }
 
-    getPossibleCaptureBorder() {
-        return `2px solid ${this.possibleCaptureColor}`;
+    getPossibleCaptureBackground() {
+        return this.possibleCaptureColor;
     }
 }

@@ -1,5 +1,6 @@
 #!/usr/local/bin/python
 from com.johnmalcolmnorwood.stupidchess.move_generators.possible_move_game_state import PossibleMoveGameState
+from com.johnmalcolmnorwood.stupidchess.factories.piece_move_generator_factory import get_piece_move_generator_for_piece
 
 
 class PossibleMoveService(object):
@@ -23,3 +24,11 @@ class PossibleMoveService(object):
 
         if not possible_move_game_state.is_piece_on_square(square):
             return []
+
+        if not possible_move_game_state.is_pieces_turn():
+            return []
+
+        piece = possible_move_game_state.get_piece_on_square(square)
+        piece_move_generator = get_piece_move_generator_for_piece(piece.type, possible_move_game_state)
+
+        return piece_move_generator.get_possible_moves()

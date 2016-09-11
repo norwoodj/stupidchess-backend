@@ -107,9 +107,11 @@ class Game extends React.Component {
         if (this.squareSelectionState.isSquareSelected(square)) {
             this.squareSelectionState.clear();
             this.setState({squareSelectionState: this.squareSelectionState})
-        } else if (this.squareSelectionState.isSquarePossibleMove(square) || !this.squareSelectionState.isSquarePossibleCapture(square)) {
+        } else if (this.squareSelectionState.isSquarePossibleMove(square)) {
             var movePieceMove = getMoveObjectForPieceMove(square);
             this.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
+        } else if (this.gameState.hasPieceOnSquare(square)) {
+            this.handleClickOnPieceSquareNothingSelected(square);
         }
     }
 
@@ -119,6 +121,7 @@ class Game extends React.Component {
             return;
         }
 
+        this.squareSelectionState.clear();
         this.gameService.getPossibleMoves(this.gameUuid, square).then((possibleMoves) => {
             if (possibleMoves.length > 0) {
                 possibleMoves.forEach(possibleMove => {

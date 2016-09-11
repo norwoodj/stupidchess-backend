@@ -14,8 +14,10 @@ class PieceType:
     KING = 'KING'
     QUEEN = 'QUEEN'
     BISHOP = 'BISHOP'
-    PONY = 'PONY'
     CASTLE = 'CASTLE'
+    PONY = 'PONY'
+    CHECKER = 'CHECKER'
+    CHECKER_KING = 'CHECKER_KING'
     PAWN = 'PAWN'
 
 
@@ -25,6 +27,8 @@ PIECE_TYPE_REGEX = '|'.join([
     PieceType.BISHOP,
     PieceType.PONY,
     PieceType.CASTLE,
+    PieceType.CHECKER,
+    PieceType.CHECKER_KING,
     PieceType.PAWN,
 ])
 

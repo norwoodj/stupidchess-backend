@@ -1,18 +1,22 @@
 #!/usr/local/bin/python
 from com.johnmalcolmnorwood.stupidchess.models.piece import PieceType
-from com.johnmalcolmnorwood.stupidchess.move_generators.king_move_generator import KingMoveGenerator
+from com.johnmalcolmnorwood.stupidchess.move_generators.offset_list_move_generator import OffsetListMoveGenerator
 from com.johnmalcolmnorwood.stupidchess.move_generators.directional_move_generator import DirectionalMoveGenerator
 
+
+KING_OFFSETS = (-10, -9, 1, 11, 10, 9, -1, -11)
+PONY_OFFSETS = (-19, -8, 12, 21, 19, 8, -12, -21)
 
 BISHOP_DIRECTIONS = (-11, -9, 11, 9)
 CASTLE_DIRECTIONS = (-10, 1, 10, -1)
 QUEEN_DIRECTIONS = BISHOP_DIRECTIONS + CASTLE_DIRECTIONS
 
 PIECE_MOVE_GENERATOR_FOR_PIECE_TYPE = {
-    PieceType.KING: KingMoveGenerator,
+    PieceType.KING: lambda game_state: OffsetListMoveGenerator(game_state, KING_OFFSETS),
     PieceType.QUEEN: lambda game_state: DirectionalMoveGenerator(game_state, QUEEN_DIRECTIONS),
     PieceType.BISHOP: lambda game_state: DirectionalMoveGenerator(game_state, BISHOP_DIRECTIONS),
     PieceType.CASTLE: lambda game_state: DirectionalMoveGenerator(game_state, CASTLE_DIRECTIONS),
+    PieceType.PONY: lambda game_state: OffsetListMoveGenerator(game_state, PONY_OFFSETS),
 }
 
 

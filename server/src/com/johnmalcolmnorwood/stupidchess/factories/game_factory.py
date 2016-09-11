@@ -24,7 +24,7 @@ STUPID_CHESS_INTIAL_PIECES_FOR_SIDE = [
     PieceType.CASTLE,
     PieceType.CASTLE,
     PieceType.PONY,
-    PieceType.PAWN,
+    PieceType.CHECKER,
     PieceType.PAWN,
     PieceType.PAWN,
     PieceType.PAWN,

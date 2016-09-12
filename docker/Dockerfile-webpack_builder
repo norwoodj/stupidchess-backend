@@ -1,4 +1,4 @@
-FROM node
+FROM node:6.5
 MAINTAINER John Norwood
 
 RUN npm install -g webpack

@@ -9,11 +9,14 @@ class PossibleMoveService(object):
         self.__board_middle_section_for_game_type = board_middle_section_for_game_type
 
     def get_possible_moves_from_square(self, square, game):
+        board_square_set = self.__board_squares_for_game_type.get(game.type, set())
+        board_middle_square_set = self.__board_middle_section_for_game_type.get(game.type, set())
+
         possible_move_game_state = PossibleMoveGameState(
             game,
             square,
-            self.__board_squares_for_game_type,
-            self.__board_middle_section_for_game_type,
+            board_square_set,
+            board_middle_square_set,
         )
 
         if possible_move_game_state.is_game_over():
@@ -29,6 +32,6 @@ class PossibleMoveService(object):
             return []
 
         piece = possible_move_game_state.get_piece_on_square(square)
-        piece_move_generator = get_piece_move_generator_for_piece(piece.type, possible_move_game_state)
+        piece_move_generator = get_piece_move_generator_for_piece(piece.type)
 
-        return piece_move_generator.get_possible_moves()
+        return piece_move_generator.get_possible_moves(possible_move_game_state)

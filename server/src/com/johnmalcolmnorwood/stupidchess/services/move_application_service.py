@@ -104,7 +104,9 @@ class MoveApplicationService(object):
         return {
             '$and': [
                 {'color': color},
-                {'$or': [{'type': move.piece.type, 'index': move.piece.index} for move in moves]},
+                {'$or': [
+                    {'type': move.piece.type, 'index': move.piece.index} for move in moves
+                ]},
             ],
         }
 
@@ -113,7 +115,7 @@ class MoveApplicationService(object):
         return {
             'color': move.piece.color,
             'type': move.piece.type,
-            'square': move.destinationSquare
+            'square': move.destinationSquare,
         }
 
     def __get_additional_necessary_placements(self, last_move, game):
@@ -132,8 +134,8 @@ class MoveApplicationService(object):
 
         def square_filter(square):
             return square != last_move.destinationSquare and self.__is_square_in_setup_zone_for_color(
-                    piece_color,
-                    square,
+                piece_color,
+                square,
             )
 
         players_other_pieces = list(filter(piece_filter, game.possiblePiecesToBePlaced))
@@ -175,7 +177,7 @@ class MoveApplicationService(object):
             index=move.index,
             destinationSquare=move.destinationSquare,
             gameUuid=move.gameUuid,
-    )
+        )
 
     def __is_square_in_setup_zone_for_color(self, color, square):
         return square in self.__setup_squares_for_color[color]

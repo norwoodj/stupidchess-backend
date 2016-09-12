@@ -1,5 +1,5 @@
 #!/usr/local/bin/python
-from mongoengine import EmbeddedDocument, IntField, StringField
+from mongoengine import EmbeddedDocument, IntField, StringField, EmbeddedDocumentField
 
 
 class Color:
@@ -33,11 +33,18 @@ PIECE_TYPE_REGEX = '|'.join([
 ])
 
 
+class FirstMove(EmbeddedDocument):
+    gameMoveIndex = IntField(required=True)
+    startSquare = IntField(required=True)
+    destinationSquare = IntField(required=True)
+
+
 class Piece(EmbeddedDocument):
     type = StringField(required=True, regex=PIECE_TYPE_REGEX)
     color = StringField(required=True, regex=COLOR_REGEX)
     square = IntField()
     index = IntField()
+    firstMove = EmbeddedDocumentField(FirstMove)
 
     @staticmethod
     def from_json(json):

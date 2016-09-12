@@ -123,15 +123,13 @@ class Game extends React.Component {
 
         this.squareSelectionState.clear();
         this.gameService.getPossibleMoves(this.gameUuid, square).then((possibleMoves) => {
-            if (possibleMoves.length > 0) {
-                possibleMoves.forEach(possibleMove => {
-                    this.squareSelectionState.addPossibleMove(possibleMove.destinationSquare);
-                    possibleMove.captures.forEach(possibleCapture => this.squareSelectionState.addPossibleCapture(possibleCapture.square));
-                });
+            possibleMoves.forEach(possibleMove => {
+                this.squareSelectionState.addPossibleMove(possibleMove.destinationSquare);
+                possibleMove.captures.forEach(possibleCapture => this.squareSelectionState.addPossibleCapture(possibleCapture.square));
+            });
 
-                this.squareSelectionState.setSelected(square);
-                this.setState({squareSelectionState: this.squareSelectionState})
-            }
+            this.squareSelectionState.setSelected(square);
+            this.setState({squareSelectionState: this.squareSelectionState})
         });
     }
 

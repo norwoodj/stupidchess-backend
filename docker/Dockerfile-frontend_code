@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM node:6.5
 MAINTAINER John Norwood
 
 COPY web/dist /var/lib/johnmalcolmnorwood/stupidchess/dist

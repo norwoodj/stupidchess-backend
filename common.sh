@@ -20,6 +20,7 @@ WEBPACK_BUILDER_VERSION_FILE="${VERSION_FILE_DIRECTORY}/webpack_builder-image-ve
 FRONTEND_CODE_IMAGE_NAME='frontend_code'
 NGINX_IMAGE_NAME='nginx'
 SERVER_CODE_IMAGE_NAME='server_code'
+SERVER_TESTS_IMAGE_NAME='server_tests'
 UWSGI_IMAGE_NAME='uwsgi'
 WEBPACK_BUILDER_IMAGE_NAME='webpack_builder'
 
@@ -35,7 +36,11 @@ function log_line {
 }
 
 function get_images {
-    ls "${DOCKERFILE_DIRECTORY}/" | grep ${DOCKERFILE_PREFIX} | grep -v ${WEBPACK_BUILDER_IMAGE_NAME} | sed "s|${DOCKERFILE_PREFIX}||g"
+    ls "${DOCKERFILE_DIRECTORY}/" | \
+    grep ${DOCKERFILE_PREFIX} | \
+    grep -v ${WEBPACK_BUILDER_IMAGE_NAME} | \
+    grep -v ${SERVER_TESTS_IMAGE_NAME} | \
+    sed "s|${DOCKERFILE_PREFIX}||g"
 }
 
 function get_server_code_version {
@@ -59,17 +64,24 @@ function image_of_version_exists {
 
 function get_version {
     local name=${1}
-    if [[ ${name} = ${FRONTEND_CODE_IMAGE_NAME} ]]; then
-        jq -r '.version' ${WEB_PACKAGE_JSON_FILE}
-    elif [[ ${name} = ${NGINX_IMAGE_NAME} ]]; then
-        cat ${NGINX_VERSION_FILE}
-    elif [[ ${name} = ${SERVER_CODE_IMAGE_NAME} ]]; then
-        get_server_code_version
-    elif [[ ${name} = ${UWSGI_IMAGE_NAME} ]]; then
-        cat ${UWSGI_VERSION_FILE}
-    elif [[ ${name} = ${WEBPACK_BUILDER_IMAGE_NAME} ]]; then
-        cat ${WEBPACK_BUILDER_VERSION_FILE}
-    fi
+
+    case ${name} in
+        ${FRONTEND_CODE_IMAGE_NAME})
+            jq -r '.version' ${WEB_PACKAGE_JSON_FILE}
+        ;;
+        ${NGINX_IMAGE_NAME})
+            cat ${NGINX_VERSION_FILE}
+        ;;
+        ${SERVER_CODE_IMAGE_NAME})
+            get_server_code_version
+        ;;
+        ${UWSGI_IMAGE_NAME})
+            cat ${UWSGI_VERSION_FILE}
+        ;;
+        ${WEBPACK_BUILDER_IMAGE_NAME})
+            cat ${WEBPACK_BUILDER_VERSION_FILE}
+        ;;
+    esac
 }
 
 function build_image {
@@ -108,10 +120,13 @@ function build_frontend_assets {
 
 function build_assets {
     local name=${1}
-    if [[ ${name} = ${FRONTEND_CODE_IMAGE_NAME} ]]; then
-        build_frontend_assets
-        log_line "Build '${name}' assets"
-    else
-        log_line 'Nothing to build'
-    fi
+    case ${name} in
+        ${FRONTEND_CODE_IMAGE_NAME})
+            build_frontend_assets
+            log_line "Build '${name}' assets"
+        ;;
+        *)
+            log_line 'Nothing to build'
+        ;;
+    esac
 }

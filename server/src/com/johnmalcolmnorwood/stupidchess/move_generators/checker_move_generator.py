@@ -1,84 +1,94 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.piece import PieceType
+from com.johnmalcolmnorwood.stupidchess.move_generators.pawn_like_move_generator import PawnLikeMoveGenerator
+from com.johnmalcolmnorwood.stupidchess.move_generators.move_generator_utils import Offsets
 
 
 class CheckerMoveGenerator:
+    def __init__(self, forward_offsets, middle_board_offset=None):
+        self.__pawn_like_move_generator = PawnLikeMoveGenerator([9, 11], -9)
+        self.__possible_capture_moves = [
+            (capture_offset, capture_offset * 2) for capture_offset in forward_offsets
+        ]
+
+        self.__middle_board_possible_capture_move = (middle_board_offset, middle_board_offset * 2) \
+            if middle_board_offset is not None \
+            else None
+
     def get_possible_moves(self, possible_move_game_state):
-        moves = []
-
-        PawnMoveGenerator.add_non_capturing_move(moves, PawnMoveGenerator.FORWARD_ONE_OFFSET, possible_move_game_state)
-        PawnMoveGenerator.add_non_capturing_move(moves, PawnMoveGenerator.FORWARD_ONE_OFFSET, possible_move_game_state)
-
-        # If the first step forward wasn't blocked and this piece hasn't moved yet, see if move forward two
-        if not possible_move_game_state.has_piece_moved() and len(moves) > 0:
-            self.add_non_capturing_move(moves, PawnMoveGenerator.FORWARD_TWO_OFFSET, possible_move_game_state)
-
-        PawnMoveGenerator.add_capturing_move(moves, PawnMoveGenerator.DIAGONAL_RIGHT_OFFSET, possible_move_game_state)
-        PawnMoveGenerator.add_capturing_move(moves, PawnMoveGenerator.DIAGONAL_LEFT_OFFSET, possible_move_game_state)
-
-        if possible_move_game_state.is_square_in_middle_board(possible_move_game_state.get_current_square()):
-            self.add_non_capturing_move(
-                    moves,
-                    PawnMoveGenerator.MIDDLE_BOARD_FORWARD_OFFSET,
-                    possible_move_game_state,
-            )
-
-            self.add_capturing_move(
-                    moves,
-                    PawnMoveGenerator.MIDDLE_BOARD_DIAGONAL_OFFSET,
-                    possible_move_game_state,
-            )
-
-        PawnMoveGenerator.add_en_passant_moves(moves, possible_move_game_state)
+        moves = self.__pawn_like_move_generator.get_possible_moves(possible_move_game_state)
+        self.__add_captures_from_square(
+            moves,
+            possible_move_game_state,
+            possible_move_game_state.get_current_square(),
+            set(),
+        )
 
         return moves
 
     @staticmethod
-    def add_non_capturing_move(moves, square_offset, possible_move_game_state):
-        true_offset = square_offset * possible_move_game_state.get_forward_direction()
-        new_square = possible_move_game_state.get_current_square() + true_offset
-
-        if not possible_move_game_state.is_piece_on_square(new_square):
-            moves.append(possible_move_game_state.get_move_to_square_offset(true_offset))
-
-    @staticmethod
-    def add_capturing_move(moves, square_offset, possible_move_game_state):
-        true_offset = square_offset * possible_move_game_state.get_forward_direction()
-        new_square = possible_move_game_state.get_current_square() + true_offset
-
-        if possible_move_game_state.can_capture_on_square(new_square):
-            moves.append(possible_move_game_state.get_move_to_square_offset(true_offset))
-
-    @staticmethod
-    def can_en_passant_capture_piece(piece, possible_move_game_state):
-        if piece is None or piece.firstMove is None:
-            return False
-
-        first_move = piece.firstMove
-        print(abs(first_move.destinationSquare - first_move.startSquare))
-
+    def __can_capture_on_square(capture_square, move_square, possible_move_game_state):
         return (
-            piece.type == PieceType.PAWN and
-            first_move.gameMoveIndex == possible_move_game_state.get_last_move_index() and
-            abs(first_move.destinationSquare - first_move.startSquare) == PawnMoveGenerator.FORWARD_TWO_OFFSET
+            possible_move_game_state.is_square_on_board(capture_square) and
+            possible_move_game_state.is_square_on_board(move_square) and
+            possible_move_game_state.can_capture_on_square(capture_square) and
+            not possible_move_game_state.is_piece_on_square(move_square)
         )
 
-    @staticmethod
-    def add_en_passant(moves, possible_move_game_state):
-        current_square = possible_move_game_state.get_current_square()
+    def __add_capture_for_capture_move_pair(
+        self,
+        moves,
+        possible_move_game_state,
+        square,
+        captured_squares,
+        capture_offset,
+        move_offset,
+    ):
+        capture_square = square + (capture_offset * possible_move_game_state.get_forward_direction())
+        move_square = square + (move_offset * possible_move_game_state.get_forward_direction())
+        print('Trying to Capture: {} in {}?'.format(capture_square, captured_squares))
+        can_jump = (
+            capture_square not in captured_squares and
+            CheckerMoveGenerator.__can_capture_on_square(capture_square, move_square, possible_move_game_state)
+        )
 
-        for capture_offset, move_offset in PawnMoveGenerator.POSSIBLE_EN_PASSANT_MOVES:
-            capture_piece = possible_move_game_state.get_piece_on_square(current_square + capture_offset)
-            move_square = current_square + move_offset
+        if can_jump:
+            branch_captured_squares = {capture_square, *captured_squares}
+            captures = map(possible_move_game_state.get_piece_on_square, branch_captured_squares)
 
-            if (
-                            possible_move_game_state.is_square_on_board(move_square) and
-                            not possible_move_game_state.is_piece_on_square(move_square) and
-                        PawnMoveGenerator.can_en_passant_capture_piece(capture_piece, possible_move_game_state)
-            ):
-                en_passant_move = possible_move_game_state.get_move_to_square_offset(
-                        PawnMoveGenerator.DIAGONAL_LEFT_OFFSET,
-                        additional_captures=[capture_piece],
-                )
+            move = possible_move_game_state.get_move_to_square(move_square, additional_captures=captures)
+            moves.append(move)
+            self.__add_captures_from_square(
+                    moves,
+                    possible_move_game_state,
+                    move_square,
+                    branch_captured_squares,
+            )
 
-                moves.append(en_passant_move)
+    def __add_captures_from_square(
+        self,
+        moves,
+        possible_move_game_state,
+        square,
+        captured_squares,
+    ):
+        for capture_offset, move_offset in self.__possible_capture_moves:
+            self.__add_capture_for_capture_move_pair(
+                moves,
+                possible_move_game_state,
+                square,
+                captured_squares,
+                capture_offset,
+                move_offset,
+            )
+
+        if self.__middle_board_possible_capture_move is not None:
+            capture_offset, move_offset = self.__middle_board_possible_capture_move
+
+            self.__add_capture_for_capture_move_pair(
+                    moves,
+                    possible_move_game_state,
+                    square,
+                    captured_squares,
+                    capture_offset,
+                    move_offset,
+            )

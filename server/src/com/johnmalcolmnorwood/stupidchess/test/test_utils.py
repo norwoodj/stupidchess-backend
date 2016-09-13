@@ -36,6 +36,9 @@ def get_game_state(
     board=None,
     board_middle_section=set(),
     square=0,
+    can_capture_own_pieces=False,
+    check=False,
+    can_checkers_move_twice_on_first_move=False,
     **kwargs
 ):
     game = game or get_game(**kwargs)
@@ -44,6 +47,9 @@ def get_game_state(
     return PossibleMoveGameState(
         game,
         square,
-        board,
-        board_middle_section,
+        board_square_set=board,
+        board_middle_section=board_middle_section,
+        can_capture_own_pieces=can_capture_own_pieces,
+        check=check,
+        can_checkers_move_twice_on_first_move=can_checkers_move_twice_on_first_move,
     )

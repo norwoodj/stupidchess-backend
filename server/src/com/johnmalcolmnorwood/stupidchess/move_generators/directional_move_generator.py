@@ -14,7 +14,7 @@ class DirectionalMoveGenerator:
             while move is not None:
                 possible_moves.append(move)
 
-                if len(move.captures) > 0:
+                if move.captures is not None:
                     break
 
                 step += 1

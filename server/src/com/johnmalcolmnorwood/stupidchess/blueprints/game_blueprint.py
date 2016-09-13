@@ -43,7 +43,7 @@ def post_move_to_game(game_uuid):
 
 def get_possible_move_json_element(possible_move):
     return {
-        'captures': [{'color': c.color, 'type': c.type, 'square': c.square} for c in possible_move.captures],
+        'captures': [{'color': c.color, 'type': c.type, 'square': c.square} for c in possible_move.captures or []],
         'startSquare': possible_move.startSquare,
         'destinationSquare': possible_move.destinationSquare,
     }

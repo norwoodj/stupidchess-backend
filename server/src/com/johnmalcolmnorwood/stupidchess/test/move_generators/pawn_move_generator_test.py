@@ -22,6 +22,23 @@ class PawnMoveGeneratorTest(TestCase):
         self.assertIn(moves[0].destinationSquare, {10, 20})
         self.assertIn(moves[1].destinationSquare, {10, 20})
 
+    def test_black_cant_capture_own_piece(self):
+        pieces = [
+            Piece(type=PieceType.PAWN, color=Color.BLACK, square=0, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(type=PieceType.PAWN, color=Color.BLACK, square=11, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+        ]
+        game_state = test_utils.get_game_state(
+            pieces=pieces,
+            can_capture_own_pieces=False,
+        )
+
+        move_generator = PawnMoveGenerator()
+        moves = move_generator.get_possible_moves(game_state)
+
+        self.assertEqual(len(moves), 1)
+        self.assertEqual(moves[0].destinationSquare, 10)
+        self.assertIsNone(moves[0].captures)
+
     def test_black_no_captures_no_middle_board_second_move(self):
         pieces = [Piece(type=PieceType.PAWN, color=Color.BLACK, square=0, firstMove=PawnMoveGeneratorTest.FIRST_MOVE)]
         game_state = test_utils.get_game_state(

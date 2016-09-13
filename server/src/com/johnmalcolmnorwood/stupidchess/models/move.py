@@ -23,6 +23,9 @@ class Move(BaseDocument):
 
     @staticmethod
     def from_json(json, **kwargs):
+        if json is None:
+            return None
+
         return Move(
             type=json.get('type'),
             startSquare=json.get('startSquare'),

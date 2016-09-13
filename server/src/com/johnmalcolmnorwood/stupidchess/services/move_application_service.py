@@ -1,6 +1,7 @@
 #!/usr/local/bin/python
 from com.johnmalcolmnorwood.stupidchess.models.move import Move, MoveType
 from com.johnmalcolmnorwood.stupidchess.models.game import Game
+from com.johnmalcolmnorwood.stupidchess.models.piece import Color, FirstMove, Piece
 from com.johnmalcolmnorwood.stupidchess.utils import get_piece_for_move_db_object
 
 
@@ -44,18 +45,14 @@ class MoveApplicationService(object):
         # For a MOVE move, we need the whole game state to determine if the move is legal
         elif move.type == MoveType.MOVE:
             exclude_fields = [
-                'createTimestamp', 'lastUpdateTimestamp', '_id',
+                'createTimestamp', 'lastUpdateTimestamp'
             ]
 
             return Game.objects.exclude(*exclude_fields).get(_id=game_uuid)
 
     @staticmethod
     def __get_game_for_place_move(move, game_uuid):
-        piece_to_be_placed_match = {
-            'color': move.piece.color,
-            'type': move.piece.type,
-            'index': move.piece.index,
-        }
+        piece_to_be_placed_match = move.piece.to_dict('color', 'type', 'index')
 
         game_query = {
             '_id': game_uuid,
@@ -69,7 +66,7 @@ class MoveApplicationService(object):
         if full_move.type == MoveType.PLACE:
             self.__apply_updates_for_place_move(full_move, game)
         elif full_move.type == MoveType.MOVE:
-            pass
+            MoveApplicationService.__apply_updates_for_move_move(full_move, game)
 
     def __apply_updates_for_place_move(self, full_move, game):
         additional_necessary_placements = self.__get_additional_necessary_placements(full_move, game)
@@ -82,7 +79,7 @@ class MoveApplicationService(object):
         Move.objects.insert(MoveApplicationService.__get_move_for_insert(move) for move in moves)
 
         square_removals = [move.destinationSquare for move in moves]
-        piece_removals = self.__get_piece_removal_for_moves(moves, full_move.piece.color)
+        piece_removals = MoveApplicationService.__get_piece_removal_for_place_moves(moves, full_move.piece.color)
         piece_additions = [MoveApplicationService.__get_piece_addition_for_move(move) for move in moves]
 
         updates = {
@@ -100,7 +97,73 @@ class MoveApplicationService(object):
         Game.objects(_id=game.get_id()).update(__raw__=updates)
 
     @staticmethod
-    def __get_piece_removal_for_moves(moves, color):
+    def __apply_updates_for_move_move(full_move, game):
+        if full_move is None:
+            raise Exception()
+
+        full_move.index = game.lastMove + 1
+        full_move.save()
+
+        capture_dicts = list(map(lambda move: move.to_dict('color', 'type', 'square'), full_move.captures)) \
+            if full_move.captures is not None \
+            else None
+
+        piece_removals = MoveApplicationService.__get_piece_removals_for_move_move(full_move, capture_dicts)
+
+        # Need to apply two updates because we can't add to and remove from the pieces array twice in one update
+        # This one adds all of the new captures, removes the pieces that were captured and removes the piece that was
+        # just moved
+        update_one = {
+            '$pull': {'pieces': piece_removals},
+            '$currentDate': {'lastUpdateTimestamp': True},
+        }
+
+        if capture_dicts is not None:
+            update_one['$push'] = {
+                'captures': {'$each': capture_dicts}
+            }
+
+        Game.objects(_id=game.get_id()).update(__raw__=update_one)
+
+        new_current_turn = Color.BLACK if game.currentTurn == Color.WHITE else Color.WHITE
+
+        piece_addition = Piece(
+            type=full_move.piece.type,
+            color=full_move.piece.color,
+            square=full_move.destinationSquare,
+        )
+
+        first_move = piece_addition.firstMove if piece_addition.firstMove else FirstMove(
+            gameMoveIndex=game.lastMove + 1,
+            startSquare=full_move.startSquare,
+            destinationSquare=full_move.destinationSquare,
+        ).to_dict('gameMoveIndex', 'startSquare', 'destinationSquare')
+
+        piece_addition.firstMove = first_move
+        piece_addition_dict = piece_addition.to_dict('type', 'color', 'square', 'firstMove')
+
+        # Second update sets the turn to the other player, adds the piece at it's new square, and increments the last
+        # move index of the game
+        update_two = {
+            '$push': {'pieces': piece_addition_dict},
+            '$set': {'currentTurn': new_current_turn},
+            '$inc': {'lastMove': 1},
+        }
+
+        Game.objects(_id=game.get_id()).update(__raw__=update_two)
+
+    @staticmethod
+    def __get_piece_removals_for_move_move(move, captures):
+        captures = captures or []
+        removals = [
+            move.piece.to_dict('color', 'type', 'square'),
+            *captures,
+        ]
+
+        return {'$or': removals}
+
+    @staticmethod
+    def __get_piece_removal_for_place_moves(moves, color):
         return {
             '$and': [
                 {'color': color},
@@ -112,11 +175,11 @@ class MoveApplicationService(object):
 
     @staticmethod
     def __get_piece_addition_for_move(move):
-        return {
-            'color': move.piece.color,
-            'type': move.piece.type,
-            'square': move.destinationSquare,
-        }
+        return Piece(
+            color=move.piece.color,
+            type=move.piece.type,
+            square=move.destinationSquare,
+        ).to_dict('color', 'type', 'square')
 
     def __get_additional_necessary_placements(self, last_move, game):
         """
@@ -182,11 +245,21 @@ class MoveApplicationService(object):
     def __is_square_in_setup_zone_for_color(self, color, square):
         return square in self.__setup_squares_for_color[color]
 
-    @staticmethod
-    def __get_full_move(move, game):
-        move.gameUuid = game.get_id()
+    def __get_full_move_move(self, move, game):
+        possible_moves = self.__possible_move_service.get_possible_moves_from_square(
+            move.startSquare,
+            game.get_id(),
+            game=game,
+        )
 
+        for m in possible_moves:
+            if m.destinationSquare == move.destinationSquare:
+                m.gameUuid = game.get_id()
+                return m
+
+    def __get_full_move(self, move, game):
         if move.type == MoveType.PLACE:
+            move.gameUuid = game.get_id()
             return move
         elif move.type == MoveType.MOVE:
-            return move
+            return self.__get_full_move_move(move, game)

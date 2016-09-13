@@ -108,7 +108,7 @@ class Game extends React.Component {
             this.squareSelectionState.clear();
             this.setState({squareSelectionState: this.squareSelectionState})
         } else if (this.squareSelectionState.isSquarePossibleMove(square)) {
-            var movePieceMove = getMoveObjectForPieceMove(square);
+            var movePieceMove = getMoveObjectForPieceMove(this.squareSelectionState.getSelected(), square);
             this.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
         } else if (this.gameState.hasPieceOnSquare(square)) {
             this.handleClickOnPieceSquareNothingSelected(square);

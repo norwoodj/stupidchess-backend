@@ -45,7 +45,6 @@ class CheckerMoveGenerator:
     ):
         capture_square = square + (capture_offset * possible_move_game_state.get_forward_direction())
         move_square = square + (move_offset * possible_move_game_state.get_forward_direction())
-        print('Trying to Capture: {} in {}?'.format(capture_square, captured_squares))
         can_jump = (
             capture_square not in captured_squares and
             CheckerMoveGenerator.__can_capture_on_square(capture_square, move_square, possible_move_game_state)

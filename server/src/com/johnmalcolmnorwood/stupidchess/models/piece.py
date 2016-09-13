@@ -1,6 +1,8 @@
 #!/usr/local/bin/python
 from mongoengine import EmbeddedDocument, IntField, StringField, EmbeddedDocumentField
 
+from com.johnmalcolmnorwood.stupidchess.models.dictable_document import DictableDocument
+
 
 class Color:
     BLACK = 'BLACK'
@@ -33,13 +35,13 @@ PIECE_TYPE_REGEX = '|'.join([
 ])
 
 
-class FirstMove(EmbeddedDocument):
+class FirstMove(EmbeddedDocument, DictableDocument):
     gameMoveIndex = IntField(required=True)
     startSquare = IntField(required=True)
     destinationSquare = IntField(required=True)
 
 
-class Piece(EmbeddedDocument):
+class Piece(EmbeddedDocument, DictableDocument):
     type = StringField(required=True, regex=PIECE_TYPE_REGEX)
     color = StringField(required=True, regex=COLOR_REGEX)
     square = IntField()
@@ -47,7 +49,10 @@ class Piece(EmbeddedDocument):
     firstMove = EmbeddedDocumentField(FirstMove)
 
     @staticmethod
-    def from_json(json):
+    def from_json(json, **kwargs):
+        if json is None:
+            return None
+
         return Piece(
             type=json.get('type'),
             color=json.get('color'),

@@ -1,8 +1,6 @@
 #!/usr/local/bin/python
 from com.johnmalcolmnorwood.stupidchess.models.move import Move, MoveType
-from com.johnmalcolmnorwood.stupidchess.models.game import GameType
 from com.johnmalcolmnorwood.stupidchess.models.piece import Color, PieceType
-from com.johnmalcolmnorwood.stupidchess.utils import get_piece_for_move_db_object
 
 
 class PossibleMoveGameState:
@@ -88,14 +86,14 @@ class PossibleMoveGameState:
             captures = additional_captures
 
         return Move(
-                startSquare=self.__piece_being_moved.square,
-                destinationSquare=new_square,
-                type=MoveType.MOVE,
-                piece=get_piece_for_move_db_object(self.__piece_being_moved),
-                captures=captures,
+            startSquare=self.__piece_being_moved.square,
+            destinationSquare=new_square,
+            type=MoveType.MOVE,
+            piece=self.__piece_being_moved,
+            captures=captures,
         )
 
     def get_move_to_square_offset(self, square_offset, additional_captures=None):
         new_square = self.__piece_being_moved.square + square_offset
-        return self.get_move_to_square(new_square)
+        return self.get_move_to_square(new_square, additional_captures)
 

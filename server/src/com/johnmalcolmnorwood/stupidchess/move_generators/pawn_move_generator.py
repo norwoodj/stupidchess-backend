@@ -49,12 +49,6 @@ class PawnMoveGenerator:
 
         first_move = piece.firstMove
 
-        print(
-            piece.type == PieceType.PAWN,
-            first_move.gameMoveIndex == possible_move_game_state.get_last_move_index(),
-            abs(first_move.destinationSquare - first_move.startSquare) == 2 * Offsets.FORWARD_OFFSET,
-        )
-
         return (
             piece.type == PieceType.PAWN and
             first_move.gameMoveIndex == possible_move_game_state.get_last_move_index() and

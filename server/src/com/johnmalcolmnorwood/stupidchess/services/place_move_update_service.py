@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 from com.johnmalcolmnorwood.stupidchess.models.move import Move, MoveType
 from com.johnmalcolmnorwood.stupidchess.models.game import Game
-from com.johnmalcolmnorwood.stupidchess.models.piece import Color, FirstMove, Piece, PieceType
+from com.johnmalcolmnorwood.stupidchess.models.piece import Piece
 from com.johnmalcolmnorwood.stupidchess.services.abstract_move_update_service import AbstractMoveUpdateService
 
 
@@ -50,12 +50,18 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
         Game.objects(_id=game.get_id()).update(__raw__=updates)
 
     def get_move_for_insert(self, move):
-        move.piece = Piece(
+        move_piece = Piece(
             color=move.piece.color,
             type=move.piece.type,
         )
 
-        return move
+        return Move(
+            type=MoveType.PLACE,
+            destinationSquare=move.destinationSquare,
+            gameUuid=move.gameUuid,
+            index=move.index,
+            piece=move_piece,
+        )
 
     @staticmethod
     def __get_piece_removal_for_place_moves(moves, color):

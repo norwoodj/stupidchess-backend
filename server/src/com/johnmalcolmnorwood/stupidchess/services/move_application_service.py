@@ -21,8 +21,6 @@ class MoveApplicationService(object):
         # index of the last move
         game = move_update_service.get_game_for_move(move, game_uuid)
 
-        # Get the full move object, with captures and all, if this method returns None, the move wasn't legal and we
-        # raise an exception
         moves_to_apply = move_update_service.get_moves_to_apply(move, game)
 
         # Write the move objects, since we have a unique index on the index field of the move, these moves will fail

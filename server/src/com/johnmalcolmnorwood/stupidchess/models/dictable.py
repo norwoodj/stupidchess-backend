@@ -3,9 +3,6 @@
 
 class Dictable:
     def to_dict(self, *keys):
-        from pprint import pprint
-        pprint(keys)
-
         prefixes = set()
         result = {}
 
@@ -30,5 +27,4 @@ class Dictable:
             else:
                 result[k] = getattr(self, k)
 
-        pprint(result)
         return result

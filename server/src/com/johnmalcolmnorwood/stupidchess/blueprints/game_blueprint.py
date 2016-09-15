@@ -18,7 +18,7 @@ def post_game():
         return make_api_response(400, 'Invalid game type "{}"')
 
     game.save()
-    return make_api_response(201, 'Successfully created game')
+    return Response(status=201, response=json.dumps({'gameUuid': game.get_id()}), mimetype='application/json')
 
 
 @game_blueprint.route('/')

@@ -17,18 +17,18 @@ STUPID_CHESS_INTIAL_SQUARES_TO_BE_PLACED = [
 ]
 
 STUPID_CHESS_INTIAL_PIECES_FOR_SIDE = [
-    PieceType.KING,
-    PieceType.QUEEN,
-    PieceType.BISHOP,
-    PieceType.BISHOP,
-    PieceType.CASTLE,
-    PieceType.CASTLE,
+    PieceType.PAWN,
+    PieceType.PAWN,
+    PieceType.PAWN,
+    PieceType.PAWN,
     PieceType.PONY,
     PieceType.CHECKER,
-    PieceType.PAWN,
-    PieceType.PAWN,
-    PieceType.PAWN,
-    PieceType.PAWN,
+    PieceType.CASTLE,
+    PieceType.CASTLE,
+    PieceType.BISHOP,
+    PieceType.BISHOP,
+    PieceType.QUEEN,
+    PieceType.KING,
 ]
 
 STUPID_CHESS_INITIAL_PIECES_TO_BE_PLACED = [
@@ -69,6 +69,7 @@ CHESS_INITIAL_PIECES = [
     *[Piece(type=PieceType.PAWN, color=Color.WHITE, square=square) for square in range(60, 68)],
 ]
 
+
 def get_new_chess_game():
     return Game(
         type=GameType.CHESS,
@@ -87,6 +88,7 @@ CHECKERS_INITIAL_PIECES = [
     *[Piece(type=PieceType.CHECKER, color=Color.WHITE, square=square) for square in range(60, 68, 2)],
     *[Piece(type=PieceType.CHECKER, color=Color.WHITE, square=square) for square in range(71, 78, 2)],
 ]
+
 
 def get_new_checkers_game():
     return Game(

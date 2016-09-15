@@ -1,5 +1,5 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.move import MoveType
+from com.johnmalcolmnorwood.stupidchess.models.move import MoveType, Move
 from com.johnmalcolmnorwood.stupidchess.models.game import Game
 from com.johnmalcolmnorwood.stupidchess.models.piece import Color, FirstMove, Piece, PieceType
 from com.johnmalcolmnorwood.stupidchess.services.abstract_move_update_service import AbstractMoveUpdateService
@@ -59,18 +59,19 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         new_current_turn = Color.BLACK if game.currentTurn == Color.WHITE else Color.WHITE
 
         piece_addition = Piece(
-                type=move.piece.type,
-                color=move.piece.color,
-                square=move.destinationSquare,
+            type=move.piece.type,
+            color=move.piece.color,
+            square=move.destinationSquare,
         )
 
         piece_addition.firstMove = piece_addition.firstMove if piece_addition.firstMove is not None else FirstMove(
-                gameMoveIndex=game.lastMove + 1,
-                startSquare=move.startSquare,
-                destinationSquare=move.destinationSquare,
+            gameMoveIndex=game.lastMove + 1,
+            startSquare=move.startSquare,
+            destinationSquare=move.destinationSquare,
         )
 
-        piece_addition_dict = piece_addition.to_dict('type', 'color', 'square', 'firstMove') \
+        first_move_fields = ('firstMove.gameMoveIndex', 'firstMove.startSquare', 'firstMove.destinationSquare')
+        piece_addition_dict = piece_addition.to_dict('type', 'color', 'square', *first_move_fields) \
             if piece_addition.type == PieceType.PAWN \
             else piece_addition.to_dict('type', 'color', 'square')
 
@@ -84,19 +85,33 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
         Game.objects(_id=game.get_id()).update(__raw__=update_two)
 
-    def __get_move_for_insert(self, move):
-        move_dict = move.to_dict(
-                'type',
-                'startSquare',
-                'destinationSquare',
-                'index',
-                'gameUuid',
-                'piece.color',
-                'piece.type',
+    def get_move_for_insert(self, move):
+        move_captures = list(map(MoveMoveUpdateService.__get_capture_piece, move.captures)) \
+            if move.captures is not None \
+            else None
+
+        move_piece = Piece(
+            color=move.piece.color,
+            type=move.piece.type,
         )
 
-        move_dict['captures'] = list(map(lambda capture: capture.to_dict('color', 'type', 'square')))
-        return move_dict
+        return Move(
+            type=MoveType.MOVE,
+            gameUuid=move.gameUuid,
+            startSquare=move.startSquare,
+            destinationSquare=move.destinationSquare,
+            index=move.index,
+            piece=move_piece,
+            captures=move_captures,
+        )
+
+    @staticmethod
+    def __get_capture_piece(piece):
+        return Piece(
+            color=piece.color,
+            type=piece.type,
+            square=piece.square,
+        )
 
     @staticmethod
     def __get_piece_removals_for_move_move(move, captures):

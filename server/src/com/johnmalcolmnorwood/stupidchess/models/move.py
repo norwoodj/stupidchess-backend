@@ -1,5 +1,7 @@
 #!/usr/local/bin/python
 from mongoengine import StringField, IntField, EmbeddedDocumentField, ListField
+
+from com.johnmalcolmnorwood.stupidchess.models.dictable import Dictable
 from com.johnmalcolmnorwood.stupidchess.models.piece import Piece
 from com.johnmalcolmnorwood.stupidchess.models.base_document import BaseDocument
 
@@ -12,7 +14,7 @@ class MoveType:
 MOVE_TYPE_REGEX = '|'.join([MoveType.PLACE, MoveType.MOVE])
 
 
-class Move(BaseDocument):
+class Move(BaseDocument, Dictable):
     type = StringField(required=True, regex=MOVE_TYPE_REGEX)
     startSquare = IntField()
     destinationSquare = IntField(required=True)

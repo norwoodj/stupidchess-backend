@@ -1,7 +1,6 @@
 #!/usr/local/bin/python
 from mongoengine import EmbeddedDocument, IntField, StringField, EmbeddedDocumentField
-
-from com.johnmalcolmnorwood.stupidchess.models.dictable_document import DictableDocument
+from com.johnmalcolmnorwood.stupidchess.models.dictable import Dictable
 
 
 class Color:
@@ -35,13 +34,13 @@ PIECE_TYPE_REGEX = '|'.join([
 ])
 
 
-class FirstMove(EmbeddedDocument, DictableDocument):
+class FirstMove(EmbeddedDocument, Dictable):
     gameMoveIndex = IntField(required=True)
     startSquare = IntField(required=True)
     destinationSquare = IntField(required=True)
 
 
-class Piece(EmbeddedDocument, DictableDocument):
+class Piece(EmbeddedDocument, Dictable):
     type = StringField(required=True, regex=PIECE_TYPE_REGEX)
     color = StringField(required=True, regex=COLOR_REGEX)
     square = IntField()

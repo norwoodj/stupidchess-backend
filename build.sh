@@ -31,12 +31,12 @@ function main {
 
         for i in ${images}; do
             build_image ${i}
+            echo
         done
     else
         for i in ${@}; do
-            if [[ ${i} != 'all' ]]; then
-                build_image ${i}
-            fi
+            build_image ${i}
+            echo
         done
     fi
 }

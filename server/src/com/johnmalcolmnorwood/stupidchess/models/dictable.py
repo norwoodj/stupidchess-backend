@@ -1,30 +1,36 @@
 #!/usr/local/bin/python
+from collections import defaultdict
 
 
 class Dictable:
-    def to_dict(self, *keys):
-        prefixes = set()
+    def to_dict(self, *keys, delimiter='.'):
         result = {}
+        sub_keys = defaultdict(list)
 
-        for i, k in enumerate(keys):
-            if k in prefixes:
-                continue
-            if '.' in k:
-                prefix = k.split('.')[0]
-                if prefix in prefixes:
-                    continue
+        for k in keys:
+            split_key = k.partition(delimiter)
 
-                v = getattr(self, prefix)
-                if isinstance(v, Dictable):
-                    prefixed_keys = filter(lambda key: k.startswith(prefix), keys[i:])
-                    sub_keys = list(map(lambda key: k[len(prefix) + 1:], prefixed_keys))
-                    result[prefix] = v.to_dict(*sub_keys)
-                else:
-                    result[prefix] = v
-
-                prefixes.add(prefix)
-
-            else:
+            if len(split_key[2]) == 0:
                 result[k] = getattr(self, k)
+            else:
+                sub_keys[split_key[0]].append(split_key[2])
+
+        for prefix, sub_keys in sub_keys.items():
+            prefix_object = getattr(self, prefix)
+            result[prefix] = self.__convert_prefix_object(
+                prefix_object,
+                sub_keys,
+                delimiter,
+            )
 
         return result
+
+    def __convert_prefix_object(self, prefix_object, sub_keys, delimiter):
+        if isinstance(prefix_object, list):
+            return [self.__convert_prefix_object(o, sub_keys, delimiter) for o in prefix_object]
+        if isinstance(prefix_object, dict):
+            return {k: prefix_object[k] for k in sub_keys}
+        elif isinstance(prefix_object, Dictable):
+            return prefix_object.to_dict(*sub_keys, delimiter=delimiter)
+        else:
+            return [self.__convert_prefix_object(o, sub_keys, delimiter) for o in prefix_object]

@@ -35,11 +35,11 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
     def apply_game_updates_for_moves(self, moves, game):
         move = moves[0]
-        capture_dicts = list(map(lambda move: move.to_dict('color', 'type', 'square'), move.captures)) \
+        captures = [capture.to_dict('color', 'type', 'square') for capture in move.captures] \
             if move.captures is not None \
             else None
 
-        piece_removals = MoveMoveUpdateService.__get_piece_removals_for_move_move(move, capture_dicts)
+        piece_removals = MoveMoveUpdateService.__get_piece_removals_for_move_move(move, captures)
 
         # Need to apply two updates because we can't add to and remove from the pieces array twice in one update
         # This one adds all of the new captures, removes the pieces that were captured and removes the piece that was
@@ -49,9 +49,9 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
             '$currentDate': {'lastUpdateTimestamp': True},
         }
 
-        if capture_dicts is not None:
+        if captures is not None:
             update_one['$push'] = {
-                'captures': {'$each': capture_dicts}
+                'captures': {'$each': captures}
             }
 
         Game.objects(_id=game.get_id()).update(__raw__=update_one)
@@ -61,6 +61,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         piece_addition = Piece(
             type=move.piece.type,
             color=move.piece.color,
+            firstMove=move.piece.firstMove,
             square=move.destinationSquare,
         )
 
@@ -116,6 +117,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
     @staticmethod
     def __get_piece_removals_for_move_move(move, captures):
         captures = captures or []
+
         removals = [
             move.piece.to_dict('color', 'type', 'square'),
             *captures,

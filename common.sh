@@ -23,14 +23,17 @@ SERVER_CODE_IMAGE_NAME='server_code'
 SERVER_TESTS_IMAGE_NAME='server_tests'
 UWSGI_IMAGE_NAME='uwsgi'
 WEBPACK_BUILDER_IMAGE_NAME='webpack_builder'
+MUSTACHE_RENDER_IMAGE_NAME='mustache_render'
 
 CONTAINER_WEB_ROOT='/var/lib/johnmalcolmnorwood/stupidchess'
 
-LOCAL_COMPOSE_HANDLEBARS_FILE="${DOCKERFILE_DIRECTORY}/docker-compose-LCL.yml.handlebars"
+LOCAL_DOCKER_COMPOSE_MUSTACHE_FILE="${DOCKERFILE_DIRECTORY}/docker-compose-LCL.yml.mustache"
+
 HANDLEBARS_VERSION_SUFFIX='_version'
 
 
 function log_block {
+    echo
     echo "==> ${@}"
 }
 
@@ -38,16 +41,67 @@ function log_line {
     echo "  + ${@}"
 }
 
-function get_images {
-    ls "${DOCKERFILE_DIRECTORY}/" | \
-    grep ${DOCKERFILE_PREFIX} | \
-    grep -v ${WEBPACK_BUILDER_IMAGE_NAME} | \
-    grep -v ${SERVER_TESTS_IMAGE_NAME} | \
-    sed "s|${DOCKERFILE_PREFIX}||g"
+function log_border {
+    echo '======================================================================'
+}
+
+function check_image_exists {
+    local image=${1}
+    local current_version=`get_version ${image}`
+    local image_tag=`get_image_tag ${image} ${current_version}`
+    log_line "Ensuring '${image_tag}' exists locally"
+
+    if ! image_of_version_exists ${image} ${current_version}; then
+        log_line "Image ${image_tag} doesn't exist, build first: './build.sh ${image}'"
+        exit 1
+    fi
+}
+
+function build_image_if_not_exists {
+    local image_name=${1}
+
+    local image_version=`get_version ${image_name}`
+    local image_tag=`get_image_tag ${image_name} ${image_version}`
+
+    set +e
+    log_line "Ensuring ${image_tag} image exists locally, building if not"
+    if ! image_of_version_exists ${image_name} ${image_version}; then
+        set -e
+        build_image ${image_name}
+    else
+        set -e
+    fi
+}
+
+function get_images_for_local_run {
+    printf "${SERVER_CODE_IMAGE_NAME} ${UWSGI_IMAGE_NAME} ${WEBPACK_BUILDER_IMAGE_NAME} ${NGINX_IMAGE_NAME}"
+}
+
+function get_images_for_build {
+    printf "${SERVER_CODE_IMAGE_NAME} ${UWSGI_IMAGE_NAME} ${FRONTEND_CODE_IMAGE_NAME} ${NGINX_IMAGE_NAME}"
+}
+
+function get_image_name {
+    local image_name=${1}
+    printf "${PROJECT_NAME}-${image_name}"
+}
+
+function get_image_tag {
+    local image_name=${1}
+    local version=${2}
+
+    printf "`get_image_name ${image_name}`:${version}"
+}
+
+function get_current_image_tag {
+    local image_name=${1}
+    local version=`get_version ${image_name}`
+
+    get_image_tag ${image_name} ${version}
 }
 
 function get_server_code_version {
-    # setup.py files requre versions of the form '0.0.0.dev0' for dev versions, but we want it to be '0.0.0-dev' like package.json
+    # setup.py files require versions of the form '0.0.0.dev0' for dev versions, but we want it to be '0.0.0-dev' like package.json
     local dotted_version=`grep 'version=' ${SERVER_SETUP_PY_FILE} | sed "s|version='\(.*\)',|\1|"`
 
     if [[ ${dotted_version} = *dev* ]]; then
@@ -61,7 +115,7 @@ function image_of_version_exists {
     local image_name=${1}
     local version=${2}
 
-    local docker_image_tag="${PROJECT_NAME}-${image_name}:${version}"
+    local docker_image_tag=`get_image_tag ${image_name} ${version}`
     docker history -q ${docker_image_tag} &> /dev/null
 }
 
@@ -81,8 +135,8 @@ function get_version {
         ${UWSGI_IMAGE_NAME})
             cat ${UWSGI_VERSION_FILE}
         ;;
-        ${WEBPACK_BUILDER_IMAGE_NAME})
-            cat ${WEBPACK_BUILDER_VERSION_FILE}
+        *)
+            printf 'latest'
         ;;
     esac
 }
@@ -97,27 +151,19 @@ function build_image {
     log_line "Building '${image_name}' assets before packaging image"
     build_assets ${image_name}
 
-    local image_tag="${PROJECT_NAME}-${image_name}:${version}"
+    local image_tag=`get_image_tag ${image_name} ${version}`
     log_line "Building '${image_name}' docker image, using tag '${image_tag}'"
     docker build -t ${image_tag} -f "${DOCKERFILE_DIRECTORY}/${DOCKERFILE_PREFIX}${image_name}" .
 }
 
 function build_frontend_assets {
-    local webpack_builder_image_version=`get_version ${WEBPACK_BUILDER_IMAGE_NAME}`
-
-    set +e
-    if ! image_of_version_exists ${WEBPACK_BUILDER_IMAGE_NAME} ${webpack_builder_image_version}; then
-        set -e
-        log_line "${PROJECT_NAME}-${WEBPACK_BUILDER_IMAGE_NAME}:${webpack_builder_image_version} image doesn't exist locally, building..."
-        build_image ${WEBPACK_BUILDER_IMAGE_NAME}
-    else
-        set -e
-    fi
+    build_image_if_not_exists ${WEBPACK_BUILDER_IMAGE_NAME}
+    local webpack_builder_image_tag=`get_current_image_tag ${WEBPACK_BUILDER_IMAGE_NAME}`
 
     docker run --rm -it \
         -v "`pwd`/web/src:${CONTAINER_WEB_ROOT}/src" \
         -v "`pwd`/web/dist:${CONTAINER_WEB_ROOT}/dist" \
-        "${PROJECT_NAME}-${WEBPACK_BUILDER_IMAGE_NAME}:${webpack_builder_image_version}"
+        ${webpack_builder_image_tag}
 }
 
 

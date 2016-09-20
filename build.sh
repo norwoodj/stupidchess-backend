@@ -12,18 +12,34 @@ function usage {
     echo "  nginx:           Build the nginx image"
     echo "  server_code:     Build the server code data image"
     echo "  uwsgi:           Build the uwsgi server image"
-    echo "  webpack_builder: Build the webpack_builder image, which will be used to build frontend assets when building the frontend_code image"
+    echo
+    echo "Options:"
+    echo "  --help, -h, --?, -? Print this usage and exit"
 }
 
 
 function main {
+    while [[ ${1} == -* ]]; do
+        case ${1} in
+            -h | --h | --help | -? | --? )
+                usage
+                exit 0
+            ;;
+            -* )
+                usage
+                exit 1
+            ;;
+        esac
+        shift
+    done
+
     if [[ ${#} < 1 ]]; then
         usage
         exit 1
     fi
 
     if [[ ${1} = 'all' ]]; then
-        local images=`get_images`
+        local images=`get_images_for_build`
         log_block 'Building all images:'
         for i in ${images}; do
             log_line "${i}"

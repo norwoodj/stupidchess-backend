@@ -1,12 +1,13 @@
+#!/usr/local/bin/python
 import requests
 
 
-def make_move(type, color, square):
+def make_move(piece_type, color, square):
     return {
         'type': 'PLACE',
         'destinationSquare': square,
         'piece': {
-            'type': type,
+            'type': piece_type,
             'color': color,
         },
     }
@@ -20,7 +21,7 @@ BLACK_SETUP_MOVES = [
     make_move('CASTLE', 'BLACK', 13),
     make_move('BISHOP', 'BLACK', 0),
     make_move('BISHOP', 'BLACK', 3),
-    make_move('QUEEN', 'BLACK', 2),
+    make_move('QUEEN', 'BLACK', 1),
 ]
 
 WHITE_SETUP_MOVES = [
@@ -31,7 +32,7 @@ WHITE_SETUP_MOVES = [
     make_move('CASTLE', 'WHITE', 107),
     make_move('BISHOP', 'WHITE', 114),
     make_move('BISHOP', 'WHITE', 117),
-    make_move('QUEEN', 'WHITE', 116),
+    make_move('QUEEN', 'WHITE', 115),
 ]
 
 

@@ -73,7 +73,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
         first_move_fields = ('firstMove.gameMoveIndex', 'firstMove.startSquare', 'firstMove.destinationSquare')
         piece_addition_dict = piece_addition.to_dict('type', 'color', 'square', *first_move_fields) \
-            if piece_addition.type == PieceType.PAWN \
+            if piece_addition.type in {PieceType.PAWN, PieceType.CHECKER, PieceType.CHECKER_KING} \
             else piece_addition.to_dict('type', 'color', 'square')
 
         # Second update sets the turn to the other player, adds the piece at it's new square, and increments the last

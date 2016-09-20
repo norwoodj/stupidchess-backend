@@ -1,11 +1,16 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.move_generators.pawn_like_move_generator import PawnLikeMoveGenerator
-from com.johnmalcolmnorwood.stupidchess.move_generators.move_generator_utils import Offsets
+from com.johnmalcolmnorwood.stupidchess.move_generators.forward_non_capturing_move_generator import (
+    ForwardNonCapturingMoveGenerator,
+)
 
 
 class CheckerMoveGenerator:
     def __init__(self, forward_offsets, middle_board_offset=None):
-        self.__pawn_like_move_generator = PawnLikeMoveGenerator([9, 11], -9)
+        self.__forward_non_capturing_move_generator = ForwardNonCapturingMoveGenerator(
+            forward_offsets,
+            middle_board_offset
+        )
+
         self.__possible_capture_moves = [
             (capture_offset, capture_offset * 2) for capture_offset in forward_offsets
         ]
@@ -15,15 +20,30 @@ class CheckerMoveGenerator:
             else None
 
     def get_possible_moves(self, possible_move_game_state):
-        moves = self.__pawn_like_move_generator.get_possible_moves(possible_move_game_state)
+        moves = []
+        self.__add_moves_from_square(moves, possible_move_game_state, possible_move_game_state.get_current_square())
+
+        if possible_move_game_state.can_piece_move_twice():
+            second_moves = []
+            for m in moves:
+                self.__add_moves_from_square(second_moves, possible_move_game_state, m.destinationSquare)
+
+            moves += second_moves
+
+        return moves
+
+    def __add_moves_from_square(self, moves, possible_move_game_state, starting_square):
+        moves += self.__forward_non_capturing_move_generator.get_possible_moves(
+            possible_move_game_state,
+            starting_square,
+        )
+
         self.__add_captures_from_square(
             moves,
             possible_move_game_state,
-            possible_move_game_state.get_current_square(),
+            starting_square,
             set(),
         )
-
-        return moves
 
     @staticmethod
     def __can_capture_on_square(capture_square, move_square, possible_move_game_state):

@@ -1,7 +1,9 @@
 #!/usr/local/bin/python
 from com.johnmalcolmnorwood.stupidchess.models.piece import PieceType
-from com.johnmalcolmnorwood.stupidchess.move_generators.move_generator_utils import Offsets
-from com.johnmalcolmnorwood.stupidchess.move_generators.pawn_like_move_generator import PawnLikeMoveGenerator
+from com.johnmalcolmnorwood.stupidchess.move_generators.offsets import Offsets
+from com.johnmalcolmnorwood.stupidchess.move_generators.forward_non_capturing_move_generator import (
+    ForwardNonCapturingMoveGenerator,
+)
 
 
 class PawnMoveGenerator:
@@ -11,13 +13,23 @@ class PawnMoveGenerator:
     )
 
     def __init__(self):
-        self.__pawn_like_move_generator = PawnLikeMoveGenerator(
+        self.__forward_non_capturing_move_generator = ForwardNonCapturingMoveGenerator(
             directions=[Offsets.FORWARD_OFFSET],
             middle_board_forward_offset=Offsets.LEFT_OFFSET,
         )
 
     def get_possible_moves(self, possible_move_game_state):
-        moves = self.__pawn_like_move_generator.get_possible_moves(possible_move_game_state)
+        moves = self.__forward_non_capturing_move_generator.get_possible_moves(possible_move_game_state)
+        non_capturing_moves = list(filter(lambda m: m.captures is None, moves))
+
+        if len(non_capturing_moves) > 0 and possible_move_game_state.can_piece_move_twice():
+            non_capturing_move = non_capturing_moves[0]
+            self.__forward_non_capturing_move_generator.add_non_capturing_move(
+                moves,
+                non_capturing_move.destinationSquare,
+                Offsets.FORWARD_OFFSET,
+                possible_move_game_state,
+            )
 
         PawnMoveGenerator.__add_capturing_move(moves, Offsets.LEFT_FORWARD_OFFSET, possible_move_game_state)
         PawnMoveGenerator.__add_capturing_move(moves, Offsets.RIGHT_FORWARD_OFFSET, possible_move_game_state)
@@ -34,11 +46,10 @@ class PawnMoveGenerator:
 
     @staticmethod
     def __add_capturing_move(moves, square_offset, possible_move_game_state):
-        true_offset = square_offset * possible_move_game_state.get_forward_direction()
-        new_square = possible_move_game_state.get_current_square() + true_offset
+        new_square = possible_move_game_state.get_square_for_move_offset(square_offset)
 
         if possible_move_game_state.can_capture_on_square(new_square):
-            moves.append(possible_move_game_state.get_move_to_square_offset(true_offset))
+            moves.append(possible_move_game_state.get_move_to_square(new_square))
 
     @staticmethod
     def __can_en_passant_capture_piece(capture_square, possible_move_game_state):
@@ -57,14 +68,9 @@ class PawnMoveGenerator:
 
     @staticmethod
     def __add_en_passant_moves(moves, possible_move_game_state):
-        current_square = possible_move_game_state.get_current_square()
-
         for capture_offset, move_offset in PawnMoveGenerator.POSSIBLE_EN_PASSANT_MOVES:
-            true_capture_offset = capture_offset * possible_move_game_state.get_forward_direction()
-            true_move_offset = move_offset * possible_move_game_state.get_forward_direction()
-
-            capture_square = current_square + true_capture_offset
-            move_square = current_square + true_move_offset
+            capture_square = possible_move_game_state.get_square_for_move_offset(capture_offset)
+            move_square = possible_move_game_state.get_square_for_move_offset(move_offset)
 
             if (
                 possible_move_game_state.is_square_on_board(move_square) and
@@ -72,8 +78,8 @@ class PawnMoveGenerator:
                 possible_move_game_state.can_capture_on_square(capture_square) and
                 PawnMoveGenerator.__can_en_passant_capture_piece(capture_square, possible_move_game_state)
             ):
-                en_passant_move = possible_move_game_state.get_move_to_square_offset(
-                    true_move_offset,
+                en_passant_move = possible_move_game_state.get_move_to_square(
+                    move_square,
                     additional_captures=[possible_move_game_state.get_piece_on_square(capture_square)],
                 )
 

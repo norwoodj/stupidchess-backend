@@ -44,6 +44,11 @@ class PossibleMoveGameState:
     def get_forward_direction(self):
         return -1 if self.__piece_being_moved.color == Color.BLACK else 1
 
+    def get_square_for_move_offset(self, offset, starting_square=None):
+        starting_square = starting_square or self.__piece_being_moved.square
+        new_square = starting_square + self.get_forward_direction() * offset
+        return new_square
+
     def get_current_square(self):
         return self.__piece_being_moved.square
 
@@ -92,8 +97,3 @@ class PossibleMoveGameState:
             piece=self.__piece_being_moved,
             captures=captures,
         )
-
-    def get_move_to_square_offset(self, square_offset, additional_captures=None):
-        new_square = self.__piece_being_moved.square + square_offset
-        return self.get_move_to_square(new_square, additional_captures)
-

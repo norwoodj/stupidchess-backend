@@ -26,6 +26,9 @@ WEBPACK_BUILDER_IMAGE_NAME='webpack_builder'
 
 CONTAINER_WEB_ROOT='/var/lib/johnmalcolmnorwood/stupidchess'
 
+LOCAL_COMPOSE_HANDLEBARS_FILE="${DOCKERFILE_DIRECTORY}/docker-compose-LCL.yml.handlebars"
+HANDLEBARS_VERSION_SUFFIX='_version'
+
 
 function log_block {
     echo "==> ${@}"

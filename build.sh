@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 source common.sh
 
@@ -40,6 +40,7 @@ function main {
 
     if [[ ${1} = 'all' ]]; then
         local images=`get_images_for_build`
+
         log_block 'Building all images:'
         for i in ${images}; do
             log_line "${i}"

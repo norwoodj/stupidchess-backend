@@ -5,7 +5,7 @@ services:
     ports:
       - '27017:27017'
   nginx:
-    image: 'stupidchess-nginx:{{nginx_version}}'
+    image: 'jnorwood/stupidchess-nginx:{{nginx_version}}'
     entrypoint: 'nginx -c /etc/nginx/local/nginx.conf -g "daemon off;"'
     volumes:
       - '{{project_path}}/etc/nginx:/etc/nginx/local'
@@ -15,9 +15,9 @@ services:
     ports:
       - '80:80'
   server_code:
-    image: 'stupidchess-server_code:{{server_code_version}}'
+    image: 'jnorwood/stupidchess-server_code:{{server_code_version}}'
   uwsgi:
-    image: 'stupidchess-uwsgi:{{uwsgi_version}}'
+    image: 'jnorwood/stupidchess-uwsgi:{{uwsgi_version}}'
     links:
       - mongo
     entrypoint: 'uwsgi --ini /etc/uwsgi/uwsgi.ini:local'
@@ -27,7 +27,7 @@ services:
     volumes_from:
       - server_code
   webpack_builder:
-    image: 'stupidchess-webpack_builder:{{webpack_builder_version}}'
+    image: 'jnorwood/stupidchess-webpack_builder:{{webpack_builder_version}}'
     volumes:
       - '{{project_path}}/web/src:/var/lib/johnmalcolmnorwood/stupidchess/src'
     entrypoint: 'webpack --watch'

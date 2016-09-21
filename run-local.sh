@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 source common.sh
 
@@ -29,21 +29,17 @@ function build_docker_compose_template_data {
 }
 
 function render_mustache_template {
-    local render_mustache_image_tag=`get_current_image_tag ${MUSTACHE_RENDER_IMAGE_NAME}`
-
     build_docker_compose_template_data | docker run \
         --rm \
         -v `pwd`:/opt/mustache \
         -w /opt/mustache \
-        -i ${render_mustache_image_tag} \
+        -i ${MUSTACHE_RENDER_IMAGE_NAME} \
         mustache - ${LOCAL_DOCKER_COMPOSE_MUSTACHE_FILE}
 }
 
 function run_docker_compose_for_images {
     command=${1}
     log_block 'Rendering docker-compose template with current image versions'
-    build_image_if_not_exists ${MUSTACHE_RENDER_IMAGE_NAME}
-
     log_line 'Using docker-compose config:'
 
     log_border

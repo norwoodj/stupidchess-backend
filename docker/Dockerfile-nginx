@@ -1,4 +1,4 @@
-FROM nginx
+FROM nginx:1.11
 MAINTAINER John Norwood
 
 COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf

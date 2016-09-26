@@ -1,7 +1,8 @@
 #!/usr/local/bin/python
+from com.johnmalcolmnorwood.stupidchess.exceptions.illegal_move_exception import IllegalMoveException
 from com.johnmalcolmnorwood.stupidchess.models.move import MoveType, Move
 from com.johnmalcolmnorwood.stupidchess.models.game import Game
-from com.johnmalcolmnorwood.stupidchess.models.piece import Color, FirstMove, Piece, PieceType
+from com.johnmalcolmnorwood.stupidchess.models.piece import Color, FirstMove, Piece
 from com.johnmalcolmnorwood.stupidchess.services.abstract_move_update_service import AbstractMoveUpdateService
 
 
@@ -21,17 +22,20 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
     def get_moves_to_apply(self, move, game):
         possible_moves = self.__possible_move_service.get_possible_moves_from_square(
-                move.startSquare,
-                game.get_id(),
-                game=game,
+            move.startSquare,
+            game.get_id(),
+            game=game,
         )
 
         for m in possible_moves:
-            if m.destinationSquare == move.destinationSquare:
+            if m.destinationSquare == move.destinationSquare and (
+                (not hasattr(m, 'disambiguating_capture')) or
+                m.disambiguating_capture in set(map(lambda c: c.square, m.captures))
+            ):
                 m.gameUuid = game.get_id()
                 return [m]
 
-        raise Exception()
+        raise IllegalMoveException(move)
 
     def apply_game_updates_for_moves(self, moves, game):
         move = moves[0]
@@ -72,9 +76,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         )
 
         first_move_fields = ('firstMove.gameMoveIndex', 'firstMove.startSquare', 'firstMove.destinationSquare')
-        piece_addition_dict = piece_addition.to_dict('type', 'color', 'square', *first_move_fields) \
-            if piece_addition.type in {PieceType.PAWN, PieceType.CHECKER, PieceType.CHECKER_KING} \
-            else piece_addition.to_dict('type', 'color', 'square')
+        piece_addition_dict = piece_addition.to_dict('type', 'color', 'square', *first_move_fields)
 
         # Second update sets the turn to the other player, adds the piece at it's new square, and increments the last
         # move index of the game

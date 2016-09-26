@@ -1,4 +1,4 @@
-export default class SquareSelectionState {
+class SquareSelectionState {
     constructor() {
         this.selected = null;
         this.possibleMoves = new Set();
@@ -43,3 +43,5 @@ export default class SquareSelectionState {
         this.possibleCaptures.clear();
     }
 }
+
+export {SquareSelectionState};

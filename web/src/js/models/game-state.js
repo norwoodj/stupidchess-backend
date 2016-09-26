@@ -1,4 +1,4 @@
-export default class GameState {
+class GameState {
     constructor() {
         this.pieces = new Map();
         this.type = 'NONE';
@@ -69,3 +69,5 @@ export default class GameState {
         apiResponse.squaresToBePlaced.forEach(square => this.squaresToBePlaced.add(square));
     }
 }
+
+export {GameState};

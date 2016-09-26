@@ -79,7 +79,7 @@ function build_assets {
     case ${name} in
         ${FRONTEND_CODE_IMAGE_NAME})
             build_frontend_assets
-            log_line "Build '${name}' assets"
+            log_line "Built '${name}' assets"
         ;;
         *)
             log_line 'Nothing to build'

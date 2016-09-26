@@ -43,8 +43,6 @@ def get_new_stupid_chess_game():
         possiblePiecesToBePlaced=STUPID_CHESS_INITIAL_PIECES_TO_BE_PLACED,
         squaresToBePlaced=STUPID_CHESS_INTIAL_SQUARES_TO_BE_PLACED,
         currentTurn=Color.BLACK,
-        blackScore=1,
-        whiteScore=1,
     )
 
 CHESS_INITIAL_PIECES = [
@@ -75,8 +73,6 @@ def get_new_chess_game():
         type=GameType.CHESS,
         pieces=CHESS_INITIAL_PIECES,
         currentTurn=Color.WHITE,
-        blackScore=1,
-        whiteScore=1,
     )
 
 CHECKERS_INITIAL_PIECES = [
@@ -95,8 +91,6 @@ def get_new_checkers_game():
         type=GameType.CHECKERS,
         pieces=CHECKERS_INITIAL_PIECES,
         currentTurn=Color.WHITE,
-        blackScore=sum(1 for _ in filter(lambda piece: piece.color == Color.BLACK, CHECKERS_INITIAL_PIECES)),
-        whiteScore=sum(1 for _ in filter(lambda piece: piece.color == Color.WHITE, CHECKERS_INITIAL_PIECES)),
     )
 
 

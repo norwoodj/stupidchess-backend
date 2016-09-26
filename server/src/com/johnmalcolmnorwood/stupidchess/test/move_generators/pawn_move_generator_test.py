@@ -27,6 +27,7 @@ class PawnMoveGeneratorTest(TestCase):
             Piece(type=PieceType.PAWN, color=Color.BLACK, square=0, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
             Piece(type=PieceType.PAWN, color=Color.BLACK, square=11, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
         ]
+
         game_state = test_utils.get_game_state(
             pieces=pieces,
             can_capture_own_pieces=False,

@@ -7,13 +7,21 @@ class Board extends React.Component {
     getBackgroundForSquare(square) {
         if (this.props.squareSelectionState.isSquareSelected(square)) {
             return this.props.displayState.getSelectedBackground();
+        }
+
+        if (this.props.ambiguousMoveState.isAmbiguousDestinationSelected()) {
+            if (this.props.ambiguousMoveState.getSelectedAmbiguousDestination() == square) {
+                return this.props.displayState.getPossibleMoveBackground();
+            } else if (this.props.ambiguousMoveState.isDisambiguatingCaptureForSelectedSquare(square)) {
+                return this.props.displayState.getPossibleCaptureBackground();
+            }
         } else if (this.props.squareSelectionState.isSquarePossibleCapture(square)) {
             return this.props.displayState.getPossibleCaptureBackground();
         } else if (this.props.squareSelectionState.isSquarePossibleMove(square)) {
             return this.props.displayState.getPossibleMoveBackground();
-        } else {
-            return this.props.displayState.getSquareColor(square);
         }
+
+        return this.props.displayState.getSquareColor(square);
     }
 
     getClassForSquare(square) {
@@ -74,6 +82,7 @@ Board.propTypes = {
     gameState: React.PropTypes.object.isRequired,
     displayState: React.PropTypes.object.isRequired,
     squareSelectionState: React.PropTypes.object.isRequired,
+    ambiguousMoveState: React.PropTypes.object.isRequired,
     clickHandler: React.PropTypes.func.isRequired
 };
 

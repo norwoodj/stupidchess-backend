@@ -17,15 +17,20 @@ class Dictable:
 
         for prefix, sub_keys in sub_keys.items():
             prefix_object = getattr(self, prefix)
-            result[prefix] = self.__convert_prefix_object(
+            prefix_object = self.__convert_prefix_object(
                 prefix_object,
                 sub_keys,
                 delimiter,
             )
 
+            if prefix_object is not None:
+                result[prefix] = prefix_object
+
         return result
 
     def __convert_prefix_object(self, prefix_object, sub_keys, delimiter):
+        if prefix_object is None:
+            return None
         if isinstance(prefix_object, list):
             return [self.__convert_prefix_object(o, sub_keys, delimiter) for o in prefix_object]
         if isinstance(prefix_object, dict):

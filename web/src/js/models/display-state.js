@@ -1,4 +1,4 @@
-export default class DisplayState {
+class DisplayState {
     constructor() {
         this.squareColors = ['saddlebrown', 'sandybrown'];
         this.possibleMoveColor = 'yellow';
@@ -23,3 +23,5 @@ export default class DisplayState {
         return this.possibleCaptureColor;
     }
 }
+
+export {DisplayState};

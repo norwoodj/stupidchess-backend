@@ -26,23 +26,35 @@ class CheckerMoveGenerator:
         if possible_move_game_state.can_piece_move_twice():
             second_moves = []
             for m in moves:
-                self.__add_moves_from_square(second_moves, possible_move_game_state, m.destinationSquare)
+                self.__add_moves_from_square(
+                    second_moves,
+                    possible_move_game_state,
+                    m.destinationSquare,
+                    m.captures,
+                )
 
             moves += second_moves
 
         return moves
 
-    def __add_moves_from_square(self, moves, possible_move_game_state, starting_square):
-        moves += self.__forward_non_capturing_move_generator.get_possible_moves(
+    def __add_moves_from_square(self, moves, possible_move_game_state, starting_square, captures_so_far=None):
+        non_capturing_moves = self.__forward_non_capturing_move_generator.get_possible_moves(
             possible_move_game_state,
             starting_square,
         )
+
+        for m in non_capturing_moves:
+            m.captures = captures_so_far
+
+        moves += non_capturing_moves
+
+        captures_set = set() if captures_so_far is None else set(map(lambda c: c.square, captures_so_far))
 
         self.__add_captures_from_square(
             moves,
             possible_move_game_state,
             starting_square,
-            set(),
+            captures_set,
         )
 
     @staticmethod

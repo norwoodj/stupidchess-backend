@@ -1,4 +1,4 @@
-export default class BoardSetupState {
+class BoardSetupState {
     constructor() {
         this.setupBoard = null;
     }
@@ -17,3 +17,5 @@ export default class BoardSetupState {
         this.setupBoard = color.toUpperCase();
     }
 }
+
+export {BoardSetupState};

@@ -1,6 +1,7 @@
 #!/usr/local/bin/python
 from com.johnmalcolmnorwood.stupidchess.models.move import Move, MoveType
 from com.johnmalcolmnorwood.stupidchess.models.piece import Color, PieceType
+from com.johnmalcolmnorwood.stupidchess.utils import get_game_scores
 
 
 class PossibleMoveGameState:
@@ -27,7 +28,8 @@ class PossibleMoveGameState:
         return self.__game.lastMove
 
     def is_game_over(self):
-        return self.__game.blackScore == 0 or self.__game.whiteScore == 0
+        black_score, white_score = get_game_scores(self.__game)
+        return black_score == 0 or white_score == 0
 
     def is_pieces_turn(self):
         return self.__game.currentTurn == self.__piece_being_moved.color

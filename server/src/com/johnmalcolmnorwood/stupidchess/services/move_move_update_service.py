@@ -20,6 +20,15 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
         return Game.objects.exclude(*exclude_fields).get(_id=game_uuid)
 
+    @staticmethod
+    def __move_matches_requested_move(requested_move, move):
+        return (
+            move.destinationSquare == requested_move.destinationSquare and (
+                requested_move.disambiguating_capture is None or
+                requested_move.disambiguating_capture in set(map(lambda c: c.square, move.captures))
+            )
+        )
+
     def get_moves_to_apply(self, move, game):
         possible_moves = self.__possible_move_service.get_possible_moves_from_square(
             move.startSquare,
@@ -28,10 +37,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         )
 
         for m in possible_moves:
-            if m.destinationSquare == move.destinationSquare and (
-                (not hasattr(m, 'disambiguating_capture')) or
-                m.disambiguating_capture in set(map(lambda c: c.square, m.captures))
-            ):
+            if MoveMoveUpdateService.__move_matches_requested_move(move, m):
                 m.gameUuid = game.get_id()
                 return [m]
 

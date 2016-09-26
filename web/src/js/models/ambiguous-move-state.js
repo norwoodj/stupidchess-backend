@@ -25,11 +25,15 @@ class AmbiguousMoveState {
     }
 
     isDisambiguatingCaptureForSelectedSquare(square) {
-        return this.disambiguatingCapturesBySquare.get(this.selectedAmbiguousDestination).includes(square);
+        console.log(square);
+        var disambiguatingCaptures = this.disambiguatingCapturesBySquare.get(this.selectedAmbiguousDestination)
+        console.log(disambiguatingCaptures);
+        return disambiguatingCaptures.includes(square);
     }
 
     clear() {
         this.disambiguatingCapturesBySquare.clear();
+        this.selectedAmbiguousDestination = null;
     }
 }
 

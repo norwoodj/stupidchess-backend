@@ -15,8 +15,6 @@ def get_game(
     pieces_to_be_placed=[],
     squares_to_be_placed=[],
     current_turn=Color.BLACK,
-    black_score=1,
-    white_score=1,
     **kwargs
 ):
     return Game(
@@ -26,8 +24,6 @@ def get_game(
         possiblePiecesToBePlaced=pieces_to_be_placed,
         squaresToBePlaced=squares_to_be_placed,
         currentTurn=Color.BLACK,
-        blackScore=black_score,
-        whiteScore=white_score,
     )
 
 

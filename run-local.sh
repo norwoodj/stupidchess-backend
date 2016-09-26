@@ -48,8 +48,9 @@ function run_docker_compose_for_images {
 
     docker-compose \
       -f <(render_mustache_template) \
-      ${command} \
-      `[[ ${command} == 'up' && ${DAEMON} == 'true' ]] && echo '-d'`
+      -p ${PROJECT_NAME} \
+      `[[ ${command} == 'up' && ${DAEMON} == 'true' ]] && echo '-d'` \
+      ${command}
 }
 
 function ensure_all_images_exist {
@@ -62,14 +63,19 @@ function ensure_all_images_exist {
 }
 
 function start {
-    log_block 'Starting Server...'
+    log_block 'Starting server...'
     ensure_all_images_exist
     run_docker_compose_for_images 'up'
 }
 
 function stop {
-    log_block 'Stopping Server...'
+    log_block 'Stopping server...'
     run_docker_compose_for_images 'down'
+}
+
+function ps {
+    log_block 'Listing running servers...'
+    run_docker_compose_for_images 'ps'
 }
 
 function main {

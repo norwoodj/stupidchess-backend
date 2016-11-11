@@ -1,8 +1,0 @@
-# This dockerfile is used to build the container that will run the tests for the placer data export project
-FROM python:3.5
-
-WORKDIR /opt/stupidchess/server
-COPY server/test-requirements.txt /opt/stupidchess/server/requirements.txt
-
-RUN pip install -r requirements.txt
-ENTRYPOINT nosetests

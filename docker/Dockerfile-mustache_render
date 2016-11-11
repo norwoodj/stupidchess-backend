@@ -1,4 +1,0 @@
-FROM ruby:2.3
-MAINTAINER John Norwood
-
-RUN gem install mustache

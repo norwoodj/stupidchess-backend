@@ -1,43 +1,21 @@
-#!/usr/bin/env bash -e
+#!/bin/bash -e
 
 source common.sh
 
 
 function usage {
-    echo "${0} <images>"
+    echo "${0} [ options ] <image> [ <image> [ <image> ... ] ]"
+    echo
+    echo "This script is used to build the various docker images needed to run the services from this project"
     echo
     echo "Images:"
-    echo "  all:             Build all assets and docker images needed to run the application"
-    echo "  frontend_code:   Build the frontend code data image"
-    echo "  nginx:           Build the nginx image"
-    echo "  server_code:     Build the server code data image"
-    echo "  uwsgi:           Build the uwsgi server image"
+    print_build_usage_images_list
     echo
     echo "Options:"
-    echo "  --help, -h, --?, -? Print this usage and exit"
+    echo "  --help, -h  Print this usage and exit"
 }
 
-
-function main {
-    while [[ ${1} == -* ]]; do
-        case ${1} in
-            -h | --h | --help | -? | --? )
-                usage
-                exit 0
-            ;;
-            -* )
-                usage
-                exit 1
-            ;;
-        esac
-        shift
-    done
-
-    if [[ ${#} < 1 ]]; then
-        usage
-        exit 1
-    fi
-
+function build {
     if [[ ${1} = 'all' ]]; then
         local images=`get_images_for_build`
 
@@ -47,15 +25,38 @@ function main {
         done
 
         for i in ${images}; do
-            build_image ${i}
-            echo
+            build_image_with_hooks ${i}
         done
     else
         for i in ${@}; do
-            build_image ${i}
-            echo
+            if [[ ${i} != 'all' ]]; then
+                build_image_with_hooks ${i}
+            fi
         done
     fi
+}
+
+function main {
+    while [[ ${1} == -* ]]; do
+        case ${1} in
+            -h | --help)
+                usage
+                exit 0
+            ;;
+            -*)
+                log_block "Invalid flag '${1}'!"
+                echo
+                usage
+                exit 1
+            ;;
+        esac
+        shift
+    done
+
+    local images=${@}
+    check_images_argument 'get_images_for_build' ${images}
+
+    build ${images}
 }
 
 

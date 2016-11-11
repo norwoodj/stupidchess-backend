@@ -1,94 +1,61 @@
-#!/usr/bin/env bash -e
+#!/bin/bash -e
 
 source common.sh
 
 
 function usage {
-    echo "${0} <command>"
+    echo "${0} <command> <service> [ options ]"
+    echo
+    echo "This script can be used to start, stop, and list running instances of the services built by this project, on"
+    echo "a local machine"
     echo
     echo "Commands:"
-    echo "  start: Run the local server for development"
-    echo "  stop:  Kill the local development server, stops and removes the containers if they're running in "
-    echo "         daemon mode, otherwise, will just remove the stopped containers"
+    echo "  start  Run the local server for development"
+    echo "  stop   Kill the local development server, stops and removes the containers if they're running in"
+    echo "  ps     See which containers are currently running"
+    echo "  logs   Show the logs of the running containers"
+    echo
+    echo "Services:"
+    print_run_local_usage_services_list
     echo
     echo "Options:"
-    echo "  --daemon, -d        Starts the local server in development mode, has no effect when stopping"
-    echo "  --help, -h, --?, -? Print this usage and exit"
+    echo "  --help, -h    Print this usage and exit"
+    echo "  --daemon, -d  Starts the local server as a daemon"
 }
 
-function build_docker_compose_template_data {
-    local images=`get_images_for_local_run`
+function run_docker_compose_for_service {
+    local command=${1}
+    local service=${2}
+    local daemon=${3}
 
-    echo '---'
-    for i in ${images}; do
-        local image_version=`get_version ${i}`
-        echo "${i}${HANDLEBARS_VERSION_SUFFIX}: '${image_version}'"
-    done
-    echo "project_path: '`pwd`'"
-    echo '---'
-}
-
-function render_mustache_template {
-    build_docker_compose_template_data | docker run \
-        --rm \
-        -v `pwd`:/opt/mustache \
-        -w /opt/mustache \
-        -i ${MUSTACHE_RENDER_IMAGE_NAME} \
-        mustache - ${LOCAL_DOCKER_COMPOSE_MUSTACHE_FILE}
-}
-
-function run_docker_compose_for_images {
-    command=${1}
-    log_block 'Rendering docker-compose template with current image versions'
-    log_line 'Using docker-compose config:'
-
-    log_border
-    render_mustache_template
-    log_border
+    local docker_compose_file=`get_local_docker_compose_path_for_service ${service}`
+    log_line "Running docker-compose command ${command} for ${service}"
 
     docker-compose \
-      -f <(render_mustache_template) \
-      -p ${PROJECT_NAME} \
-      `[[ ${command} == 'up' && ${DAEMON} == 'true' ]] && echo '-d'` \
-      ${command}
-}
-
-function ensure_all_images_exist {
-    log_block 'Ensuring all images for run exist'
-    local images=`get_images_for_local_run`
-
-    for i in ${images}; do
-        check_image_exists ${i}
-    done
+        -p "${PROJECT_NAME}-${service}" \
+        -f ${docker_compose_file} \
+        ${command} \
+        `[[ ${command} = 'up' && ${daemon} = 'true' ]] && echo '-d'`
 }
 
 function start {
-    log_block 'Starting server...'
-    ensure_all_images_exist
-    run_docker_compose_for_images 'up'
-}
+    local service=${1}
+    shift
 
-function stop {
-    log_block 'Stopping server...'
-    run_docker_compose_for_images 'down'
-}
+    local daemon='false'
 
-function ps {
-    log_block 'Listing running servers...'
-    run_docker_compose_for_images 'ps'
-}
-
-function main {
     while [[ ${1} == -* ]]; do
         case ${1} in
-            --daemon | -d )
-                DAEMON="true"
+            --daemon | -d)
+                daemon='true'
             ;;
-            -h | --h | --help | -? | --? )
+            -h | --help)
                 usage
                 exit 0
             ;;
-            -* )
+            -*)
+                log_block "Invalid flag '${1}'!"
+                echo
                 usage
                 exit 1
             ;;
@@ -96,13 +63,66 @@ function main {
         shift
     done
 
-    if [[ ${#} < 1 ]]; then
-        usage
-        exit 1
-    fi
+    log_block "Starting '${service}' server..."
 
-    command=${1}
-    ${command}
+    log_line "Ensuring all images exist to run service ${service}"
+    images=`get_images_for_service ${service}`
+    for i in ${images}; do
+        check_current_image_exists ${i}
+    done
+
+    pre_run_local_hook ${service}
+    run_docker_compose_for_service 'up' ${service} ${daemon}
+    post_run_local_hook ${service}
+}
+
+function stop {
+    local service=${1}
+
+    log_block "Stopping '${service}' server..."
+    run_docker_compose_for_service 'down' ${service}
+}
+
+function ps {
+    local service=${1}
+
+    log_block 'Listing running servers...'
+    run_docker_compose_for_service 'ps' ${service}
+}
+
+function logs {
+    local service=${1}
+
+    log_block "Retrieving logs for service: ${service}..."
+    run_docker_compose_for_service 'logs' ${service}
+}
+
+function main {
+    while [[ ${1} == -* ]]; do
+        case ${1} in
+            -h | --help)
+                usage
+                exit 0
+            ;;
+            -*)
+                log_block "Invalid flag '${1}'!"
+                echo
+                usage
+                exit 1
+            ;;
+        esac
+        shift
+    done
+
+    local command=${1}
+    check_command_argument "${command}" 'start' 'stop' 'ps' 'logs'
+    shift
+
+    local service=${1}
+    check_service_argument ${service}
+    shift
+
+    ${command} ${service} ${@}
 }
 
 

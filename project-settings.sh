@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -e
+#!/bin/bash -e
 
 #
 ## Configuration settings for the project, setting up the name of the project, the locations of various important files,
@@ -8,15 +8,62 @@
 # The name of the project. This value will prefix all built docker image names generated so that an image named 'image'
 # will end up having a tag of ${PROJECT_NAME}-image:version
 PROJECT_NAME='stupidchess'
+LOCAL_IMAGE_VERSION_TAG='current'
 
-# The docker directory is where all Dockerfiles and docker-compose yaml files will be placed. The Dockerfile prefix is
-# a prefix that should be used when naming all Dockerfiles. Such that an image named 'image' will be built by a
-# Dockerfile called 'Dockerfile-image' which is stored in the Dockerfile directory configured here
-DOCKERFILE_DIRECTORY='docker'
-DOCKERFILE_PREFIX='Dockerfile-'
+# Configuration for rendering the docker-compose.yml.mustache files. First, the version suffix that each image version key in
+# file has. For instance for an image named 'image' with version suffix _version, in the docker-compose mustache file
+# will be the image tag: image:{{image_version}}
+MUSTACHE_RENDER_IMAGE_NAME='jnorwood/mustache_render'
+HANDLEBARS_VERSION_SUFFIX='_version'
+HANDLEBARS_ENV_SUFFIX='_environment'
 
-# The name of the docker compose file used to run locally
-LOCAL_DOCKER_COMPOSE_MUSTACHE_FILE="${DOCKERFILE_DIRECTORY}/docker-compose-LCL.yml.mustache"
+# Docker deploy configuration. If the DOCKER_REGISTRY_URL is empty, will be pushed to docker hub. The user is the
+# organization that the image will be pushed to, so the full push url will be DOCKER_REGISTRY_URL/DOCKER_REGISTRY_ORG/image:tag
+DOCKER_REGISTRY_URL=
+DOCKER_REGISTRY_ORG='jnorwood'
+
+# Deployed App bundle name
+DEPLOYED_APP_BUNDLE_NAME="${PROJECT_NAME}-current"
+SERVER_BUNDLE_DEPLOY_DESTINATION="/var/lib/johnmalcolmnorwood/${PROJECT_NAME}"
+# The name of the project. This value will prefix all built docker image names generated so that an image named 'image'
+# will end up having a tag of ${PROJECT_NAME}-image:version
+
+
+#
+## Script Usage Configuration
+#
+function print_build_usage_images_list {
+    echo "  all            Build all assets and docker images needed to run the application"
+    echo "  frontend_code  Build the frontend code data image"
+    echo "  nginx          Build the nginx image"
+    echo "  server_code    Build the server code data image"
+    echo "  uwsgi          Build the uwsgi server image"
+}
+
+function print_deploy_usage_images_list {
+    echo "  all            Deploy all assets and docker images needed to run the application"
+    echo "  frontend_code  Deploy the frontend code data image"
+    echo "  nginx          Deploy the nginx image"
+    echo "  server_code    Deploy the server code data image"
+    echo "  uwsgi          Deploy the uwsgi server image"
+}
+
+function print_environment_list {
+    :
+}
+
+function print_run_local_usage_services_list {
+    echo "  stupidchess  Run the stupidchess web server"
+}
+
+function print_run_deployed_usage_services_list {
+    print_run_local_usage_services_list
+}
+
+
+#
+## Build Configuration
+#
 
 # List of Docker Images that this project builds
 FRONTEND_CODE_IMAGE_NAME='frontend_code'
@@ -25,34 +72,49 @@ SERVER_CODE_IMAGE_NAME='server_code'
 SERVER_TESTS_IMAGE_NAME='server_tests'
 UWSGI_IMAGE_NAME='uwsgi'
 WEBPACK_BUILDER_IMAGE_NAME='webpack_builder'
-MUSTACHE_RENDER_IMAGE_NAME='mustache_render'
 
-# Configuration for rendering the docker-compose.yml.mustache files. First, the version suffix that each image version key in
-# file has. For instance for an image named 'image' with version suffix _version, in the docker-compose mustache file
-# will be the image tag: image:{{image_version}}
-MUSTACHE_RENDER_IMAGE_NAME='jnorwood/mustache_render'
-HANDLEBARS_VERSION_SUFFIX='_version'
-
-# Docker deploy configuration. If the DOCKER_REGISTRY_URL is empty, will be pushed to docker hub. The user is the
-# organization that the image will be pushed to, so the full push url will be DOCKER_REGISTRY_URL/DOCKER_REGISTRY_ORG/image:tag
-DOCKER_REGISTRY_URL=
-DOCKER_REGISTRY_ORG='jnorwood'
-
-
-function get_images_for_local_run {
-    printf "${SERVER_CODE_IMAGE_NAME} ${UWSGI_IMAGE_NAME} ${WEBPACK_BUILDER_IMAGE_NAME} ${NGINX_IMAGE_NAME}"
-}
 
 function get_images_for_build {
-    printf "${SERVER_CODE_IMAGE_NAME} ${UWSGI_IMAGE_NAME} ${FRONTEND_CODE_IMAGE_NAME} ${NGINX_IMAGE_NAME}"
+    printf "${FRONTEND_CODE_IMAGE_NAME} ${NGINX_IMAGE_NAME} ${SERVER_CODE_IMAGE_NAME} ${UWSGI_IMAGE_NAME}"
 }
 
 function get_images_for_deploy {
     get_images_for_build
 }
 
+function get_services_for_deploy {
+    printf ${PROJECT_NAME}
+}
 
-function get_version {
+function get_images_for_service {
+    local service=${1}
+    get_images_for_build
+}
+
+function get_dockerfile_path_for_image {
+    local image=${1}
+    printf "docker/Dockerfile-${image}"
+}
+
+function get_docker_build_context_path_for_image {
+    local image=${1}
+    printf '.'
+}
+
+function get_docker_build_args_for_image {
+    local image=${1}
+}
+
+function get_local_docker_compose_path_for_service {
+    local service=${1}
+    printf "docker/docker-compose-LCL.yml"
+}
+
+function get_deploy_docker_compose_mustache_path_for_service {
+    local service=${1}
+}
+
+function get_image_version {
     local name=${1}
 
     case ${name} in
@@ -63,7 +125,7 @@ function get_version {
             cat ${NGINX_VERSION_FILE}
         ;;
         ${SERVER_CODE_IMAGE_NAME})
-            get_server_code_version
+            get_setup_py_code_version 'server/setup.py'
         ;;
         ${UWSGI_IMAGE_NAME})
             cat ${UWSGI_VERSION_FILE}
@@ -74,9 +136,43 @@ function get_version {
     esac
 }
 
-function build_assets {
-    local name=${1}
-    case ${name} in
+
+#
+## Deploy Configuration
+#
+
+function get_bundled_docker_compose_name_for_service {
+    local service=${1}
+    printf "docker-compose-${service}.yml"
+}
+
+function get_bundle_version {
+    printf `get_image_version ${SERVER_CODE_IMAGE_NAME}`
+}
+
+function get_servers_for_env {
+    local environment=${1}
+}
+
+function get_deploy_environments {
+    :
+}
+
+function upload_application_bundle {
+    local environment=${1}
+    local bundle_zip_archive=${2}
+}
+
+
+#
+## Hooks
+#
+
+function pre_build_hook {
+    local image_name=${1}
+    log_block "Pre build hook for image ${image_name}"
+
+    case ${image_name} in
         ${FRONTEND_CODE_IMAGE_NAME})
             build_frontend_assets
             log_line "Built '${name}' assets"
@@ -87,31 +183,49 @@ function build_assets {
     esac
 }
 
+function post_build_hook {
+    local image_name=${1}
+    log_block "Post build hook for image ${image_name}"
+}
+
+function pre_run_local_hook {
+    local service=${1}
+    log_block "Pre run local hook for service ${service}"
+}
+
+function post_run_local_hook {
+    local service=${1}
+    log_block "Post run local hook for service ${service}"
+}
+
+function pre_run_deployed_hook {
+    local service=${1}
+    local environment=${2}
+    log_block "Pre run deployed hook for service ${service} in environment ${environment}"
+}
+
+function post_run_deployed_hook {
+    local service=${1}
+    local environment=${2}
+    log_block "Post run deployed hook for service ${service} in environment ${environment}"
+}
+
 
 #
-## Version files for those images that will be versioned in text files, and the package.json file used for versioning
-## the frontend code and the setup.py file used to version the backend code
+## Implementations
 #
+
 VERSION_FILE_DIRECTORY='versions'
 UWSGI_VERSION_FILE="${VERSION_FILE_DIRECTORY}/uwsgi-image-version.txt"
 NGINX_VERSION_FILE="${VERSION_FILE_DIRECTORY}/nginx-image-version.txt"
 WEB_PACKAGE_JSON_FILE='web/package.json'
 SERVER_SETUP_PY_FILE='server/setup.py'
 
-#
-## Build and version retrieval implementations
-#
-function get_server_code_version {
-    # setup.py files require versions of the form '0.0.0.dev0' for dev versions, but we want it to be '0.0.0-dev' like package.json
-    local dotted_version=`grep 'version=' ${SERVER_SETUP_PY_FILE} | sed "s|version='\(.*\)',|\1|"`
 
-    if [[ ${dotted_version} = *dev* ]]; then
-        printf ${dotted_version} | sed 's|\([0-9.]*\)\.dev.*|\1|' | xargs printf '%s-dev'
-    else
-        printf ${dotted_version}
-    fi
+function get_setup_py_code_version {
+    local setup_py_file_path=${1}
+    printf `grep 'version=' ${setup_py_file_path} | sed "s|version='\(.*\)',|\1|"`
 }
-
 
 CONTAINER_WEB_ROOT='/var/lib/johnmalcolmnorwood/stupidchess'
 

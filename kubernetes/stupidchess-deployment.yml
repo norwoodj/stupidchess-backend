@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: stupidchess-deployment
+  annotations:
+    pod.beta.kubernetes.io/init-containers: |
+      [
+          {
+              "name": "stupidchess-frontend_code",
+              "image": "jnorwood/stupidchess-rpi_frontend_code:0.0.0-dev",
+              "command": ["cp", "/var/lib/johnmalcolmnorwood/stupidchess/dist/*", "/tmp/frontend_code/"],
+              "volumeMounts": [{
+                  "name": "frontend-code-volume",
+                  "mountPath": "/tmp/frontend_code"
+              }]
+          }, {
+              "name": "stupidchess-server_code",
+              "image": "jnorwood/stupidchess-rpi_server_code:0.0.0-dev",
+              "command: ["cp", "/usr/local/lib/python3.5/site-packages/*", "/tmp/server_code/"],
+              "volumeMounts": [{
+                  "name": "server-code-volume",
+                  "mountPath": "/tmp/server_code"
+              }]
+          }
+      ]
+
+spec:
+  template:
+    metadata:
+      labels:
+        app: stupidchess
+    spec:
+      containers:
+        - name: stupidchess-nginx
+          image: jnorwood/stupidchess-rpi_nginx:0.0.0-dev
+          volumeMounts:
+            - name: socket-volume
+              mountPath: '/tmp/stupidchess'
+            - name: frontend-code-volume
+              mountPath: '/var/lib/johnmalcolmnorwood/stupidchess/dist'
+          ports:
+            - name: http
+              containerPort: 80
+        - name: stupidchess-uwsgi
+          image: jnorwood/stupidchess-rpi_uwsgi:0.0.0-dev
+          volumeMounts:
+            - name: socket-volume
+              mountPath: '/tmp/stupidchess'
+            - name: server-code-volume
+              mountPath: '/usr/local/lib/python3.5/site-packages'
+      volumes:
+        - name: socket-volume
+          emptyDir: {}
+        - name: frontend-code-volume
+          emptyDir: {}
+        - name: server-code-volume
+          emptyDir: {}

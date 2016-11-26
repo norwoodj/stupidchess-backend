@@ -33,19 +33,27 @@ SERVER_BUNDLE_DEPLOY_DESTINATION="/var/lib/johnmalcolmnorwood/${PROJECT_NAME}"
 ## Script Usage Configuration
 #
 function print_build_usage_images_list {
-    echo "  all            Build all assets and docker images needed to run the application"
-    echo "  frontend_code  Build the frontend code data image"
-    echo "  nginx          Build the nginx image"
-    echo "  server_code    Build the server code data image"
-    echo "  uwsgi          Build the uwsgi server image"
+    echo "  all                Build all assets and docker images needed to run the application"
+
+    if is_running_on_raspberry_pi; then
+        echo "  rpi_frontend_code  Build the raspberry pi frontend code data image"
+        echo "  rpi_nginx          Build the raspberry pi nginx image"
+        echo "  rpi_server_code    Build the raspberry pi server code data image"
+        echo "  rpi_uwsgi          Build the raspberry pi uwsgi server image"
+    else
+        echo "  frontend_code      Build the frontend code data image"
+        echo "  nginx              Build the nginx image"
+        echo "  server_code        Build the server code data image"
+        echo "  uwsgi              Build the uwsgi server image"
+    fi
 }
 
 function print_deploy_usage_images_list {
-    echo "  all            Deploy all assets and docker images needed to run the application"
-    echo "  frontend_code  Deploy the frontend code data image"
-    echo "  nginx          Deploy the nginx image"
-    echo "  server_code    Deploy the server code data image"
-    echo "  uwsgi          Deploy the uwsgi server image"
+    echo "  all                Deploy all assets and docker images needed to run the application"
+    echo "  rpi_frontend_code  Deploy the frontend code data image"
+    echo "  rpi_nginx          Deploy the nginx image"
+    echo "  rpi_server_code    Deploy the server code data image"
+    echo "  rpi_uwsgi          Deploy the uwsgi server image"
 }
 
 function print_environment_list {
@@ -73,13 +81,23 @@ SERVER_TESTS_IMAGE_NAME='server_tests'
 UWSGI_IMAGE_NAME='uwsgi'
 WEBPACK_BUILDER_IMAGE_NAME='webpack_builder'
 
+RPI_FRONTEND_CODE_IMAGE_NAME='rpi_frontend_code'
+RPI_NGINX_IMAGE_NAME='rpi_nginx'
+RPI_SERVER_CODE_IMAGE_NAME='rpi_server_code'
+RPI_UWSGI_IMAGE_NAME='rpi_uwsgi'
+RPI_WEBPACK_BUILDER_IMAGE_NAME='rpi_webpack_builder'
+
 
 function get_images_for_build {
-    printf "${FRONTEND_CODE_IMAGE_NAME} ${NGINX_IMAGE_NAME} ${SERVER_CODE_IMAGE_NAME} ${UWSGI_IMAGE_NAME}"
+    if is_running_on_raspberry_pi; then
+        printf "${RPI_FRONTEND_CODE_IMAGE_NAME} ${RPI_NGINX_IMAGE_NAME} ${RPI_SERVER_CODE_IMAGE_NAME} ${RPI_UWSGI_IMAGE_NAME}"
+    else
+        printf "${FRONTEND_CODE_IMAGE_NAME} ${NGINX_IMAGE_NAME} ${SERVER_CODE_IMAGE_NAME} ${UWSGI_IMAGE_NAME}"
+    fi
 }
 
 function get_images_for_deploy {
-    get_images_for_build
+    printf "${RPI_FRONTEND_CODE_IMAGE_NAME} ${RPI_NGINX_IMAGE_NAME} ${RPI_SERVER_CODE_IMAGE_NAME} ${RPI_UWSGI_IMAGE_NAME}"
 }
 
 function get_services_for_deploy {
@@ -88,7 +106,11 @@ function get_services_for_deploy {
 
 function get_images_for_service {
     local service=${1}
-    get_images_for_build
+    if is_running_on_raspberry_pi; then
+        printf "${RPI_WEBPACK_BUILDER_IMAGE_NAME} ${RPI_NGINX_IMAGE_NAME} ${RPI_SERVER_CODE_IMAGE_NAME} ${RPI_UWSGI_IMAGE_NAME}"
+    else
+        printf "${WEBPACK_BUILDER_IMAGE_NAME} ${NGINX_IMAGE_NAME} ${SERVER_CODE_IMAGE_NAME} ${UWSGI_IMAGE_NAME}"
+    fi
 }
 
 function get_dockerfile_path_for_image {
@@ -107,7 +129,12 @@ function get_docker_build_args_for_image {
 
 function get_local_docker_compose_path_for_service {
     local service=${1}
-    printf "docker/docker-compose-LCL.yml"
+
+    if is_running_on_raspberry_pi; then
+        printf "docker/docker-compose-rpi.yml"
+    else
+        printf "docker/docker-compose.yml"
+    fi
 }
 
 function get_deploy_docker_compose_mustache_path_for_service {
@@ -118,49 +145,22 @@ function get_image_version {
     local name=${1}
 
     case ${name} in
-        ${FRONTEND_CODE_IMAGE_NAME})
+        ${RPI_FRONTEND_CODE_IMAGE_NAME})
             jq -r '.version' ${WEB_PACKAGE_JSON_FILE}
         ;;
-        ${NGINX_IMAGE_NAME})
+        ${RPI_NGINX_IMAGE_NAME})
             cat ${NGINX_VERSION_FILE}
         ;;
-        ${SERVER_CODE_IMAGE_NAME})
+        ${RPI_SERVER_CODE_IMAGE_NAME})
             get_setup_py_code_version 'server/setup.py'
         ;;
-        ${UWSGI_IMAGE_NAME})
+        ${RPI_UWSGI_IMAGE_NAME})
             cat ${UWSGI_VERSION_FILE}
         ;;
         *)
             printf 'latest'
         ;;
     esac
-}
-
-
-#
-## Deploy Configuration
-#
-
-function get_bundled_docker_compose_name_for_service {
-    local service=${1}
-    printf "docker-compose-${service}.yml"
-}
-
-function get_bundle_version {
-    printf `get_image_version ${SERVER_CODE_IMAGE_NAME}`
-}
-
-function get_servers_for_env {
-    local environment=${1}
-}
-
-function get_deploy_environments {
-    :
-}
-
-function upload_application_bundle {
-    local environment=${1}
-    local bundle_zip_archive=${2}
 }
 
 
@@ -173,9 +173,9 @@ function pre_build_hook {
     log_block "Pre build hook for image ${image_name}"
 
     case ${image_name} in
-        ${FRONTEND_CODE_IMAGE_NAME})
+        ${FRONTEND_CODE_IMAGE_NAME}|${RPI_FRONTEND_CODE_IMAGE_NAME})
             build_frontend_assets
-            log_line "Built '${name}' assets"
+            log_line "Built '${image_name}' assets"
         ;;
         *)
             log_line 'Nothing to build'
@@ -221,6 +221,9 @@ NGINX_VERSION_FILE="${VERSION_FILE_DIRECTORY}/nginx-image-version.txt"
 WEB_PACKAGE_JSON_FILE='web/package.json'
 SERVER_SETUP_PY_FILE='server/setup.py'
 
+function is_running_on_raspberry_pi {
+    uname -a | grep 'arm' &> /dev/null
+}
 
 function get_setup_py_code_version {
     local setup_py_file_path=${1}
@@ -230,8 +233,16 @@ function get_setup_py_code_version {
 CONTAINER_WEB_ROOT='/var/lib/johnmalcolmnorwood/stupidchess'
 
 function build_frontend_assets {
-    build_image_if_not_exists ${WEBPACK_BUILDER_IMAGE_NAME}
-    local webpack_builder_image_tag=`get_current_image_tag ${WEBPACK_BUILDER_IMAGE_NAME}`
+    local webpack_builder_image_name=''
+
+    if is_running_on_raspberry_pi; then
+        webpack_builder_image_name=${RPI_WEBPACK_BUILDER_IMAGE_NAME}
+    else
+        webpack_builder_image_name=${WEBPACK_BUILDER_IMAGE_NAME}
+    fi
+
+    build_image_if_not_exists ${webpack_builder_image_name}
+    local webpack_builder_image_tag=`get_current_image_tag ${webpack_builder_image_name}`
 
     docker run --rm -it \
         -v "`pwd`/web/src:${CONTAINER_WEB_ROOT}/src" \

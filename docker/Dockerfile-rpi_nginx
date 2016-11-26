@@ -1,5 +1,4 @@
-FROM nginx:1.11
+FROM jnorwood/rpi-nginx:1.11.6
 MAINTAINER John Norwood <norwood.john.m@gmail.com>
 
 COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80

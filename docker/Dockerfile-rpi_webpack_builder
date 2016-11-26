@@ -1,4 +1,4 @@
-FROM node:7.0.0
+FROM hypriot/rpi-node:7.0.0
 MAINTAINER John Norwood <norwood.john.m@gmail.com>
 
 RUN npm install -g webpack

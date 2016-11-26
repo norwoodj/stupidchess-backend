@@ -1,0 +1,33 @@
+version: '2'
+services:
+  mongo:
+    image: 'dhermanns/rpi-mongo:2.6.4'
+    ports:
+      - '27017:27017'
+  nginx:
+    image: 'stupidchess-rpi_nginx:current'
+    entrypoint: 'nginx -c /etc/nginx/local/nginx.conf -g "daemon off;"'
+    volumes:
+      - '../etc/nginx:/etc/nginx/local'
+    volumes_from:
+      - webpack_builder
+      - uwsgi
+    ports:
+      - '80:80'
+  server_code:
+    image: 'stupidchess-rpi_server_code:current'
+  uwsgi:
+    image: 'stupidchess-rpi_uwsgi:current'
+    links:
+      - mongo
+    entrypoint: 'uwsgi --ini /etc/uwsgi/uwsgi.ini:local'
+    volumes:
+      - '../server:/var/lib/johnmalcolmnorwood/stupidchess/server'
+      - '../etc/uwsgi:/etc/uwsgi'
+    volumes_from:
+      - server_code
+  webpack_builder:
+    image: 'stupidchess-rpi_webpack_builder:current'
+    volumes:
+      - '../web/src:/var/lib/johnmalcolmnorwood/stupidchess/src'
+    entrypoint: 'webpack --watch'

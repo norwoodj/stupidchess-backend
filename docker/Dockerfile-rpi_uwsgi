@@ -1,8 +1,6 @@
-FROM python:3.5
+FROM jnorwood/rpi-python:3.5.2
 MAINTAINER John Norwood <norwood.john.m@gmail.com>
 
 RUN pip install uwsgi
 COPY etc/uwsgi/uwsgi.ini /etc/uwsgi/uwsgi.ini
-
 VOLUME /tmp
-ENTRYPOINT ["uwsgi", "--ini", "/etc/uwsgi/uwsgi.ini"]

@@ -13,7 +13,7 @@ class AbstractMoveUpdateService(object):
         raise NotImplementedError()
 
     def write_move_objects(self, moves_to_apply):
-        moves = list(map(self.get_move_for_insert, moves_to_apply))
+        moves = [self.get_move_for_insert(m) for m in moves_to_apply]
         Move.objects.insert(moves)
 
     def apply_game_updates_for_moves(self, moves_to_apply, game):

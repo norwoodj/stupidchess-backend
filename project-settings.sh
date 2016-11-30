@@ -64,10 +64,6 @@ function print_run_local_usage_services_list {
     echo "  stupidchess  Run the stupidchess web server"
 }
 
-function print_run_deployed_usage_services_list {
-    print_run_local_usage_services_list
-}
-
 
 #
 ## Build Configuration
@@ -137,10 +133,6 @@ function get_local_docker_compose_path_for_service {
     fi
 }
 
-function get_deploy_docker_compose_mustache_path_for_service {
-    local service=${1}
-}
-
 function get_image_version {
     local name=${1}
 
@@ -196,18 +188,6 @@ function pre_run_local_hook {
 function post_run_local_hook {
     local service=${1}
     log_block "Post run local hook for service ${service}"
-}
-
-function pre_run_deployed_hook {
-    local service=${1}
-    local environment=${2}
-    log_block "Pre run deployed hook for service ${service} in environment ${environment}"
-}
-
-function post_run_deployed_hook {
-    local service=${1}
-    local environment=${2}
-    log_block "Post run deployed hook for service ${service} in environment ${environment}"
 }
 
 

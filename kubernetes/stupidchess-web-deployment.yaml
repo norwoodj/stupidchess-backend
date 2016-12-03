@@ -1,0 +1,63 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: stupidchess-web-deployment
+  namespace: stupidchess
+spec:
+  template:
+    metadata:
+      labels:
+        role: web-service
+      annotations:
+        pod.beta.kubernetes.io/init-containers: |
+          [
+              {
+                  "name": "stupidchess-frontend-code",
+                  "image": "jnorwood/stupidchess-rpi_frontend_code:0.0.0-dev",
+                  "imagePullPolicy": "Always",
+                  "command": ["bash", "-c", "cp -R /var/lib/johnmalcolmnorwood/stupidchess/dist/* /tmp/frontend-code"],
+                  "volumeMounts": [{
+                      "name": "frontend-code-volume",
+                      "mountPath": "/tmp/frontend-code"
+                  }]
+              }, {
+                  "name": "stupidchess-server-code",
+                  "image": "jnorwood/stupidchess-rpi_server_code:0.0.0-dev",
+                  "imagePullPolicy": "Always",
+                  "command": ["bash", "-c", "cp -R /usr/local/lib/python3.5/site-packages/* /tmp/server-code"],
+                  "volumeMounts": [{
+                      "name": "server-code-volume",
+                      "mountPath": "/tmp/server-code"
+                  }]
+              }
+          ]
+    spec:
+      containers:
+        - name: stupidchess-nginx
+          image: jnorwood/stupidchess-rpi_nginx:0.0.0-dev
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: socket-volume
+              mountPath: '/tmp'
+            - name: frontend-code-volume
+              mountPath: '/var/lib/johnmalcolmnorwood/stupidchess/dist'
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+        - name: stupidchess-uwsgi
+          image: jnorwood/stupidchess-rpi_uwsgi:0.0.0-dev
+          imagePullPolicy: 'Always'
+          volumeMounts:
+            - name: socket-volume
+              mountPath: '/tmp'
+            - name: server-code-volume
+              mountPath: '/usr/local/lib/python3.5/site-packages'
+      volumes:
+        - name: socket-volume
+          emptyDir: {}
+        - name: frontend-code-volume
+          emptyDir: {}
+        - name: server-code-volume
+          emptyDir: {}

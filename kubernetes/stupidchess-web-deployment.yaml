@@ -4,6 +4,7 @@ metadata:
   name: stupidchess-web-deployment
   namespace: stupidchess
 spec:
+  replicas: 2
   template:
     metadata:
       labels:

@@ -15,3 +15,10 @@ spec:
           ports:
             - name: mongo
               containerPort: 27017
+          volumeMounts:
+            - name: stupidchess-mongo-volume
+              mountPath: /data/db
+      volumes:
+          - name: stupidchess-mongo-volume
+            persistentVolumeClaim:
+              claimName: stupidchess-mongo-pv-claim

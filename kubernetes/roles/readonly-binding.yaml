@@ -1,0 +1,12 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1alpha1
+metadata:
+  name: stupidchess-readonly-binding
+  namespace: stupidchess
+subjects:
+  - kind: User
+    name: veintitres-readonly
+roleRef:
+  kind: Role
+  name: stupidchess-readonly
+  apiGroup: ''

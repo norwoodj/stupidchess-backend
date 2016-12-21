@@ -1,4 +1,5 @@
 import React from 'react';
+import Container from 'muicss/lib/react/container';
 
 import {Board} from './board';
 import {CaptureGrid} from './capture-grid';
@@ -205,22 +206,21 @@ class Game extends React.Component {
     }
 
     render() {
-        console.log('Game');
         return (
-            <div>
+            <Container className="game-panel" fluid={true}>
                 <div className="row">
                     <Scoreboard gameState={this.state.gameState}/>
                 </div>
                 <div className="row">
-                    <div id="board-block" className="content-block mui-col-lg-8 mui-col-md-12">
+                    <div id="board-block" className="content-block mui-col-md-7 mui-col-sm-12">
                         <Board clickHandler={this.handleBoardClick.bind(this)} {...this.state}/>
                     </div>
-                    <div className="content-block mui-col-lg-4 mui-col-md-12">
+                    <div className="content-block mui-col-md-4 mui-col-sm-12">
                         <div className="row">
-                            <div className="content-block mui-col-lg-12 mui-col-sm-6">
+                            <div className="content-block mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
                                 <CaptureGrid gameState={this.state.gameState} captureColor="WHITE"/>
                             </div>
-                            <div className="content-block mui-col-lg-12 mui-col-sm-6">
+                            <div className="content-block mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
                                 <CaptureGrid gameState={this.state.gameState} captureColor="BLACK"/>
                             </div>
                         </div>
@@ -234,17 +234,15 @@ class Game extends React.Component {
                             </div>
                         </div>
                         <div className="row">
-                            <div id="color-setup-select" className="content-block mui-col-lg-12 mui-col-sm-6">
-                                <ColorSetupSelect
-                                    gameState={this.state.gameState}
-                                    boardSetupState={this.state.boardSetupState}
-                                    colorChangeHandler={this.handleColorSetupSelect.bind(this)}
-                                />
-                            </div>
+                            <ColorSetupSelect
+                                gameState={this.state.gameState}
+                                boardSetupState={this.state.boardSetupState}
+                                colorChangeHandler={this.handleColorSetupSelect.bind(this)}
+                            />
                         </div>
                     </div>
                 </div>
-            </div>
+            </Container>
         );
     }
 }

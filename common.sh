@@ -16,7 +16,7 @@ function log_block {
 }
 
 function log_line {
-    echo "  + ${@}"
+    echo "  - ${@}"
 }
 
 function log_border {

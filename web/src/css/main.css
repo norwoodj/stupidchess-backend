@@ -29,6 +29,11 @@ buttons {
     transition: left 0.2s;
 }
 
+.skin-element {
+    background: navy;
+    color: yellow;
+}
+
 #sidedrawer {
     position: fixed;
     top: 0;
@@ -53,7 +58,7 @@ buttons {
 }
 
 #footer {
-    height: 160px;
+    height: 120px;
     margin-left: 0px;
     transition: margin-left 0.2s;
 }
@@ -126,13 +131,9 @@ buttons {
 /**
  * Footer CSS
  */
-#footer {
-    background-color: #0288D1;
-    color: #fff;
-}
 
 #footer a {
-    color: #fff;
+    color: white;
     text-decoration: underline;
 }
 

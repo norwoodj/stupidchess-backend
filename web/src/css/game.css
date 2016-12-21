@@ -1,5 +1,11 @@
-#game-panel {
+.game-panel {
     background-image: url("/img/wood.jpg");
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+table {
+    border-collapse: collapse;
 }
 
 .non-board-grid {

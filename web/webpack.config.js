@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: './src/js/game.jsx',
+    entry: './src/js/render-game-page.jsx',
     resolve: {
         extensions: ['', '.js', '.jsx']
     },

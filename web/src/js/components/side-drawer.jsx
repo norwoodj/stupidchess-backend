@@ -10,7 +10,7 @@ class SideDrawer extends React.Component {
                 </div>
                 <div className="mui-divider"></div>
                 {this.props.menuCategories.map(menuCategory =>
-                    <MenuCategory name={menuCategory.category} menuOptions={menuCategory.options}/>
+                    <MenuCategory name={menuCategory.category} key={menuCategory.category} menuOptions={menuCategory.options}/>
                 )}
             </div>
         );

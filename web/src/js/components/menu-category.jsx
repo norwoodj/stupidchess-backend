@@ -8,7 +8,7 @@ class MenuCategory extends React.Component {
                 <li>
                     <strong>{this.props.name}</strong>
                     <ul>{this.props.menuOptions.map((option) =>
-                        <li><a href={option.link}>{option.text}</a></li>
+                        <li key={option.text}><a href={option.link}>{option.text}</a></li>
                     )}</ul>
                 </li>
             </ul>

@@ -5,6 +5,12 @@ from com.johnmalcolmnorwood.stupidchess.models.piece import Piece, COLOR_REGEX
 from com.johnmalcolmnorwood.stupidchess.models.base_document import BaseDocument
 
 
+class GameAuthType:
+    ANONYMOUS = 'ANONYMOUS'
+    SINGLE_PLAYER = 'SINGLE_PLAYER'
+    TWO_PLAYER = 'TWO_PLAYER'
+
+
 class GameType:
     STUPID_CHESS = 'STUPID_CHESS'
     CHESS = 'CHESS'

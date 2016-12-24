@@ -25,16 +25,15 @@ var NORMAL_CHESS_BOARD = [
 ];
 
 var STUPID_CHESS_BLACK_HALF_BOARD = [
-    [null, null,   73,   72,   71,   70, null, null],
-    [null, null,   63,   62,   61,   60, null, null],
-    [null, null,   53,   52,   51,   50, null, null],
-    [null, null,   43,   42,   41,   40, null, null],
-    [null, null,   33,   32,   31,   30, null, null],
-    [null, null,   23,   22,   21,   20, null, null],
-    [null, null,   13,   12,   11,   10, null, null],
-    [null, null,    3,    2,    1,    0, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null]
+    [null,   73,   72,   71,   70, null],
+    [null,   63,   62,   61,   60, null],
+    [null,   53,   52,   51,   50, null],
+    [null,   43,   42,   41,   40, null],
+    [null,   33,   32,   31,   30, null],
+    [null,   23,   22,   21,   20, null],
+    [null,   13,   12,   11,   10, null],
+    [null,    3,    2,    1,    0, null],
+    [null, null, null, null, null, null]
 ];
 
 var STUPID_CHESS_WHITE_HALF_BOARD = [

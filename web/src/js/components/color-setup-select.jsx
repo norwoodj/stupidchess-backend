@@ -10,7 +10,7 @@ class ColorSetupSelect extends React.Component {
         }
 
         return (
-            <div id="color-setup-select" className="content-block mui-col-lg-12 mui-col-sm-6">
+            <div id="color-setup-select" className="content-block mui-col-lg-12 mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
                 <form>
                     <div className="mui-select">
                         <label>Select Color to set up</label>

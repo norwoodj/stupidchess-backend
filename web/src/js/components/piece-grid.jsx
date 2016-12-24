@@ -5,7 +5,7 @@ import {range} from '../util';
 
 class PieceGridSquare extends React.Component {
     getSquareClassName() {
-       return `${this.props.defaultClass} ${this.props.piece != null ? 'piece-square' : ''}`;
+        return `${this.props.defaultClass} ${this.props.piece != null ? 'piece-square' : ''}`;
     }
 
     getPieceImage() {
@@ -54,13 +54,15 @@ class PieceGrid extends React.Component {
         let gridShape = this.getGridShape();
 
         return (
-            <table className="piece-grid non-board-grid">
-                <tbody>{ range(gridShape.rows).map(rowIndex => (
-                    <tr key={rowIndex}>{ range(gridShape.columns).map(cellIndex => (
-                        this.getPieceGridSquareForIndices(rowIndex, cellIndex, gridShape)
-                    ))}</tr>
-                ))}</tbody>
-            </table>
+            <div className="content-block mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
+                <table className="piece-grid non-board-grid">
+                    <tbody>{ range(gridShape.rows).map(rowIndex => (
+                        <tr key={rowIndex}>{ range(gridShape.columns).map(cellIndex => (
+                            this.getPieceGridSquareForIndices(rowIndex, cellIndex, gridShape)
+                        ))}</tr>
+                    ))}</tbody>
+                </table>
+            </div>
         );
     }
 }

@@ -212,28 +212,18 @@ class Game extends React.Component {
                     <Scoreboard gameState={this.state.gameState}/>
                 </div>
                 <div className="row">
-                    <div id="board-block" className="content-block mui-col-md-7 mui-col-sm-12">
-                        <Board clickHandler={this.handleBoardClick.bind(this)} {...this.state}/>
-                    </div>
+                    <Board clickHandler={this.handleBoardClick.bind(this)} {...this.state}/>
                     <div className="content-block mui-col-md-4 mui-col-sm-12">
                         <div className="row">
-                            <div className="content-block mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
-                                <CaptureGrid gameState={this.state.gameState} captureColor="WHITE"/>
-                            </div>
-                            <div className="content-block mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
-                                <CaptureGrid gameState={this.state.gameState} captureColor="BLACK"/>
-                            </div>
+                            <CaptureGrid gameState={this.state.gameState} captureColor="WHITE"/>
+                            <CaptureGrid gameState={this.state.gameState} captureColor="BLACK"/>
                         </div>
                         <div className="row">
-                            <div className="content-block mui-col-lg-12 mui-col-sm-6">
-                                <PieceSelectGrid
-                                    gameState={this.state.gameState}
-                                    boardSetupState={this.state.boardSetupState}
-                                    pieceSelectionCallback={this.handlePlacePieceSelection.bind(this)}
-                                />
-                            </div>
-                        </div>
-                        <div className="row">
+                            <PieceSelectGrid
+                                gameState={this.state.gameState}
+                                boardSetupState={this.state.boardSetupState}
+                                pieceSelectionCallback={this.handlePlacePieceSelection.bind(this)}
+                            />
                             <ColorSetupSelect
                                 gameState={this.state.gameState}
                                 boardSetupState={this.state.boardSetupState}

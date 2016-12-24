@@ -29,9 +29,18 @@ buttons {
     transition: left 0.2s;
 }
 
+#react-root {
+    height: 100%;
+}
+
 .skin-element {
     background: navy;
+    color: white;
+}
+
+#footer a {
     color: yellow;
+    text-decoration: underline;
 }
 
 #sidedrawer {
@@ -47,14 +56,14 @@ buttons {
 }
 
 #content-wrapper {
-    min-height: 100%;
+    height: 100%;
     overflow-x: hidden;
-    margin-left: 0px;
+    margin-left: 0;
     transition: margin-left 0.2s;
 
     /* sticky bottom */
-    margin-bottom: -160px;
-    padding-bottom: 160px;
+    margin-bottom: -120px;
+    padding-bottom: 120px;
 }
 
 #footer {
@@ -120,21 +129,14 @@ buttons {
     text-decoration: none;
 }
 
-.color-change {
-    animation: colorRotate 30s linear 0s infinite;
-}
-
-.mui-btn {
-    color: #ffffff
-}
-
-/**
- * Footer CSS
- */
-
-#footer a {
+.submit-button {
+    background-color: navy;
     color: white;
-    text-decoration: underline;
+}
+
+.submit-button:hover {
+    background-color: navy;
+    color: yellow;
 }
 
 /**

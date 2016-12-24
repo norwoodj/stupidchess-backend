@@ -3,13 +3,16 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: './src/js/render-game-page.jsx',
+    entry: {
+        game: './src/js/render-game-page.jsx',
+        createGame: './src/js/render-game-form.jsx'
+    },
     resolve: {
         extensions: ['', '.js', '.jsx']
     },
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'js/bundle.js'
+        filename: 'js/[name].bundle.js'
     },
     plugins: [
         new CopyWebpackPlugin([

@@ -59,19 +59,21 @@ class Board extends React.Component {
         let squareIndex = 0;
 
         return (
-            <table id="board" className="piece-grid">
-                <tbody>{ boardShape.map((row, rowIndex) => (
-                    <tr key={rowIndex}>{ row.map(square => (
-                        <td key={squareIndex++}
-                            className={this.getClassForSquare(square)}
-                            style={this.getStyleForSquare(square)}
-                            onClick={() => this.props.clickHandler(square)}
-                        >
-                            <div>{this.getPieceImageElementForSquare(square)}</div>
-                        </td>
-                    ))}</tr>
-                ))}</tbody>
-            </table>
+            <div id="board-block" className="content-block mui-col-md-7 mui-col-sm-12">
+                <table id="board" className="piece-grid">
+                    <tbody>{ boardShape.map((row, rowIndex) => (
+                        <tr key={rowIndex}>{ row.map(square => (
+                            <td key={squareIndex++}
+                                className={this.getClassForSquare(square)}
+                                style={this.getStyleForSquare(square)}
+                                onClick={() => this.props.clickHandler(square)}
+                            >
+                                <div>{this.getPieceImageElementForSquare(square)}</div>
+                            </td>
+                        ))}</tr>
+                    ))}</tbody>
+                </table>
+            </div>
         );
     }
 }

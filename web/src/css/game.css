@@ -1,7 +1,12 @@
 .game-panel {
     background-image: url("/img/wood.jpg");
+    min-height: 100%;
     padding-top: 30px;
     padding-bottom: 30px;
+}
+
+#game-page {
+    height: 100%;
 }
 
 table {

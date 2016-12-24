@@ -1,10 +1,10 @@
 #!/usr/local/bin/python
-import json
-from flask import Blueprint, request, Response, current_app, jsonify
+from flask import Blueprint, request, current_app, jsonify
 from com.johnmalcolmnorwood.stupidchess.factories.game_factory import get_new_game_for_game_type
 from com.johnmalcolmnorwood.stupidchess.models.move import Move
-from com.johnmalcolmnorwood.stupidchess.models.game import Game
+from com.johnmalcolmnorwood.stupidchess.models.game import Game, GameType, GameAuthType
 from com.johnmalcolmnorwood.stupidchess.utils import make_api_response, get_game_dict
+
 
 game_blueprint = Blueprint('game', __name__)
 
@@ -29,6 +29,24 @@ def post_game():
 def get_games():
     games = Game.objects.exclude('createTimestamp', 'lastUpdateTimestamp')
     return jsonify(list(map(get_game_dict, games)))
+
+
+@game_blueprint.route('/types')
+def get_game_types():
+    return jsonify([
+        GameType.STUPID_CHESS,
+        GameType.CHESS,
+        GameType.CHECKERS,
+    ])
+
+
+@game_blueprint.route('/auth-types')
+def get_game_auth_types():
+    return jsonify([
+       GameAuthType.ANONYMOUS,
+       GameAuthType.SINGLE_PLAYER,
+       GameAuthType.TWO_PLAYER,
+    ])
 
 
 @game_blueprint.route('/<game_uuid>')

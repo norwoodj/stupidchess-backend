@@ -15,6 +15,7 @@ import {AmbiguousMoveState} from '../models/ambiguous-move-state';
 
 import GameService from '../services/game-service';
 import {getMoveObjectForPieceMove, getMoveObjectForPlacePiece} from '../factories/move-factory';
+import {handleUnauthorized} from '../util';
 
 
 class Game extends React.Component {
@@ -51,25 +52,28 @@ class Game extends React.Component {
     }
 
     retrieveNewGameState() {
-        this.gameService.getGameByUuid(this.gameUuid).then((gameResponse) => {
-            if (gameResponse.lastMove != this.gameState.lastMove) {
-                this.gameState.updateFromApiResponse(gameResponse);
-                this.squareSelectionState.clear();
-                this.ambiguousMoveState.clear();
+        this.gameService.getGameByUuid(this.gameUuid).then(
+            (gameResponse) => {
+                if (gameResponse.lastMove != this.gameState.lastMove) {
+                    this.gameState.updateFromApiResponse(gameResponse);
+                    this.squareSelectionState.clear();
+                    this.ambiguousMoveState.clear();
 
-                if (this.gameState.inBoardSetupMode()) {
-                    this.boardSetupState.updateFromColorsSettingUp(this.gameState.getColorsSettingUp());
+                    if (this.gameState.inBoardSetupMode()) {
+                        this.boardSetupState.updateFromColorsSettingUp(this.gameState.getColorsSettingUp());
+                    }
+
+                    this.setState({
+                        gameState: this.gameState,
+                        boardSetupState: this.boardSetupState,
+                        displayState: this.displayState,
+                        squareSelectionState: this.squareSelectionState,
+                        ambiguousMoveState: this.ambiguousMoveState
+                    })
                 }
-
-                this.setState({
-                    gameState: this.gameState,
-                    boardSetupState: this.boardSetupState,
-                    displayState: this.displayState,
-                    squareSelectionState: this.squareSelectionState,
-                    ambiguousMoveState: this.ambiguousMoveState
-                })
-            }
-        }, (error) => console.log(error));
+            },
+            handleUnauthorized
+        );
     }
 
     handleColorSetupSelect(colorSelected) {
@@ -154,7 +158,10 @@ class Game extends React.Component {
             square
         );
 
-        this.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
+        this.gameService.makeMove(this.gameUuid, movePieceMove).then(
+            () => this.retrieveNewGameState(),
+            handleUnauthorized
+        );
     }
 
     handleClickOnPossibleMoveSquare(square) {
@@ -163,7 +170,10 @@ class Game extends React.Component {
             this.setState({ambiguousMoveState: this.ambiguousMoveState})
         } else {
             var movePieceMove = getMoveObjectForPieceMove(this.squareSelectionState.getSelected(), square);
-            this.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
+            this.gameService.makeMove(this.gameUuid, movePieceMove).then(
+                () => this.retrieveNewGameState(),
+                handleUnauthorized
+            );
         }
     }
 
@@ -173,27 +183,30 @@ class Game extends React.Component {
             return;
         }
 
-        this.gameService.getPossibleMoves(this.gameUuid, square).then((possibleMoveResponse) => {
-            possibleMoveResponse.possibleMoves.forEach(possibleMove => {
-                this.squareSelectionState.addPossibleMove(possibleMove.destinationSquare);
+        this.gameService.getPossibleMoves(this.gameUuid, square).then(
+            (possibleMoveResponse) => {
+                possibleMoveResponse.possibleMoves.forEach(possibleMove => {
+                    this.squareSelectionState.addPossibleMove(possibleMove.destinationSquare);
 
-                if (possibleMove.hasOwnProperty('captures')) {
-                    possibleMove.captures.forEach(possibleCapture => {
-                        this.squareSelectionState.addPossibleCapture(possibleCapture.square);
-                    });
-                }
-            });
+                    if (possibleMove.hasOwnProperty('captures')) {
+                        possibleMove.captures.forEach(possibleCapture => {
+                            this.squareSelectionState.addPossibleCapture(possibleCapture.square);
+                        });
+                    }
+                });
 
-            possibleMoveResponse.ambiguousMoves.forEach(ambiguousMove => {
-                this.ambiguousMoveState.addAmbiguousMove(
-                    ambiguousMove.destinationSquare,
-                    ambiguousMove.disambiguatingCaptures
-                );
-            });
+                possibleMoveResponse.ambiguousMoves.forEach(ambiguousMove => {
+                    this.ambiguousMoveState.addAmbiguousMove(
+                        ambiguousMove.destinationSquare,
+                        ambiguousMove.disambiguatingCaptures
+                    );
+                });
 
-            this.squareSelectionState.setSelected(square);
-            this.setState({squareSelectionState: this.squareSelectionState})
-        });
+                this.squareSelectionState.setSelected(square);
+                this.setState({squareSelectionState: this.squareSelectionState})
+            },
+            handleUnauthorized
+        );
     }
 
     handlePlacePieceSelection(piece) {
@@ -202,7 +215,10 @@ class Game extends React.Component {
         }
 
         var placeMove = getMoveObjectForPlacePiece(this.squareSelectionState.getSelected(), piece);
-        this.gameService.makeMove(this.gameUuid, placeMove).then(() => this.retrieveNewGameState());
+        this.gameService.makeMove(this.gameUuid, placeMove).then(
+            () => this.retrieveNewGameState(),
+            handleUnauthorized
+        );
     }
 
     render() {

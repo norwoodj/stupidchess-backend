@@ -3,10 +3,6 @@ export default class GameService {
         this.http = http;
     }
 
-    getGames() {
-        return [];
-    }
-
     createGame(createRequest) {
         return new Promise((resolve, reject) => {
             this.http.ajax({

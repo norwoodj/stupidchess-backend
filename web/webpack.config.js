@@ -5,7 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
     entry: {
         game: './src/js/render-game-page.jsx',
-        createGame: './src/js/render-game-form.jsx'
+        createGame: './src/js/render-game-form.jsx',
+        login: './src/js/render-login-form.jsx'
     },
     resolve: {
         extensions: ['', '.js', '.jsx']

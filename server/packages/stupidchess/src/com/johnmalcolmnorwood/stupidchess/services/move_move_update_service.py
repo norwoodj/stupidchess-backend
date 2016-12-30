@@ -1,5 +1,5 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.exceptions.illegal_move_exception import IllegalMoveException
+from com.johnmalcolmnorwood.stupidchess.exceptions import IllegalMoveException
 from com.johnmalcolmnorwood.stupidchess.models.move import MoveType, Move
 from com.johnmalcolmnorwood.stupidchess.models.game import Game
 from com.johnmalcolmnorwood.stupidchess.models.piece import Color, FirstMove, Piece

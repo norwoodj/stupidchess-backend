@@ -8,7 +8,7 @@ services:
     image: 'stupidchess-rpi_nginx:current'
     entrypoint: 'nginx -c /etc/nginx/local/nginx.conf -g "daemon off;"'
     volumes:
-      - '../etc/nginx:/etc/nginx/local'
+      - '../etc/nginx:/etc/nginx/local:ro'
     volumes_from:
       - webpack_builder
       - uwsgi
@@ -22,12 +22,13 @@ services:
       - mongo
     entrypoint: 'uwsgi --ini /etc/uwsgi/uwsgi.ini:local'
     volumes:
-      - '../server:/var/lib/johnmalcolmnorwood/stupidchess/server'
-      - '../etc/uwsgi:/etc/uwsgi'
+      - '../server/packages/stupidchess/src/com:/var/lib/johnmalcolmnorwood/stupidchess/server/com'
+      - '../server/packages/auth/src/com/johnmalcolmnorwood/auth:/var/lib/johnmalcolmnorwood/stupidchess/server/com/johnmalcolmnorwood/auth:ro'
+      - '../etc/uwsgi:/etc/uwsgi:ro'
     volumes_from:
       - server_code
   webpack_builder:
     image: 'stupidchess-rpi_webpack_builder:current'
     volumes:
-      - '../web/src:/var/lib/johnmalcolmnorwood/stupidchess/src'
+      - '../web/src:/var/lib/johnmalcolmnorwood/stupidchess/src:ro'
     entrypoint: 'webpack --watch'

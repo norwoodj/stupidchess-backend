@@ -129,16 +129,6 @@ buttons {
     text-decoration: none;
 }
 
-.submit-button {
-    background-color: navy;
-    color: white;
-}
-
-.submit-button:hover {
-    background-color: navy;
-    color: yellow;
-}
-
 /**
  * Side drawer CSS
  */

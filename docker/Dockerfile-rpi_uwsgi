@@ -4,9 +4,11 @@ MAINTAINER John Norwood <norwood.john.m@gmail.com>
 RUN pip install uwsgi
 COPY etc/uwsgi/uwsgi.ini /etc/uwsgi/uwsgi.ini
 
-COPY server /var/lib/johnmalcolmnorwood/stupidchess/server
+COPY server/packages /var/lib/johnmalcolmnorwood/stupidchess/server
 WORKDIR /var/lib/johnmalcolmnorwood/stupidchess/server
-RUN python setup.py install
+
+RUN cd auth && python setup.py install
+RUN cd stupidchess && python setup.py install
 
 VOLUME /tmp
 ENTRYPOINT ["uwsgi", "--ini", "/etc/uwsgi/uwsgi.ini"]

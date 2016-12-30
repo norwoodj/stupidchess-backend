@@ -3,11 +3,11 @@ from mongoengine import StringField, IntField, EmbeddedDocumentListField, ListFi
 from com.johnmalcolmnorwood.stupidchess.models.dictable import Dictable
 from com.johnmalcolmnorwood.stupidchess.models.piece import Piece, COLOR_REGEX
 from com.johnmalcolmnorwood.stupidchess.models.base_document import BaseDocument
+from com.johnmalcolmnorwood.stupidchess.models import UUID_REGEX
 
 
 class GameAuthType:
-    ANONYMOUS = 'ANONYMOUS'
-    SINGLE_PLAYER = 'SINGLE_PLAYER'
+    ONE_PLAYER = 'ONE_PLAYER'
     TWO_PLAYER = 'TWO_PLAYER'
 
 
@@ -32,3 +32,5 @@ class Game(BaseDocument, Dictable):
     currentTurn = StringField(required=True, regex=COLOR_REGEX)
     possiblePiecesToBePlaced = EmbeddedDocumentListField(document_type=Piece, default=list)
     squaresToBePlaced = ListField(field=IntField(), default=list)
+    blackPlayerUuid = StringField(required=True, regex=UUID_REGEX)
+    whitePlayerUuid = StringField(required=True, regex=UUID_REGEX)

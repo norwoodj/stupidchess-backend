@@ -1,0 +1,17 @@
+.submit-button {
+    background-color: navy;
+    color: white;
+}
+
+.submit-button:hover {
+    background-color: navy;
+    color: yellow;
+}
+
+#input-form {
+    height: 100%;
+}
+
+.form-container {
+    padding-top: 30px;
+}

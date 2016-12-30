@@ -3,10 +3,6 @@ from flask import jsonify
 from com.johnmalcolmnorwood.stupidchess.utils.game_rules import get_game_scores
 
 
-def make_api_response(status, message, **kwargs):
-    return jsonify({'message': message, **kwargs}), status
-
-
 def get_game_dict(game):
     game_dict = game.to_dict(
         'type',

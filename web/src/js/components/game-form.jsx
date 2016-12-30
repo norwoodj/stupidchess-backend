@@ -9,7 +9,7 @@ import Container from 'muicss/lib/react/container';
 
 import GameService from '../services/game-service';
 import {GameAuthType} from '../constants';
-import {toTitleCase} from '../util';
+import {toTitleCase, handleUnauthorized} from '../util';
 
 
 class GameForm extends React.Component {
@@ -67,7 +67,7 @@ class GameForm extends React.Component {
 
         this.gameService.createGame(createGameRequest).then(
             response => window.location.replace(`/game.html?gameuuid=${response.gameUuid}`),
-            error => console.log(error)
+            handleUnauthorized
         );
     }
 
@@ -87,9 +87,9 @@ class GameForm extends React.Component {
 
     render() {
         return (
-            <Container className="game-form-container">
+            <Container className="form-container">
                 <Panel>
-                    <Form>
+                    <Form id="input-form">
                         <legend>Create New Game</legend>
                         <Select onChange={this.updateGameType.bind(this)}>{ this.state.gameTypes.map(
                             gameType => <Option key={gameType} value={gameType} label={toTitleCase(gameType)}/>

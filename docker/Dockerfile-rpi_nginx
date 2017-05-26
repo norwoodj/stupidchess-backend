@@ -1,4 +1,29 @@
+##
+# This stage of the build installs webpack and npm, and then builds a public dist archive out of our frontend code
+##
+FROM jnorwood/rpi-node:7.10.0
+
+MAINTAINER John Norwood <norwood.john.m@gmail.com>
+
+RUN npm install -g webpack
+
+WORKDIR /var/lib/johnmalcolmnorwood/stupidchess
+COPY web/package.json .
+RUN npm install
+
+COPY web/.babelrc .
+COPY web/.eslintrc .
+COPY web/webpack.config.js .
+RUN webpack -p --progress
+
+
+##
+# This stage copies the generated dist archive from the previous stage of the build into the application home, and adds the
+# nginx config file
+##
 FROM jnorwood/rpi-nginx:1.11.6
 MAINTAINER John Norwood <norwood.john.m@gmail.com>
 
+WORKDIR /var/lib/johnmalcolmnorwood/stupidchess
+COPY --from=0 /var/lib/johnmalcolmnorwood/stupidchess/dist .
 COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf

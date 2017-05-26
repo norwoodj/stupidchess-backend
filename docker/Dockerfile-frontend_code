@@ -1,5 +1,0 @@
-FROM node:6.5
-MAINTAINER John Norwood <norwood.john.m@gmail.com>
-
-COPY web/dist /var/lib/johnmalcolmnorwood/stupidchess/dist
-VOLUME /var/lib/johnmalcolmnorwood/stupidchess/dist

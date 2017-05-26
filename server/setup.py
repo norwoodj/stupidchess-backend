@@ -8,7 +8,9 @@ setup(
     packages=find_packages('src'),
     zip_safe=False,
     entry_points={
-        'console_scripts': []
+        'console_scripts': [
+            'create_sc_set_up_game=com.johnmalcolmnorwood.stupidchess.scripts:main',
+        ],
     },
     install_requires=[
         'flask-mongoengine',

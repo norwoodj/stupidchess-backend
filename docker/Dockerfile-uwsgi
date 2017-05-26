@@ -1,8 +1,16 @@
-FROM python:3.5
+FROM python:3.6-alpine
 MAINTAINER John Norwood <norwood.john.m@gmail.com>
 
-RUN pip install uwsgi
+RUN apk add --no-cache \
+        build-base \
+        linux-headers \
+    && pip install uwsgi
+
 COPY etc/uwsgi/uwsgi.ini /etc/uwsgi/uwsgi.ini
+
+COPY server /var/lib/johnmalcolmnorwood/stupidchess/server
+WORKDIR /var/lib/johnmalcolmnorwood/stupidchess/server
+RUN python setup.py install
 
 VOLUME /tmp
 ENTRYPOINT ["uwsgi", "--ini", "/etc/uwsgi/uwsgi.ini"]

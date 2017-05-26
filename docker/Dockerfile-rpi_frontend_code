@@ -1,5 +1,0 @@
-FROM jnorwood/rpi-nginx:1.11.6
-MAINTAINER John Norwood <norwood.john.m@gmail.com>
-
-COPY web/dist /var/lib/johnmalcolmnorwood/stupidchess/dist
-VOLUME /var/lib/johnmalcolmnorwood/stupidchess/dist

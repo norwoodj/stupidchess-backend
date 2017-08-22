@@ -5,3 +5,4 @@ __pycache__
 server/build
 *.egg-info
 *.iml
+*.tgz

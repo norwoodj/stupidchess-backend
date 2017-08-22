@@ -3,6 +3,7 @@
 [[ -n "${_DOCKER_SETTINGS_SH:+_}" ]] && return || readonly _DOCKER_SETTINGS_SH=1
 
 source ${SCRIPT_DIR}/settings/common.sh
+source ${SCRIPT_DIR}/utilities/rpi-utilities.sh
 
 ##
 # Environment variables that control how images are named/deployed/built etc.
@@ -18,15 +19,17 @@ source ${SCRIPT_DIR}/settings/common.sh
 ##
 # List here all of the images built/deployed/used by the project
 ##
-readonly NGINX_IMAGE_NAME='nginx'
-readonly SERVER_CODE_IMAGE_NAME='server_code'
-readonly SERVER_TESTS_IMAGE_NAME='server_tests'
-readonly UWSGI_IMAGE_NAME='uwsgi'
+readonly _RPI_SERVER_CODE_IMAGE_NAME='rpi_server_code'
+readonly _RPI_NGINX_IMAGE_NAME='rpi_nginx'
+readonly _RPI_UWSGI_IMAGE_NAME='rpi_uwsgi'
 
-readonly RPI_NGINX_IMAGE_NAME='rpi_nginx'
-readonly RPI_SERVER_CODE_IMAGE_NAME='rpi_server_code'
-readonly RPI_UWSGI_IMAGE_NAME='rpi_uwsgi'
+readonly _X86_SERVER_CODE_IMAGE_NAME='server_code'
+readonly _X86_NGINX_IMAGE_NAME='nginx'
+readonly _X86_UWSGI_IMAGE_NAME='uwsgi'
 
+readonly SERVER_CODE_IMAGE_NAME=$(is_running_on_raspberry_pi && echo "${_RPI_SERVER_CODE_IMAGE_NAME}" || echo "${_X86_SERVER_CODE_IMAGE_NAME}")
+readonly NGINX_IMAGE_NAME=$(is_running_on_raspberry_pi && echo "${_RPI_NGINX_IMAGE_NAME}" || echo "${_X86_NGINX_IMAGE_NAME}")
+readonly UWSGI_IMAGE_NAME=$(is_running_on_raspberry_pi && echo "${_RPI_UWSGI_IMAGE_NAME}" || echo "${_X86_UWSGI_IMAGE_NAME}")
 
 readonly _DOCKER_CONFIG=$(cat <<EOF
 {
@@ -76,7 +79,8 @@ function get_image_name {
 
 function get_dockerfile_path_for_image {
     local image=${1}
-    echo "docker/Dockerfile-${image}"
+    local folder_name=$(is_running_on_raspberry_pi && echo "rpi" || echo "x86")
+    echo "docker/${folder_name}/Dockerfile-${image}"
 }
 
 function get_docker_build_context_path_for_image {
@@ -86,7 +90,7 @@ function get_docker_build_context_path_for_image {
 
 function get_image_version {
     local image=${1}
-    cat "versions/${image}.txt"
+    cat "version.txt"
 }
 
 function get_docker_registry_name {

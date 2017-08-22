@@ -7,9 +7,14 @@ services:
 
   nginx:
     image: stupidchess-nginx:current
-    entrypoint: 'nginx -c /etc/nginx/local/nginx.conf -g "daemon off;"'
+    entrypoint:
+      - nginx
+      - -c
+      - /etc/nginx/local/nginx.conf
+      - -g
+      - daemon off;
     volumes:
-      - ../etc/nginx:/etc/nginx/local
+      - ../../etc/nginx:/etc/nginx/local
     volumes_from:
       - uwsgi
     ports:
@@ -21,5 +26,5 @@ services:
       - mongo
     entrypoint: uwsgi --ini /etc/uwsgi/uwsgi.ini:local
     volumes:
-      - ../server:/var/lib/johnmalcolmnorwood/stupidchess/server
-      - ../etc/uwsgi:/etc/uwsgi
+      - ../../server/packages:/var/lib/johnmalcolmnorwood/stupidchess/server:ro
+      - ../../etc/uwsgi:/etc/uwsgi:ro

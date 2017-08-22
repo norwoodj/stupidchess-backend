@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR="$(cd `dirname ${BASH_SOURCE[0]}` && pwd -P)"
-source ${SCRIPT_DIR}/settings/build-and-deploy-images-settings.sh
+source ${SCRIPT_DIR}/settings/docker-settings.sh
+source ${SCRIPT_DIR}/utilities/command-line-utilities.sh
+source ${SCRIPT_DIR}/utilities/docker-utilities.sh
+source ${SCRIPT_DIR}/utilities/job-utilities.sh
 
 
 function usage {

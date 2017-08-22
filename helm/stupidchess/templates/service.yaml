@@ -2,10 +2,10 @@ kind: Service
 apiVersion: v1
 metadata:
   name: stupidchess-web-service
-  namespace: stupidchess
 spec:
   selector:
     role: web-service
+
   ports:
     - name: http
       port: 80

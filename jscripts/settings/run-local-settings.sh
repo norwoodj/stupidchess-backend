@@ -5,6 +5,7 @@
 source ${SCRIPT_DIR}/settings/application-settings.sh
 source ${SCRIPT_DIR}/utilities/command-line-utilities.sh
 source ${SCRIPT_DIR}/utilities/docker-utilities.sh
+source ${SCRIPT_DIR}/utilities/rpi-utilities.sh
 
 ##
 # Run Local Configuration
@@ -35,7 +36,8 @@ function handle_additional_options {
 
 function get_local_docker_compose_path_for_app {
     local app=${1}
-    echo "docker/docker-compose.yaml"
+    local folder_name=$(is_running_on_raspberry_pi && echo "x86" || echo "rpi")
+    echo "docker/${folder_name}/docker-compose.yaml"
 }
 
 

@@ -18,8 +18,6 @@ function getQueryParam(parameter) {
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
-LOCATION_REGEX = new RegExp('http(s){0,1}://([^/])*/' + parameter + '=([^&]*)
-
 function handleUnauthorized(error) {
     if (error.status == 401) {
         window.location.replace(`/login.html?next=${encodeURIComponent(window.location.pathname)}`);

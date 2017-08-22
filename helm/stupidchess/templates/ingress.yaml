@@ -2,15 +2,7 @@ kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
   name: stupidchess-ingress
-  namespace: stupidchess
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    kubernetes.io/tls-acme: "true"
 spec:
-  tls:
-    - secretName: stupidchess-tls
-      hosts:
-        - stupidchess.johnmalcolmnorwood.com
   rules:
     - host: stupidchess.johnmalcolmnorwood.com
       http:

@@ -1,0 +1,32 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: stupidchess-web-deployment
+spec:
+  replicas: {{ .Values.stupidchessWebDeploymentReplicas }}
+  template:
+    metadata:
+      labels:
+        role: web-service
+    spec:
+      containers:
+        - name: stupidchess-nginx
+          image: {{ .Values.stupidchessNginxImageName }}:{{ .Values.stupidchessImageVersion }}
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: socket-volume
+              mountPath: /tmp
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+        - name: stupidchess-uwsgi
+          image: {{ .Values.stupidchessUwsgiImageName }}:{{ .Values.stupidchessImageVersion }}
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: socket-volume
+              mountPath: /tmp
+      volumes:
+        - name: socket-volume
+          emptyDir: {}

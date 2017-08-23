@@ -26,5 +26,5 @@ services:
       - mongo
     entrypoint: uwsgi --ini /etc/uwsgi/uwsgi.ini:local
     volumes:
-      - ../../server/packages:/var/lib/johnmalcolmnorwood/stupidchess/server:ro
+      - ../../server/packages/stupidchess/src:/var/lib/johnmalcolmnorwood/stupidchess/server/src:ro
       - ../../etc/uwsgi:/etc/uwsgi:ro

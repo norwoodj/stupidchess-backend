@@ -11,8 +11,17 @@ mongo:
     persistentVolumeClaimStorageRequest: 2Gi
 
 ##
-# Web service settings
+# Web Service settings
+##
+web_service:
+  ingressName: stupidchess-ingress
+  ingressHostname: stupidchess.johnmalcolmnorwood.com
+  serviceName: stupidchess-web-service
+
+##
+# Stupidchess settings
 ##
 stupidchessNginxImageName: jnorwood/stupidchess-rpi_nginx
 stupidchessUwsgiImageName: jnorwood/stupidchess-rpi_uwsgi
 stupidchessWebDeploymentReplicas: 2
+stupidchessHealthCheckEndpoint: /api/health

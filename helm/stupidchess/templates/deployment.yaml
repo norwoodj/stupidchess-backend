@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: stupidchess-nginx
-          image: {{ .Values.stupidchessNginxImageName }}:{{ .Values.stupidchessImageVersion }}
+          image: {{ .Values.stupidchessNginxImageName }}:{{ .Chart.Version }}
           imagePullPolicy: Always
           volumeMounts:
             - name: socket-volume
@@ -22,7 +22,7 @@ spec:
             - name: https
               containerPort: 443
         - name: stupidchess-uwsgi
-          image: {{ .Values.stupidchessUwsgiImageName }}:{{ .Values.stupidchessImageVersion }}
+          image: {{ .Values.stupidchessUwsgiImageName }}:{{ .Chart.Version }}
           imagePullPolicy: Always
           volumeMounts:
             - name: socket-volume

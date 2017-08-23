@@ -2,12 +2,20 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: stupidchess-web-deployment
+  labels:
+{{- range .Values.web_service.simple_service.deploymentLabels }}
+    {{ .key }}: {{ .value }}
+{{- end }}
+
 spec:
   replicas: {{ .Values.stupidchessWebDeploymentReplicas }}
   template:
     metadata:
       labels:
-        role: web-service
+{{- range .Values.web_service.simple_service.deploymentLabels }}
+        {{ .key }}: {{ .value }}
+{{- end }}
+
     spec:
       containers:
         - name: stupidchess-nginx
@@ -19,14 +27,19 @@ spec:
           ports:
             - name: http
               containerPort: 80
-            - name: https
-              containerPort: 443
+          livenessProbe: &healthProbe
+            httpGet:
+              path: {{ .Values.stupidchessHealthCheckEndpoint }}
+              port: http
+          readinessProbe: *healthProbe
+          
         - name: stupidchess-uwsgi
           image: {{ .Values.stupidchessUwsgiImageName }}:{{ .Chart.Version }}
           imagePullPolicy: Always
           volumeMounts:
             - name: socket-volume
               mountPath: /tmp
+
       volumes:
         - name: socket-volume
           emptyDir: {}

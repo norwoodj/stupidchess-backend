@@ -1,0 +1,86 @@
+.game-panel {
+    background-image: url("/img/wood.jpg");
+    min-height: 100%;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+#game-page {
+    height: 100%;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.non-board-grid {
+    border: solid white 1px;
+}
+
+.piece-grid {
+    width: 55%;
+    margin: 0 auto;
+}
+
+.square {
+    border: 1px solid black;
+}
+
+.content-block {
+    margin-top: 30px;
+}
+
+#color-setup-select {
+    background-color: white;
+}
+
+.piece-grid td {
+    width: 12.5%;
+    position: relative;
+}
+
+.piece-grid td:not(.piece-square) :after {
+    content: '';
+    display: block;
+    margin-top: 100%;
+}
+
+.piece-grid .capture {
+    background-color: green;
+}
+
+.piece-grid .piece-selection {
+    background-color: green;
+}
+
+.piece {
+    width: 100%;
+    height: 100%;
+}
+
+#scoreboard {
+    width: 100%;
+    margin: 0 auto;
+    font: 20px "Arial Black", Gadget, sans-serif;
+    table-layout: fixed;
+    max-width: 300px;
+}
+
+#scoreboard td {
+    border: white solid 1px;
+    padding-left: 10px;
+}
+
+#scoreboard .score-name-cell {
+    background-color: black;
+    color: white;
+}
+
+#scoreboard .score-score-cell {
+    background-color: blue;
+    color: yellow;
+}
+
+#scoreboard .current-turn {
+    border: yellow solid 3px;
+}

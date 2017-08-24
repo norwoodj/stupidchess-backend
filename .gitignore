@@ -6,3 +6,5 @@ server/build
 *.egg-info
 *.iml
 *.tgz
+jscripts/*.sh
+jscripts/utilities/*.sh

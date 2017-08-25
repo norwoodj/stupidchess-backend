@@ -88,6 +88,10 @@ function get_docker_build_context_path_for_image {
     echo "."
 }
 
+function get_additional_docker_build_args {
+    local image=${1}
+}
+
 function get_image_version {
     local image=${1}
     cat "version.txt"

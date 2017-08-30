@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   mongo:
     image: dhermanns/rpi-mongo:2.6.4
@@ -14,7 +14,7 @@ services:
       - -g
       - daemon off;
     volumes:
-      - ../etc/nginx:/etc/nginx/local:ro
+      - ../../etc/nginx:/etc/nginx/local:ro
     volumes_from:
       - uwsgi
     ports:
@@ -26,8 +26,5 @@ services:
       - mongo
     entrypoint: uwsgi --ini /etc/uwsgi/uwsgi.ini:local
     volumes:
-      - ../server/packages/stupidchess/src/com/:/var/lib/johnmalcolmnorwood/stupidchess/server/com
-      - ../server/packages/auth/src/com/johnmalcolmnorwood/auth:/var/lib/johnmalcolmnorwood/stupidchess/server/com/johnmalcolmnorwood/auth:ro
-      - ../etc/uwsgi:/etc/uwsgi:ro
-    volumes_from:
-      - server_code
+      - ../../server/packages/stupidchess/src:/var/lib/johnmalcolmnorwood/stupidchess/server/src:ro
+      - ../../etc/uwsgi:/etc/uwsgi:ro

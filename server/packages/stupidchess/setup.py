@@ -14,6 +14,7 @@ setup(
         'bcrypt==3.1.0',
         'flask==0.11.1',
         'flask-mongoengine==0.8.2',
+        'healthcheck==1.3.2',
         'nose==1.3.7',
         'com.johnmalcolmnorwood.auth==0.0.0-dev',
     ],

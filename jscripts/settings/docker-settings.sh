@@ -47,13 +47,11 @@ EOF
 )
 
 function print_build_images_usage_list {
-    echo -n "  "
-    join "\n  " $(get_images_to_build)
-    echo
+    echo "  $(join "\n  " $(get_images_to_build))"
 }
 
 function print_deploy_images_usage_list {
-    echo "  $(join "\n  " `get_images_to_deploy`)"
+    echo "  $(join "\n  " $(get_images_to_deploy))"
 }
 
 ##

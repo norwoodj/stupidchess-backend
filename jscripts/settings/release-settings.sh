@@ -45,10 +45,7 @@ function get_next_dev_version {
 }
 
 function get_versioned_files {
-    echo "
-        version.txt
-        helm/stupidchess/Chart.yaml
-    "
+    echo version.txt charts/stupidchess/Chart.yaml
 }
 
 function get_release_version_commit_message {

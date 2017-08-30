@@ -8,3 +8,4 @@ server/build
 *.tgz
 jscripts/*.sh
 jscripts/utilities/*.sh
+requirements.lock

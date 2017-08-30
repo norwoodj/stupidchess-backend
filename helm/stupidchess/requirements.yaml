@@ -1,7 +1,0 @@
-dependencies:
-  - name: mongo
-    version: "17.0823"
-    repository:
-  - name: web_service
-    version: "17.0823"
-    repository:

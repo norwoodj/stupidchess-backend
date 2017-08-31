@@ -1,7 +1,7 @@
 ##
 # This stage of the build installs webpack and npm, and then builds a public dist archive out of our frontend code
 ##
-FROM node:7.10-alpine
+FROM node:8.3-alpine
 MAINTAINER John Norwood <norwood.john.m@gmail.com>
 
 RUN npm install -g webpack

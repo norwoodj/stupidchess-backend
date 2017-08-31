@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   mongo:
     image: mongo:2.6.4
@@ -14,7 +14,7 @@ services:
       - -g
       - daemon off;
     volumes:
-      - ../../etc/nginx:/etc/nginx/local
+      - ../../etc/nginx:/etc/nginx/local:ro
     volumes_from:
       - uwsgi
     ports:
@@ -22,8 +22,6 @@ services:
 
   uwsgi:
     image: stupidchess-uwsgi:current
-    links:
-      - mongo
     entrypoint: uwsgi --ini /etc/uwsgi/uwsgi.ini:local
     volumes:
       - ../../server/packages/stupidchess/src:/var/lib/johnmalcolmnorwood/stupidchess/server/src:ro

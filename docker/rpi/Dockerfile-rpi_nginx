@@ -1,7 +1,7 @@
 ##
 # This stage of the build installs webpack and npm, and then builds a public dist archive out of our frontend code
 ##
-FROM jnorwood/rpi-node:7.10.0
+FROM resin/raspberrypi3-alpine-node:8.3
 MAINTAINER John Norwood <norwood.john.m@gmail.com>
 
 RUN npm install -g webpack

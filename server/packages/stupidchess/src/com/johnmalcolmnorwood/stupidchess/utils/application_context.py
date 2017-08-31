@@ -44,7 +44,7 @@ class ApplicationContext:
 
     @staticmethod
     def __initialize_healthcheck(app):
-        health = HealthCheck(app, "/api/health")
+        health = HealthCheck(app, "/health")
 
         def mongo_okay():
             db = get_db()

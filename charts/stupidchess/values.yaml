@@ -24,4 +24,4 @@ web_service:
 stupidchessNginxImageName: jnorwood/stupidchess-rpi_nginx
 stupidchessUwsgiImageName: jnorwood/stupidchess-rpi_uwsgi
 stupidchessWebDeploymentReplicas: 2
-stupidchessHealthCheckEndpoint: /api/health
+stupidchessHealthCheckEndpoint: /health

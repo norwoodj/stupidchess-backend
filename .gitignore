@@ -9,3 +9,5 @@ server/build
 jscripts/*.sh
 jscripts/utilities/*.sh
 requirements.lock
+_version.json
+.idea

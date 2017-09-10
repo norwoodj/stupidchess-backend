@@ -38,9 +38,8 @@ buttons {
     color: white;
 }
 
-#footer a {
+.link {
     color: yellow;
-    text-decoration: underline;
 }
 
 #sidedrawer {

@@ -14,5 +14,9 @@ class User:
     def is_anonymous(self):
         raise NotImplementedError()
 
+    @property
+    def username(self):
+        raise NotImplementedError()
+
     def get_id(self):
         raise NotImplementedError()

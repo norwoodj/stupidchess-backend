@@ -3,6 +3,7 @@
 [[ -n "${_APPLICATION_SETTINGS_SH:+_}" ]] && return || readonly _APPLICATION_SETTINGS_SH=1
 
 source ${SCRIPT_DIR}/settings/docker-settings.sh
+source ${SCRIPT_DIR}/utilities/rpi-utilities.sh
 
 ##
 # This is where you should define the names of every application that is built by this project, an application being some
@@ -18,6 +19,7 @@ readonly _APPLICATION_CONFIG=$(cat <<EOF
         "${STUPIDCHESS_APP_NAME}": [
             "${NGINX_IMAGE_NAME}",
             "${UWSGI_IMAGE_NAME}"
+             $(is_running_on_raspberry_pi || echo ", \"${WEBPACK_BUILDER_IMAGE_NAME}\"")
         ]
     }
 }

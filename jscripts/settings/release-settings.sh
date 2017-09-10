@@ -6,6 +6,8 @@ source ${SCRIPT_DIR}/settings/application-settings.sh
 source ${SCRIPT_DIR}/utilities/command-line-utilities.sh
 source ${SCRIPT_DIR}/utilities/git-utilities.sh
 
+: ${HOTFIX_NUMBER:=0}
+
 
 function handle_release_options {
     local flag=${1}
@@ -49,7 +51,11 @@ function get_next_dev_version {
 }
 
 function get_versioned_files {
-    echo version.txt charts/stupidchess/Chart.yaml
+    echo \
+        version.txt \
+        charts/stupidchess/Chart.yaml \
+        web/package.json \
+        server/packages/{auth,stupidchess}/setup.py
 }
 
 function get_release_version_commit_message {

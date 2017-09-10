@@ -36,10 +36,25 @@ spec:
         - name: stupidchess-uwsgi
           image: {{ .Values.stupidchessUwsgiImageName }}:{{ .Chart.Version }}
           imagePullPolicy: Always
+          env:
+            - name: JCONFIGURE_ACTIVE_PROFILES
+              value: {{ .Values.jconfigActiveProfiles }}
+            - name: JCONFIGURE_CONFIG_DIRECTORIES
+              value: {{ .Values.jconfigConfigDirectores }}
+            - name: FLASK_APP_SECRET_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.stupidchessSecretName }}
+                    key: flask-app-secret-key
           volumeMounts:
             - name: socket-volume
-              mountPath: /tmp
+              mountPath: /tmp/sockets
+            - name: secrets-volume
+              mountPath: /tmp/secrets
 
       volumes:
         - name: socket-volume
           emptyDir: {}
+        - name: secrets-volume
+          secret:
+            secretName: {{ .Values.stupidchessSecretName }}

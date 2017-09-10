@@ -1,0 +1,4 @@
+healthcheck_endpoint: /health
+
+MONGODB_SETTINGS:
+  db: stupidchess

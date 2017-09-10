@@ -17,7 +17,7 @@ $(() => {
     ReactDOM.render(
         <div id="react-root">
             <SideDrawer pageName={APP_NAME} menuCategories={MENU_CATEGORIES}/>
-            <ScAppBar appName={APP_NAME}/>
+            <ScAppBar appName={APP_NAME} httpService={$}/>
             <div id="content-wrapper">
                 <div className="mui--appbar-height"></div>
                 <Game httpService={$} gameUuid={gameUuid}/>

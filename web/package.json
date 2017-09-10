@@ -1,6 +1,6 @@
 {
   "name": "stupid-chess",
-  "version": "0.0.0-dev",
+  "version": "17.0906.0-dev",
   "description": "Stupid Chess web game",
   "repository": "https://github.com/norwoodj/stupid-chess",
   "main": "static/js/game.jsx",

@@ -6,7 +6,7 @@ class Footer extends React.Component {
             <footer id="footer" className="skin-element">
                 <div className="mui-container-fluid">
                     <br/>
-                    Brought to you by: <a href="https://johnmalcolmnorwood.com">John Norwood</a>
+                    Brought to you by: <a className="link" href="https://johnmalcolmnorwood.com">John Norwood</a>
                 </div>
             </footer>
         );

@@ -7,7 +7,6 @@ function setupSideDrawerTransition() {
         sidedrawerEl = $('#sidedrawer');
 
     function showSidedrawer() {
-        console.log('SHOW');
         // show overlay
         var options = {
             onclose: function () {
@@ -28,7 +27,6 @@ function setupSideDrawerTransition() {
 
 
     function hideSidedrawer() {
-        console.log('HIDE');
         bodyEl.toggleClass('hide-sidedrawer');
     }
 

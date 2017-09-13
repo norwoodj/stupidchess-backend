@@ -42,10 +42,10 @@ spec:
             - name: JCONFIGURE_CONFIG_DIRECTORIES
               value: {{ .Values.jconfigConfigDirectores }}
             - name: FLASK_APP_SECRET_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ .Values.stupidchessSecretName }}
-                    key: flask-app-secret-key
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.stupidchessSecretName }}
+                  key: flask-app-secret-key
           volumeMounts:
             - name: socket-volume
               mountPath: /tmp/sockets

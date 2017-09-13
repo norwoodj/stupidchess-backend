@@ -2,8 +2,7 @@
 import bcrypt
 from mongoengine import DoesNotExist
 
-from com.johnmalcolmnorwood.auth.models import User
-from com.johnmalcolmnorwood.auth.user_service import UserService
+from com.johnmalcolmnorwood.auth.user_service import UserService, UserAlreadyExistsException
 from com.johnmalcolmnorwood.stupidchess.models.user import User
 
 
@@ -22,6 +21,10 @@ class AuthUser:
     @property
     def is_anonymous(self):
         return False
+
+    @property
+    def username(self):
+        return self.__user.username
 
     def get_id(self):
         return self.__user.get_id()
@@ -51,6 +54,9 @@ class ScUserService(UserService):
             username=username,
             password=hashed_password,
         )
+
+        if self.get_user_with_username(username) is not None:
+            raise UserAlreadyExistsException(username)
 
         user.save()
 

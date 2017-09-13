@@ -6,6 +6,8 @@ source ${SCRIPT_DIR}/settings/application-settings.sh
 source ${SCRIPT_DIR}/utilities/command-line-utilities.sh
 source ${SCRIPT_DIR}/utilities/git-utilities.sh
 
+: ${HOTFIX_NUMBER:=0}
+
 
 function handle_release_options {
     local flag=${1}
@@ -45,11 +47,20 @@ function get_release_version {
 
 function get_next_dev_version {
     local release_version=$(date -u -v+1d "+%y.%m%d")
-    echo "${release_version}-dev"
+
+    if [[ -n "${HOTFIX_NUMBER:+_}" ]]; then
+        echo "${release_version}.${HOTFIX_NUMBER}-dev"
+    else
+        echo "${release_version}-dev"
+    fi
 }
 
 function get_versioned_files {
-    echo version.txt charts/stupidchess/Chart.yaml
+    echo \
+        version.txt \
+        charts/stupidchess/Chart.yaml \
+        web/package.json \
+        server/packages/{auth,stupidchess}/setup.py
 }
 
 function get_release_version_commit_message {

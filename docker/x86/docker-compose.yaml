@@ -17,12 +17,23 @@ services:
       - ../../etc/nginx:/etc/nginx/local:ro
     volumes_from:
       - uwsgi
+      - webpack_builder
     ports:
       - 80:80
 
   uwsgi:
     image: stupidchess-uwsgi:current
     entrypoint: uwsgi --ini /etc/uwsgi/uwsgi.ini:local
+    environment:
+      - JCONFIGURE_ACTIVE_PROFILES=LCL
+      - JCONFIGURE_CONFIG_DIRECTORIES=/var/lib/johnmalcolmnorwood/stupidchess/server/config
     volumes:
       - ../../server/packages/stupidchess/src:/var/lib/johnmalcolmnorwood/stupidchess/server/src:ro
+      - ../../config:/var/lib/johnmalcolmnorwood/stupidchess/server/config:ro
       - ../../etc/uwsgi:/etc/uwsgi:ro
+
+  webpack_builder:
+    image: stupidchess-webpack_builder:current
+    entrypoint: webpack --watch
+    volumes:
+      - ../../web/src:/var/lib/johnmalcolmnorwood/stupidchess/src

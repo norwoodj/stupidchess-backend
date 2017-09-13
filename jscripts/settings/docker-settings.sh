@@ -31,12 +31,14 @@ readonly _X86_UWSGI_IMAGE_NAME='uwsgi'
 readonly SERVER_CODE_IMAGE_NAME=$(is_running_on_raspberry_pi && echo "${_RPI_SERVER_CODE_IMAGE_NAME}" || echo "${_X86_SERVER_CODE_IMAGE_NAME}")
 readonly NGINX_IMAGE_NAME=$(is_running_on_raspberry_pi && echo "${_RPI_NGINX_IMAGE_NAME}" || echo "${_X86_NGINX_IMAGE_NAME}")
 readonly UWSGI_IMAGE_NAME=$(is_running_on_raspberry_pi && echo "${_RPI_UWSGI_IMAGE_NAME}" || echo "${_X86_UWSGI_IMAGE_NAME}")
+readonly WEBPACK_BUILDER_IMAGE_NAME='webpack_builder'
 
 readonly _DOCKER_CONFIG=$(cat <<EOF
 {
     "buildImages": [
         "${NGINX_IMAGE_NAME}",
         "${UWSGI_IMAGE_NAME}"
+        $(is_running_on_raspberry_pi || echo ", \"${WEBPACK_BUILDER_IMAGE_NAME}\"")
     ],
     "deployImages": [
         "${NGINX_IMAGE_NAME}",
@@ -93,7 +95,7 @@ function get_additional_docker_build_args {
 
 function get_image_version {
     local image=${1}
-    cat "version.txt"
+    cat version.txt
 }
 
 function get_docker_registry_name {

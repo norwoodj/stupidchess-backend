@@ -8,14 +8,17 @@ RUN apk add --no-cache \
     && pip install uwsgi
 
 ARG APP_DIR=/var/lib/johnmalcolmnorwood/stupidchess/server
-
-COPY etc/uwsgi/uwsgi.ini /etc/uwsgi/uwsgi.ini
-COPY server/packages ${APP_DIR}
-
 WORKDIR ${APP_DIR}
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY server/packages .
+COPY config ./config
+COPY etc/uwsgi/uwsgi.ini /etc/uwsgi/uwsgi.ini
 
 RUN cd auth && python setup.py install
 RUN cd stupidchess && python setup.py install
 
-VOLUME /tmp
+VOLUME /tmp/sockets
 ENTRYPOINT ["uwsgi", "--ini", "/etc/uwsgi/uwsgi.ini"]

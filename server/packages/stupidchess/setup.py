@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="com.johnmalcolmnorwood.stupidchess",
-    version="17.0913.0",
+    version="17.0914.0-dev",
     package_dir={"": "src"},
     packages=find_packages("src"),
     zip_safe=False,
@@ -17,6 +17,6 @@ setup(
         "healthcheck==1.3.2",
         "jconfigure==17.0913.1",
         "nose==1.3.7",
-        "com.johnmalcolmnorwood.auth==17.0913.0",
+        "com.johnmalcolmnorwood.auth==17.0914.0-dev",
     ],
 )

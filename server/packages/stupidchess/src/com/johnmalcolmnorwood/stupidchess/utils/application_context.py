@@ -23,6 +23,7 @@ class ApplicationContext:
         self.config = configure()
         _LOGGER.debug(self.config)
 
+        self.__initialize_app(app)
         self.__initialize_mongo(app)
         self.__initialize_healthcheck(app)
 

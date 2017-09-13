@@ -17,7 +17,7 @@ COPY server/packages .
 COPY config ./config
 COPY etc/uwsgi/uwsgi.ini /etc/uwsgi/uwsgi.ini
 
-RUN ls && cd auth && python setup.py install
+RUN cd auth && python setup.py install
 RUN cd stupidchess && python setup.py install
 
 VOLUME /tmp/sockets

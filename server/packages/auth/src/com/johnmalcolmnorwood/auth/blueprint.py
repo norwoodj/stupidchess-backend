@@ -2,7 +2,7 @@
 from urllib.parse import urlparse, urljoin
 from flask import Blueprint, request, jsonify, current_app, abort
 from flask_login import login_user, current_user
-
+from . import LOGGER
 
 auth_blueprint = Blueprint('auth', __name__)
 
@@ -45,7 +45,9 @@ def login():
     user = current_app.context.user_service.get_user_with_credentials(username, password)
 
     if user is None:
+        LOGGER.debug(f"Invalid login provided for user '{username}'")
         abort(401)
 
     login_user(user)
+    LOGGER.debug(f"Successfully logged in user '{username}'")
     return jsonify(message='Logged in successfully')

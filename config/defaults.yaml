@@ -1,4 +1,10 @@
-healthcheck_endpoint: /health
+environment: !EnvVar {name: "JCONFIGURE_ACTIVE_PROFILES", default: "none"}
+
+endpoint_prefixes:
+  healthcheck: /health
+  auth: /api/user
+  game: /api/game
 
 MONGODB_SETTINGS:
   db: stupidchess
+  host: mongo

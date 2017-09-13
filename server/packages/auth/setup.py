@@ -13,7 +13,7 @@ setup(
         ],
     },
     install_requires=[
-        "flask==0.11.1",
-        "flask-login==0.4.0",
+        "flask",
+        "flask-login",
     ],
 )

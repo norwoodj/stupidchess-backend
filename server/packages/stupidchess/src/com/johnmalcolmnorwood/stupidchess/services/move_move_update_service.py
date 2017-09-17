@@ -95,9 +95,11 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         Game.objects(_id=game.get_id()).update(__raw__=update_two)
 
     def get_move_for_insert(self, move):
-        move_captures = list(map(MoveMoveUpdateService.__get_capture_piece, move.captures)) \
-            if move.captures is not None \
+        move_captures = (
+            [MoveMoveUpdateService.__get_capture_piece(c) for c in move.captures]
+            if move.captures is not None
             else None
+        )
 
         move_piece = Piece(
             color=move.piece.color,

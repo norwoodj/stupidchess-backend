@@ -3,6 +3,10 @@
     color: white;
 }
 
+.error-text {
+    color: red;
+}
+
 .submit-button:hover {
     background-color: navy;
     color: yellow;

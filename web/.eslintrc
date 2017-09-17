@@ -29,7 +29,7 @@
         // else is used
         "quotes": [
             2,
-            "single"
+            "double"
         ]
     }
 }

@@ -1,5 +1,1 @@
 app_secret_key: !EnvVar FLASK_APP_SECRET_KEY
-
-_MONGODB_SETTINGS:
-  username: !IncludeText /tmp/secrets/mongo-username
-  password: !IncludeText /tmp/secrets/mongo-password

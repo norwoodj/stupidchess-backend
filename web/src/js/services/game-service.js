@@ -6,10 +6,10 @@ export default class GameService {
     createGame(createRequest) {
         return new Promise((resolve, reject) => {
             this.http.ajax({
-                type: 'POST',
-                url: '/api/game/',
+                type: "POST",
+                url: "/api/game/",
                 data: JSON.stringify(createRequest),
-                contentType: 'application/json',
+                contentType: "application/json",
                 success: game => resolve(game),
                 error: (error) => reject(error)
             });
@@ -19,7 +19,7 @@ export default class GameService {
     getPossibleMoves(gameUuid, square) {
         return new Promise((resolve, reject) => {
             this.http.ajax({
-                type: 'GET',
+                type: "GET",
                 url: `/api/game/${gameUuid}/move/possible?square=${square}`,
                 success: possibleMoves => resolve(possibleMoves),
                 error: (error) => reject(error)
@@ -30,8 +30,8 @@ export default class GameService {
     getPossibleGameTypes() {
         return new Promise((resolve, reject) => {
             this.http.ajax({
-                type: 'GET',
-                url: '/api/game/types',
+                type: "GET",
+                url: "/api/game/types",
                 success: gameTypes => resolve(gameTypes),
                 error: error => reject(error)
             });
@@ -42,8 +42,8 @@ export default class GameService {
     getPossibleGameAuthTypes() {
         return new Promise((resolve, reject) => {
             this.http.ajax({
-                type: 'GET',
-                url: '/api/game/auth-types',
+                type: "GET",
+                url: "/api/game/auth-types",
                 success: gameAuthTypes => resolve(gameAuthTypes),
                 error: error => reject(error)
             });
@@ -53,7 +53,7 @@ export default class GameService {
     getGameByUuid(gameUuid) {
         return new Promise((resolve, reject) => {
             this.http.ajax({
-                type: 'GET',
+                type: "GET",
                 url: `/api/game/${gameUuid}`,
                 success: game => resolve(game),
                 error: (error) => reject(error)
@@ -65,10 +65,10 @@ export default class GameService {
         return new Promise(
             (resolve, reject) => {
                 this.http.ajax({
-                    type: 'POST',
+                    type: "POST",
                     url: `/api/game/${gameUuid}/move/`,
                     data: JSON.stringify(move),
-                    contentType: 'application/json',
+                    contentType: "application/json",
                     success: (response) => resolve(response),
                     error: (error) => reject(error)
                 });

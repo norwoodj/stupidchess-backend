@@ -1,6 +1,6 @@
-import React from 'react';
-import {PieceGrid} from './piece-grid';
-import {getPieceSelectShapeForSetupMode} from '../factories/board-shapes-factory';
+import React from "react";
+import {PieceGrid} from "./piece-grid";
+import {getPieceSelectShapeForSetupMode} from "../factories/board-shapes-factory";
 
 
 class PieceSelectGrid extends PieceGrid {
@@ -15,7 +15,7 @@ class PieceSelectGrid extends PieceGrid {
     }
 
     getDefaultClassName() {
-        return 'piece-selection';
+        return "piece-selection";
     }
 
     shouldDisplay() {

@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 import {ScAppBar} from "./components/app-bar";
 import {SideDrawer} from "./components/side-drawer";
 import {Footer} from "./components/footer";
-import {GameForm} from "./components/game-form";
+import {CreateAccountForm} from "./components/create-account-form";
 import {setupSideDrawerTransition} from "./side-drawer-transition";
 import {MENU_CATEGORIES, APP_NAME} from "./constants";
 
@@ -17,11 +17,11 @@ $(() => {
             <ScAppBar appName={APP_NAME} httpService={$}/>
             <div id="content-wrapper">
                 <div className="mui--appbar-height"></div>
-                <GameForm httpService={$}/>
+                <CreateAccountForm httpService={$}/>
             </div>
             <Footer/>
         </div>,
-        document.getElementById("game-form")
+        document.getElementById("create-account-form")
     );
 
     setupSideDrawerTransition();

@@ -1,7 +1,8 @@
-import React from 'react';
-import Appbar from 'muicss/lib/react/appbar';
-import Container from 'muicss/lib/react/container';
-import UserService from '../services/user-service';
+import React from "react";
+import Appbar from "muicss/lib/react/appbar";
+import Container from "muicss/lib/react/container";
+import UserService from "../services/user-service";
+import {redirectToNextQueryParam} from "../util";
 
 
 class ScAppBar extends React.Component {
@@ -13,17 +14,19 @@ class ScAppBar extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.httpService);
         this.userService = new UserService(this.props.httpService);
         this.userService.getCurrentUser().then(
             user => this.setState({
                 user: user
-            })
+            }),
+            () => null
         );
     }
 
     handleLogout() {
-        return;
+        this.userService.logout().then(
+            () => redirectToNextQueryParam("/")
+        )
     }
 
     render() {

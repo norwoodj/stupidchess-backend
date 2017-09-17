@@ -2,7 +2,7 @@ dist/
 node_modules/
 *.pyc
 __pycache__
-server/build
+build
 *.egg-info
 *.iml
 *.tgz

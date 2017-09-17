@@ -7,9 +7,8 @@ setup(
     package_dir={"": "src"},
     packages=find_packages("src"),
     zip_safe=False,
-    entry_points={
-        "console_scripts": []
-    },
+    namespace_packages=["com", "com.johnmalcolmnorwood"],
+    entry_points={},
     install_requires=[
         "bcrypt",
         "flask",

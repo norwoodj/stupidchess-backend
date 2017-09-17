@@ -1,11 +1,11 @@
 class GameState {
     constructor() {
         this.pieces = new Map();
-        this.type = 'NONE';
+        this.type = "NONE";
         this.captures = [];
-        this.currentTurn = 'BLACK';
-        this.blackUsername = 'Black';
-        this.whiteUsername = 'White';
+        this.currentTurn = "BLACK";
+        this.blackUsername = "Black";
+        this.whiteUsername = "White";
         this.lastMove = -2;
         this.blackScore = 0;
         this.whiteScore = 0;
@@ -26,7 +26,7 @@ class GameState {
     }
 
     inBoardSetupMode() {
-        return this.type == 'STUPID_CHESS' && this.lastMove < 23;
+        return this.type == "STUPID_CHESS" && this.lastMove < 23;
     }
 
     getColorsSettingUp() {
@@ -35,11 +35,11 @@ class GameState {
         var colorsSettingUp = [];
 
         this.possiblePiecesToBePlaced.forEach(piece => {
-            if (piece.color == 'BLACK' && !blackPiece) {
-                colorsSettingUp[colorsSettingUp.length] = 'BLACK';
+            if (piece.color == "BLACK" && !blackPiece) {
+                colorsSettingUp[colorsSettingUp.length] = "BLACK";
                 blackPiece = true;
-            } else if (piece.color == 'WHITE' && !whitePiece) {
-                colorsSettingUp[colorsSettingUp.length] = 'WHITE';
+            } else if (piece.color == "WHITE" && !whitePiece) {
+                colorsSettingUp[colorsSettingUp.length] = "WHITE";
                 whitePiece = true;
             }
         });

@@ -1,9 +1,9 @@
 class DisplayState {
     constructor() {
-        this.squareColors = ['saddlebrown', 'sandybrown'];
-        this.possibleMoveColor = 'yellow';
-        this.possibleCaptureColor = 'red';
-        this.selectedColor = 'green';
+        this.squareColors = ["saddlebrown", "sandybrown"];
+        this.possibleMoveColor = "yellow";
+        this.possibleCaptureColor = "red";
+        this.selectedColor = "green";
     }
 
     getSquareColor(square) {

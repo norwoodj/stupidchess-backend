@@ -14,20 +14,20 @@ class Scoreboard extends React.Component {
                 <thead>
                     <tr>
                         <td className={this.getScoreCellClass("BLACK", "score-name-cell")}>
-                            {this.props.gameState.blackUsername}
+                            {this.props.gameState.blackPlayerName}
                         </td>
                         <td className={this.getScoreCellClass("WHITE", "score-name-cell")}>
-                            {this.props.gameState.whiteUsername}
+                            {this.props.gameState.whitePlayerName}
                         </td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td className={this.getScoreCellClass("BLACK", "score-score-cell")}>
-                            {this.props.gameState.blackScore}
+                            {this.props.gameState.blackPlayerScore}
                         </td>
                         <td className={this.getScoreCellClass("WHITE", "score-score-cell")}>
-                            {this.props.gameState.whiteScore}
+                            {this.props.gameState.whitePlayerScore}
                         </td>
                     </tr>
                 </tbody>

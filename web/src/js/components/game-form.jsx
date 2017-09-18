@@ -4,7 +4,7 @@ import Input from "muicss/lib/react/input";
 import Option from "muicss/lib/react/option";
 
 import GameService from "../services/game-service";
-import {GameAuthType} from "../constants";
+import {GameType, GameAuthType, GAME_TYPES} from "../constants";
 import {toTitleCase} from "../util";
 import {AbstractForm} from "./abstract-form";
 
@@ -20,7 +20,6 @@ class GameForm extends AbstractForm {
 
         this.state.gameTypes = [];
         this.state.gameAuthTypes = [];
-        this.state.selectedGameAuthType = null;
     }
 
     componentDidMount() {
@@ -35,31 +34,33 @@ class GameForm extends AbstractForm {
             },
             () => {
                 this.setState({errors: "Failed to retrieve possible game types from server! Using default"});
-                this.selectedGameType = "STUPID_CHESS";
+                this.selectedGameType = GameType.STUPID_CHESS;
                 this.setState({
-                    gameTypes: ["STUPID_CHESS"]
+                    gameTypes: GAME_TYPES
                 });
             }
         );
 
         this.gameService.getPossibleGameAuthTypes().then(
-            gameAuthTypes => this.setState({
+            gameAuthTypes => {
+                this.selectedGameAuthType = gameAuthTypes[0];
+                this.setState({
                     gameAuthTypes: gameAuthTypes,
-                    selectedGameAuthType: gameAuthTypes[0]
-            }),
+                })
+            },
             () => {
                 this.setState({errors: "Failed to retrieve possible game authentication types from server! Using default"});
-                this.selectedGameType = "ONE_PLAYER";
+                this.selectedGameType = GameAuthType.ONE_PLAYER;
                 this.setState({
-                    gameTypes: ["ONE_PLAYER", "TWO_PLAYER"]
+                    gameTypes: [GameAuthType.ONE_PLAYER, GameAuthType.TWO_PLAYER]
                 });
             }
         );
     }
 
     errorCheck() {
-        if (this.state.selectedGameAuthType == GameAuthType.TWO_PLAYER && this.otherPlayer.length == 0) {
-            this.setState({errors: "Other player's name needs to be provided for a 2 player game"});
+        if (this.otherPlayer.length == 0) {
+            this.setState({errors: "Other player's name is required, and must exist as a user for 2 player games"});
             return false;
         }
 
@@ -71,11 +72,12 @@ class GameForm extends AbstractForm {
     }
 
     getFormRedirectDefault(response) {
+        console.log(response);
         return `/game.html?gameuuid=${response.gameUuid}`;
     }
 
     renderFormFields() {
-        let formFields = [
+        return [
             <Select key="0" label="Game Type" onChange={this.updateGameType.bind(this)}>{
                 this.state.gameTypes.map(
                     gameType => <Option key={gameType} value={gameType} label={toTitleCase(gameType)}/>
@@ -85,35 +87,23 @@ class GameForm extends AbstractForm {
                 this.state.gameAuthTypes.map(
                     gameAuthType => <Option key={gameAuthType} value={gameAuthType} label={toTitleCase(gameAuthType)}/>
                 )
-            }</Select>
+            }</Select>,
+            <Input
+                key="2"
+                label="Other Player's name"
+                hint="Other Player's name"
+                required={true}
+                onChange={this.updateOtherPlayer.bind(this)}
+            />
         ];
-
-        if (this.state.selectedGameAuthType == GameAuthType.TWO_PLAYER) {
-            formFields.push(
-                <Input
-                    key="2"
-                    label="Other Player's name"
-                    hint="Other Player's name"
-                    required={true}
-                    onChange={this.updateOtherPlayer.bind(this)}
-                />
-            );
-        }
-
-        console.log(formFields);
-        return formFields;
     }
 
     submitForm() {
         let createGameRequest = {
             type: this.selectedGameType,
-            gameAuthType: this.state.selectedGameAuthType
+            gameAuthType: this.selectedGameAuthType,
+            otherPlayer: this.otherPlayer
         };
-        console.log(createGameRequest);
-
-        if (this.state.selectedGameAuthType == GameAuthType.TWO_PLAYER) {
-            createGameRequest.otherPlayer = this.otherPlayer;
-        }
 
         return this.gameService.createGame(createGameRequest);
     }
@@ -123,9 +113,7 @@ class GameForm extends AbstractForm {
     }
 
     updateGameAuthType(event) {
-        this.setState({
-            selectedGameAuthType: event.target.value
-        });
+        this.selectedGameAuthType = event.target.value;
     }
 
     updateOtherPlayer(event) {

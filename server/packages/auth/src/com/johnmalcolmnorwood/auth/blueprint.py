@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 from urllib.parse import urlparse, urljoin
 from flask import Blueprint, request, jsonify, current_app, abort
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, login_required, logout_user
 from . import LOGGER
 
 auth_blueprint = Blueprint('auth', __name__)
@@ -31,7 +31,8 @@ def create_user():
     if None in {username, password}:
         return jsonify(message='"username" and "password" must be provided in request!'), 400
 
-    current_app.context.user_service.create_user(username, password)
+    user = current_app.context.user_service.create_user(username, password)
+    login_user(user)
     return jsonify(message="Successfully created user {}".format(username)), 201
 
 
@@ -46,8 +47,16 @@ def login():
 
     if user is None:
         LOGGER.debug(f"Invalid login provided for user '{username}'")
-        abort(401)
+        return jsonify(message="Invalid username or password"), 401
 
     login_user(user)
     LOGGER.debug(f"Successfully logged in user '{username}'")
     return jsonify(message='Logged in successfully')
+
+
+@auth_blueprint.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    LOGGER.debug(f"Successfully logged out user '{current_user.username}'")
+    logout_user()
+    return jsonify(message='Logged out successfully')

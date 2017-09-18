@@ -7,7 +7,8 @@ module.exports = {
         game: "./src/js/render-game-page.jsx",
         createGame: "./src/js/render-game-form.jsx",
         login: "./src/js/render-login-form.jsx",
-        createAccount: "./src/js/render-create-account-form.jsx"
+        createAccount: "./src/js/render-create-account-form.jsx",
+        profile: "./src/js/render-profile-page.jsx"
     },
     resolve: {
         extensions: ["", ".js", ".jsx"]

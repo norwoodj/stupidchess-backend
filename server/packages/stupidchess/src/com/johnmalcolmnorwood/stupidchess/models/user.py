@@ -5,7 +5,7 @@ from com.johnmalcolmnorwood.stupidchess.models.base_document import BaseDocument
 class User(BaseDocument):
     meta = {
         "indexes": [{
-            "fields": ["+username"],
+            "fields": ["username"],
             "unique": True,
         }],
     }

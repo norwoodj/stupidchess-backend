@@ -15,6 +15,19 @@ MOVE_TYPE_REGEX = '|'.join([MoveType.PLACE, MoveType.MOVE])
 
 
 class Move(BaseDocument, Dictable):
+    # This first index is how we accomplish updates to games without the possiblity of conflicts, before making a change
+    # to any game state, a move is inserted, with the index of that move in terms of order in the game. We have a unique
+    # index on (gameUuid, index) however so no two simultaneous writes can both write the move. One will fail on the
+    # index and be effectively locked out of updating the game until it refreshes its copy of the game
+    meta = {
+        "indexes": [
+            {
+                "fields": ["gameUuid", "index"],
+                "unique": True,
+            }
+        ],
+    }
+
     type = StringField(required=True, regex=MOVE_TYPE_REGEX)
     startSquare = IntField()
     destinationSquare = IntField(required=True)

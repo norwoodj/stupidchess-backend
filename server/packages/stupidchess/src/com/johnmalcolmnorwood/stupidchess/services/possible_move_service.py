@@ -9,9 +9,7 @@ class PossibleMoveService(object):
         self.__board_squares_for_game_type = board_squares_for_game_type
         self.__board_middle_section_for_game_type = board_middle_section_for_game_type
 
-    def get_possible_moves_from_square(self, square, game_uuid, game=None):
-        game = game or PossibleMoveService.__get_game_by_uuid(game_uuid)
-
+    def get_possible_moves_from_square(self, square, game):
         board_square_set = self.__board_squares_for_game_type.get(game.type, set())
         board_middle_square_set = self.__board_middle_section_for_game_type.get(game.type, set())
         can_capture_own_pieces = game.type == GameType.STUPID_CHESS
@@ -44,8 +42,3 @@ class PossibleMoveService(object):
         piece_move_generator = get_piece_move_generator_for_piece(piece.type)
 
         return piece_move_generator.get_possible_moves(possible_move_game_state)
-
-    @staticmethod
-    def __get_game_by_uuid(game_uuid):
-        exclusions = ['createTimestamp', 'lastUpdateTimestamp', 'possiblePiecesToBePlaced', 'captures', '_id']
-        return Game.objects.exclude(*exclusions).get_or_404(_id=game_uuid)

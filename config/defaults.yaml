@@ -4,6 +4,7 @@ endpoint_prefixes:
   healthcheck: /health
   auth: /api/user
   game: /api/game
+  record: /api/record
 
 MONGODB_SETTINGS:
   db: stupidchess

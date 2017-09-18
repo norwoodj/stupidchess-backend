@@ -11,6 +11,11 @@ let MENU_CATEGORIES = [
 
 let APP_NAME = "Stupid Chess";
 
+let Color = {
+    BLACK: "BLACK",
+    WHITE: "WHITE"
+};
+
 let GameType = {
     STUPID_CHESS: "STUPID_CHESS",
     CHESS: "CHESS",
@@ -24,18 +29,17 @@ let GAME_TYPES = [
 ];
 
 let GameAuthType = {
-    ANONYMOUS: "ANONYMOUS",
-    SINGLE_PLAYER: "SINGLE_PLAYER",
+    ONE_PLAYER: "ONE_PLAYER",
     TWO_PLAYER: "TWO_PLAYER"
 };
 
 let GAME_AUTHORIZATION_TYPES = [
-    GameAuthType.ANONYMOUS,
-    GameAuthType.SINGLE_PLAYER,
+    GameAuthType.ONE_PLAYER,
     GameAuthType.TWO_PLAYER
 ];
 
 export {
+    Color,
     GameType,
     GAME_TYPES,
     GameAuthType,

@@ -12,6 +12,7 @@ from ...auth.initialize_authentication import initialize_authentication
 
 from .. import LOGGER
 from ..blueprints.game_blueprint import game_blueprint
+from ..blueprints.record_blueprint import record_blueprint
 from ..exceptions import IllegalMoveException, InvalidGameParameterException
 from ..services.ambiguous_move_service import AmbiguousMoveService
 from ..services.move_application_service import MoveApplicationService
@@ -19,6 +20,8 @@ from ..services.move_move_update_service import MoveMoveUpdateService
 from ..services.place_move_update_service import PlaceMoveUpdateService
 from ..services.possible_move_service import PossibleMoveService
 from ..services.sc_user_service import ScUserService
+from ..services.game_service import GameService
+from ..services.record_service import RecordService
 
 from .game_rules import SETUP_SQUARES_FOR_COLOR, BOARD_SQUARES_FOR_GAME_TYPE
 from .game_rules import BOARD_MIDDLE_SECTION_FOR_GAME_TYPE
@@ -61,6 +64,9 @@ class ApplicationContext:
             BOARD_MIDDLE_SECTION_FOR_GAME_TYPE,
         )
 
+        self.game_service = GameService(self.possible_move_service)
+        self.record_service = RecordService()
+
         self.move_update_services = (
             PlaceMoveUpdateService(SETUP_SQUARES_FOR_COLOR),
             MoveMoveUpdateService(self.possible_move_service),
@@ -68,7 +74,6 @@ class ApplicationContext:
 
         self.move_application_service = MoveApplicationService(self.move_update_services)
         self.ambiguous_move_service = AmbiguousMoveService()
-
         self.user_service = ScUserService()
 
     def __initialize_auth(self, app):
@@ -82,6 +87,7 @@ class ApplicationContext:
     def __register_blueprints(self, app):
         LOGGER.debug(f"Registering game blueprint with prefix {self.config['endpoint_prefixes']['game']}")
         app.register_blueprint(game_blueprint, url_prefix=self.config["endpoint_prefixes"]["game"])
+        app.register_blueprint(record_blueprint, url_prefix=self.config["endpoint_prefixes"]["record"])
 
     def __register_error_handlers(self, app):
         @app.errorhandler(IllegalMoveException)

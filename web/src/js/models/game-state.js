@@ -1,14 +1,17 @@
+import {Color} from "../constants";
+
+
 class GameState {
     constructor() {
         this.pieces = new Map();
         this.type = "NONE";
         this.captures = [];
-        this.currentTurn = "BLACK";
-        this.blackUsername = "Black";
-        this.whiteUsername = "White";
+        this.currentTurn = Color.BLACK;
         this.lastMove = -2;
-        this.blackScore = 0;
-        this.whiteScore = 0;
+        this.blackPlayerName = "Black";
+        this.whitePlayerName = "White";
+        this.blackPlayerScore = 0;
+        this.whitePlayerScore = 0;
         this.possiblePiecesToBePlaced = [];
         this.squaresToBePlaced = new Set();
     }
@@ -30,16 +33,16 @@ class GameState {
     }
 
     getColorsSettingUp() {
-        var blackPiece = false;
-        var whitePiece = false;
-        var colorsSettingUp = [];
+        let blackPiece = false;
+        let whitePiece = false;
+        let colorsSettingUp = [];
 
         this.possiblePiecesToBePlaced.forEach(piece => {
-            if (piece.color == "BLACK" && !blackPiece) {
-                colorsSettingUp[colorsSettingUp.length] = "BLACK";
+            if (piece.color == Color.BLACK && !blackPiece) {
+                colorsSettingUp[colorsSettingUp.length] = Color.BLACK;
                 blackPiece = true;
-            } else if (piece.color == "WHITE" && !whitePiece) {
-                colorsSettingUp[colorsSettingUp.length] = "WHITE";
+            } else if (piece.color == Color.WHITE && !whitePiece) {
+                colorsSettingUp[colorsSettingUp.length] = Color.WHITE;
                 whitePiece = true;
             }
         });
@@ -55,11 +58,11 @@ class GameState {
         this.type = apiResponse.type;
         this.captures = apiResponse.captures;
         this.currentTurn = apiResponse.currentTurn;
-        this.blackUsername = apiResponse.blackUsername;
-        this.whiteUsername = apiResponse.whiteUsername;
         this.lastMove = apiResponse.lastMove;
-        this.blackScore = apiResponse.blackScore;
-        this.whiteScore = apiResponse.whiteScore;
+        this.blackPlayerName = apiResponse.blackPlayerName;
+        this.whitePlayerName = apiResponse.whitePlayerName;
+        this.blackPlayerScore = apiResponse.blackPlayerScore;
+        this.whitePlayerScore = apiResponse.whitePlayerScore;
         this.possiblePiecesToBePlaced = apiResponse.possiblePiecesToBePlaced;
 
         this.pieces.clear();

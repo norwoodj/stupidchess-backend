@@ -11,7 +11,7 @@ export default class GameService {
                 data: JSON.stringify(createRequest),
                 contentType: "application/json",
                 success: game => resolve(game),
-                error: (error) => reject(error)
+                error: error => reject(error)
             });
         });
     }
@@ -22,7 +22,7 @@ export default class GameService {
                 type: "GET",
                 url: `/api/game/${gameUuid}/move/possible?square=${square}`,
                 success: possibleMoves => resolve(possibleMoves),
-                error: (error) => reject(error)
+                error: error => reject(error)
             });
         });
     }
@@ -47,6 +47,17 @@ export default class GameService {
                 success: gameAuthTypes => resolve(gameAuthTypes),
                 error: error => reject(error)
             });
+        });
+    }
+
+    getGames() {
+        return new Promise((resolve, reject) => {
+            this.http.ajax({
+                type: "GET",
+                url: "/api/game/",
+                success: game => resolve(game),
+                error: (error) => reject(error)
+            })
         });
     }
 

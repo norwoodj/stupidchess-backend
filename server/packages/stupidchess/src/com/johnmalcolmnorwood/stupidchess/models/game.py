@@ -25,6 +25,13 @@ GAME_TYPE_REGEX = '|'.join([
 
 
 class Game(BaseDocument, Dictable):
+    meta = {
+        "indexes": [
+            "blackPlayerUuid",
+            "whitePlayerUuid",
+        ],
+    }
+
     type = StringField(required=True, regex=GAME_TYPE_REGEX)
     lastMove = IntField(required=True, default=-1)
     pieces = EmbeddedDocumentListField(document_type=Piece, default=list)
@@ -34,3 +41,5 @@ class Game(BaseDocument, Dictable):
     squaresToBePlaced = ListField(field=IntField(), default=list)
     blackPlayerUuid = StringField(required=True, regex=UUID_REGEX)
     whitePlayerUuid = StringField(required=True, regex=UUID_REGEX)
+    blackPlayerName = StringField(required=True)
+    whitePlayerName = StringField(required=True)

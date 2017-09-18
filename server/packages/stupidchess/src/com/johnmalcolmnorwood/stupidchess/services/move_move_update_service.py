@@ -32,8 +32,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
     def get_moves_to_apply(self, move, game):
         possible_moves = self.__possible_move_service.get_possible_moves_from_square(
             move.startSquare,
-            game.get_id(),
-            game=game,
+            game,
         )
 
         for m in possible_moves:

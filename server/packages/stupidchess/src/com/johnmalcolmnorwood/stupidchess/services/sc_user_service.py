@@ -42,6 +42,10 @@ class ScUserService(UserService):
         user = ScUserService.__get_user_safe(_id=id)
         return AuthUser(user) if user is not None else None
 
+    def get_user_with_username(self, username):
+        user = ScUserService.__get_user_safe(username=username)
+        return AuthUser(user) if user is not None else None
+
     def get_user_with_credentials(self, username, password):
         user = ScUserService.__get_user_safe(username=username)
 
@@ -55,10 +59,8 @@ class ScUserService(UserService):
             password=hashed_password,
         )
 
-        if self.get_user_with_username(username) is not None:
+        if self.__get_user_safe(username=username) is not None:
             raise UserAlreadyExistsException(username)
 
         user.save()
-
-    def get_user_with_username(self, username):
-        return self.__get_user_safe(username=username)
+        return AuthUser(user)

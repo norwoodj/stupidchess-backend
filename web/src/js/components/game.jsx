@@ -1,21 +1,21 @@
-import React from 'react';
-import Container from 'muicss/lib/react/container';
+import React from "react";
+import Container from "muicss/lib/react/container";
 
-import {Board} from './board';
-import {CaptureGrid} from './capture-grid';
-import {Scoreboard} from './scoreboard'
-import {ColorSetupSelect} from './color-setup-select'
-import {PieceSelectGrid} from './piece-select-grid'
+import {Board} from "./board";
+import {CaptureGrid} from "./capture-grid";
+import {Scoreboard} from "./scoreboard"
+import {ColorSetupSelect} from "./color-setup-select"
+import {PieceSelectGrid} from "./piece-select-grid"
 
-import {BoardSetupState} from '../models/board-setup-state';
-import {DisplayState} from '../models/display-state';
-import {SquareSelectionState} from '../models/square-selection-state';
-import {GameState} from '../models/game-state';
-import {AmbiguousMoveState} from '../models/ambiguous-move-state';
+import {BoardSetupState} from "../models/board-setup-state";
+import {DisplayState} from "../models/display-state";
+import {SquareSelectionState} from "../models/square-selection-state";
+import {GameState} from "../models/game-state";
+import {AmbiguousMoveState} from "../models/ambiguous-move-state";
 
-import GameService from '../services/game-service';
-import {getMoveObjectForPieceMove, getMoveObjectForPlacePiece} from '../factories/move-factory';
-import {handleUnauthorized} from '../util';
+import GameService from "../services/game-service";
+import {getMoveObjectForPieceMove, getMoveObjectForPlacePiece} from "../factories/move-factory";
+import {handleUnauthorized} from "../util";
 
 
 class Game extends React.Component {
@@ -188,7 +188,7 @@ class Game extends React.Component {
                 possibleMoveResponse.possibleMoves.forEach(possibleMove => {
                     this.squareSelectionState.addPossibleMove(possibleMove.destinationSquare);
 
-                    if (possibleMove.hasOwnProperty('captures')) {
+                    if (possibleMove.hasOwnProperty("captures")) {
                         possibleMove.captures.forEach(possibleCapture => {
                             this.squareSelectionState.addPossibleCapture(possibleCapture.square);
                         });

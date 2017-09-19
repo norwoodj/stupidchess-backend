@@ -1,6 +1,6 @@
 function getMoveObjectForPieceMove(startSquare, destinationSquare, disambiguatingCapture = null) {
     var move = {
-        type: 'MOVE',
+        type: "MOVE",
         startSquare: startSquare,
         destinationSquare: destinationSquare
     };
@@ -14,7 +14,7 @@ function getMoveObjectForPieceMove(startSquare, destinationSquare, disambiguatin
 
 function getMoveObjectForPlacePiece(square, piece) {
     return {
-        type: 'PLACE',
+        type: "PLACE",
         piece: piece,
         destinationSquare: square
     };

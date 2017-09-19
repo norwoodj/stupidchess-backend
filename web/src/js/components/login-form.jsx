@@ -1,70 +1,71 @@
-import React from 'react';
-import Button from 'muicss/lib/react/button';
-import Form from 'muicss/lib/react/form';
-import Input from 'muicss/lib/react/input';
-import Panel from 'muicss/lib/react/panel';
-import Container from 'muicss/lib/react/container';
+import React from "react";
+import Input from "muicss/lib/react/input";
 
-import UserService from '../services/user-service';
-import {redirectToNextQueryParam} from '../util';
+import {AbstractForm} from "./abstract-form";
+import UserService from "../services/user-service";
 
 
-class LoginForm extends React.Component {
-
+class LoginForm extends AbstractForm {
     constructor() {
         super();
 
-        this.username = '';
-        this.password = '';
+        this.username = "";
+        this.password = "";
     }
 
     componentDidMount() {
         this.userService = new UserService(this.props.httpService);
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
-        if (this.username == '' || this.password == '') {
-            return;
+    errorCheck() {
+        if (this.username == "" || this.password == "") {
+            this.setState({errors: "Username and password must be provided to login!"});
+            return false;
         }
 
-        this.userService.login(this.username, this.password).then(
-            redirectToNextQueryParam,
-            error => console.log(error)
-        );
+        return true;
+    }
+
+    submitForm() {
+        return this.userService.login(this.username, this.password);
     }
 
     updateUsername(event) {
         this.username = event.target.value;
     }
-    
+
     updatePassword(event) {
         this.password = event.target.value;
     }
-    
-    render() {
-        return (
-            <Container className="form-container">
-                <Panel>
-                    <Form id="input-form">
-                        <legend>Login</legend>
-                        <Input
-                            label="Username"
-                            hint="username"
-                            required={true}
-                            onChange={this.updateUsername.bind(this)}
-                        />
-                        <Input
-                            label="Password"
-                            hint="password"
-                            required={true}
-                            onChange={this.updatePassword.bind(this)}
-                        />
-                        <Button className="submit-button" onClick={this.handleSubmit.bind(this)} variant="raised">Submit</Button>
-                    </Form>
-                </Panel>
-            </Container>
-        );
+
+    getLegend() {
+        return "Login"
+    }
+
+    getFormRedirectDefault() {
+        return "/profile.html";
+    }
+
+    renderFormFields() {
+        return [
+            <Input
+                key="0"
+                name="username"
+                label="Username"
+                hint="username"
+                required={true}
+                onChange={this.updateUsername.bind(this)}
+            />,
+            <Input
+                key="1"
+                name="password"
+                type="password"
+                label="Password"
+                hint="password"
+                required={true}
+                onChange={this.updatePassword.bind(this)}
+            />
+        ];
     }
 }
 

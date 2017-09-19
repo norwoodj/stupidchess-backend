@@ -11,5 +11,16 @@ handlers:
     formatter: default
 
 root:
-  level: DEBUG
+  level: INFO
   handlers: [default]
+
+loggers:
+  com.johnmalcolmnorwood.auth:
+    level: DEBUG
+    handlers: [default]
+    propagate: False
+
+  com.johnmalcolmnorwood.stupidchess:
+    level: DEBUG
+    handlers: [default]
+    propagate: False

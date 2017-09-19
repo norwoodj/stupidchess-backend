@@ -3,17 +3,14 @@ from setuptools import setup, find_packages
 
 setup(
     name="com.johnmalcolmnorwood.auth",
-    version="17.0913.0",
+    version="17.0919.0",
     package_dir={"": "src"},
     packages=find_packages("src"),
     zip_safe=False,
-    entry_points={
-        "console_scripts": [
-            "create_sc_set_up_game=com.johnmalcolmnorwood.stupidchess.scripts:main",
-        ],
-    },
+    namespace_packages=["com", "com.johnmalcolmnorwood"],
+    entry_points={},
     install_requires=[
-        "flask==0.11.1",
-        "flask-login==0.4.0",
+        "flask",
+        "flask-login",
     ],
 )

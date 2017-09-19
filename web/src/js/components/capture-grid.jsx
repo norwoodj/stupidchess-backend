@@ -1,11 +1,11 @@
-import React from 'react';
-import {PieceGrid} from './piece-grid';
-import {getCaptureShapeForGameType} from '../factories/board-shapes-factory';
+import React from "react";
+import {PieceGrid} from "./piece-grid";
+import {getCaptureShapeForGameType} from "../factories/board-shapes-factory";
 
 
 class CaptureGrid extends PieceGrid {
     getDefaultClassName() {
-        return 'capture';
+        return "capture";
     }
 
     getPieceForIndex(index) {

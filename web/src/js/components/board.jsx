@@ -1,6 +1,6 @@
-import React from 'react';
-import getPieceImage from '../factories/piece-factory'
-import {getHalfBoardShapeForColor, getBoardShapeForGameType} from '../factories/board-shapes-factory'
+import React from "react";
+import getPieceImage from "../factories/piece-factory"
+import {getHalfBoardShapeForColor, getBoardShapeForGameType} from "../factories/board-shapes-factory"
 
 
 class Board extends React.Component {
@@ -26,15 +26,15 @@ class Board extends React.Component {
 
     getClassForSquare(square) {
         if (square == null) {
-            return '';
+            return "";
         }
 
-        return `square ${this.props.gameState.hasPieceOnSquare(square) ? 'piece-square' : ''}`
+        return `square ${this.props.gameState.hasPieceOnSquare(square) ? "piece-square" : ""}`
     }
 
     getPieceImageElementForSquare(square) {
         if (!this.props.gameState.hasPieceOnSquare(square)) {
-            return '';
+            return "";
         }
 
         let piece = this.props.gameState.getPieceOnSquare(square);

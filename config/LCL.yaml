@@ -1,4 +1,1 @@
 app_secret_key: 8T72PRI3f8730YpFfpWGAkwGR2NRgYjM
-
-MONGODB_SETTINGS:
-  host: mongo

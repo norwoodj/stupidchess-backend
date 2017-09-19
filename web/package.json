@@ -1,6 +1,6 @@
 {
   "name": "stupid-chess",
-  "version": "17.0913.0",
+  "version": "17.0919.0",
   "description": "Stupid Chess web game",
   "repository": "https://github.com/norwoodj/stupid-chess",
   "main": "static/js/game.jsx",
@@ -13,7 +13,7 @@
   "devDependencies": {
     "babel-core": "^6.13.2",
     "babel-loader": "^6.2.5",
-    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.11.1",
     "copy-webpack-plugin": "^3.0.1",
     "eslint": "^3.3.1",

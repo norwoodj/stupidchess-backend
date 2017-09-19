@@ -25,9 +25,7 @@ class AmbiguousMoveState {
     }
 
     isDisambiguatingCaptureForSelectedSquare(square) {
-        console.log(square);
         var disambiguatingCaptures = this.disambiguatingCapturesBySquare.get(this.selectedAmbiguousDestination)
-        console.log(disambiguatingCaptures);
         return disambiguatingCaptures.includes(square);
     }
 

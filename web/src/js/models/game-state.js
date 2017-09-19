@@ -1,16 +1,23 @@
+import {Color} from "../constants";
+
+
 class GameState {
     constructor() {
         this.pieces = new Map();
-        this.type = 'NONE';
+        this.type = "NONE";
         this.captures = [];
-        this.currentTurn = 'BLACK';
-        this.blackUsername = 'Black';
-        this.whiteUsername = 'White';
+        this.currentTurn = Color.BLACK;
         this.lastMove = -2;
-        this.blackScore = 0;
-        this.whiteScore = 0;
+        this.blackPlayerName = "Black";
+        this.whitePlayerName = "White";
+        this.blackPlayerUuid = null;
+        this.whitePlayerUuid = null;
+        this.blackPlayerScore = 0;
+        this.whitePlayerScore = 0;
         this.possiblePiecesToBePlaced = [];
         this.squaresToBePlaced = new Set();
+        this.lastUpdateTimestamp = "";
+        this.gameResult = null;
     }
 
     hasPieceOnSquare(square) {
@@ -26,25 +33,11 @@ class GameState {
     }
 
     inBoardSetupMode() {
-        return this.type == 'STUPID_CHESS' && this.lastMove < 23;
+        return this.type == "STUPID_CHESS" && this.lastMove < 23;
     }
 
     getColorsSettingUp() {
-        var blackPiece = false;
-        var whitePiece = false;
-        var colorsSettingUp = [];
-
-        this.possiblePiecesToBePlaced.forEach(piece => {
-            if (piece.color == 'BLACK' && !blackPiece) {
-                colorsSettingUp[colorsSettingUp.length] = 'BLACK';
-                blackPiece = true;
-            } else if (piece.color == 'WHITE' && !whitePiece) {
-                colorsSettingUp[colorsSettingUp.length] = 'WHITE';
-                whitePiece = true;
-            }
-        });
-
-        return colorsSettingUp;
+        return [Color.BLACK, Color.WHITE];
     }
 
     squareNeedsPiecePlaced(square) {
@@ -55,12 +48,16 @@ class GameState {
         this.type = apiResponse.type;
         this.captures = apiResponse.captures;
         this.currentTurn = apiResponse.currentTurn;
-        this.blackUsername = apiResponse.blackUsername;
-        this.whiteUsername = apiResponse.whiteUsername;
         this.lastMove = apiResponse.lastMove;
-        this.blackScore = apiResponse.blackScore;
-        this.whiteScore = apiResponse.whiteScore;
+        this.blackPlayerName = apiResponse.blackPlayerName;
+        this.whitePlayerName = apiResponse.whitePlayerName;
+        this.blackPlayerUuid = apiResponse.blackPlayerUuid;
+        this.whitePlayerUuid = apiResponse.whitePlayerUuid;
+        this.blackPlayerScore = apiResponse.blackPlayerScore;
+        this.whitePlayerScore = apiResponse.whitePlayerScore;
         this.possiblePiecesToBePlaced = apiResponse.possiblePiecesToBePlaced;
+        this.lastUpdateTimestamp = apiResponse.lastUpdateTimestamp;
+        this.gameResult = apiResponse.gameResult;
 
         this.pieces.clear();
         apiResponse.pieces.forEach(piece => this.pieces.set(piece.square, piece));

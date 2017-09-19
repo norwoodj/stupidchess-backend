@@ -7,30 +7,33 @@ from com.johnmalcolmnorwood.stupidchess.models.game import Game, GameType, GameA
 from com.johnmalcolmnorwood.stupidchess.models.piece import Piece, Color, PieceType
 
 
-def create_new_game(game_type, game_auth_type, other_player=None):
+def create_new_game(game_type, game_auth_type, other_player):
     if game_auth_type not in (GameAuthType.ONE_PLAYER, GameAuthType.TWO_PLAYER):
         raise InvalidGameParameterException(
-            "'game_auth_type' must be one of ({}, {})".format(GameAuthType.ONE_PLAYER, GameAuthType.TWO_PLAYER),
+            f"game_auth_type must be one of ({GameAuthType.ONE_PLAYER}, {GameAuthType.TWO_PLAYER})"
         )
+
+    if game_type not in GAME_TYPE_TO_CREATE_FUNCTION:
+        raise InvalidGameParameterException(f"invalid game type {game_type}")
 
     if game_auth_type != GameAuthType.TWO_PLAYER:
-        return GAME_TYPE_TO_CREATE_FUNCTION.get(game_type, lambda _, __: None)(
+        return GAME_TYPE_TO_CREATE_FUNCTION[game_type](
             black_player_uuid=current_user.get_id(),
             white_player_uuid=current_user.get_id(),
-        )
-
-    if other_player is None:
-        raise InvalidGameParameterException(
-            "'other_player' parameter required when creating two player game".format(other_player),
+            black_player_name=current_user.username,
+            white_player_name=other_player,
         )
 
     other_player_obj = current_app.context.user_service.get_user_with_username(other_player)
+
     if other_player_obj is None:
         raise InvalidGameParameterException("No Player with username '{}' exists".format(other_player))
 
-    return GAME_TYPE_TO_CREATE_FUNCTION.get(game_type, lambda _, __: None)(
+    return GAME_TYPE_TO_CREATE_FUNCTION[game_type](
         black_player_uuid=current_user.get_id(),
         white_player_uuid=other_player_obj.get_id(),
+        black_player_name=current_user.username,
+        white_player_name=other_player_obj.username,
     )
 
 
@@ -64,7 +67,7 @@ STUPID_CHESS_INITIAL_PIECES_TO_BE_PLACED = [
 ]
 
 
-def get_new_stupid_chess_game(black_player_uuid, white_player_uuid):
+def get_new_stupid_chess_game(black_player_uuid, white_player_uuid, black_player_name, white_player_name):
     return Game(
         type=GameType.STUPID_CHESS,
         possiblePiecesToBePlaced=STUPID_CHESS_INITIAL_PIECES_TO_BE_PLACED,
@@ -72,6 +75,8 @@ def get_new_stupid_chess_game(black_player_uuid, white_player_uuid):
         currentTurn=Color.BLACK,
         blackPlayerUuid=black_player_uuid,
         whitePlayerUuid=white_player_uuid,
+        blackPlayerName=black_player_name,
+        whitePlayerName=white_player_name,
     )
 
 CHESS_INITIAL_PIECES = [
@@ -97,13 +102,15 @@ CHESS_INITIAL_PIECES = [
 ]
 
 
-def get_new_chess_game(black_player_uuid, white_player_uuid):
+def get_new_chess_game(black_player_uuid, white_player_uuid, black_player_name, white_player_name):
     return Game(
         type=GameType.CHESS,
         pieces=CHESS_INITIAL_PIECES,
         currentTurn=Color.WHITE,
         blackPlayerUuid=black_player_uuid,
         whitePlayerUuid=white_player_uuid,
+        blackPlayerName=black_player_name,
+        whitePlayerName=white_player_name,
     )
 
 CHECKERS_INITIAL_PIECES = [
@@ -117,13 +124,15 @@ CHECKERS_INITIAL_PIECES = [
 ]
 
 
-def get_new_checkers_game(black_player_uuid, white_player_uuid):
+def get_new_checkers_game(black_player_uuid, white_player_uuid, black_player_name, white_player_name):
     return Game(
         type=GameType.CHECKERS,
         pieces=CHECKERS_INITIAL_PIECES,
         currentTurn=Color.WHITE,
         blackPlayerUuid=black_player_uuid,
         whitePlayerUuid=white_player_uuid,
+        blackPlayerName=black_player_name,
+        whitePlayerName=white_player_name,
     )
 
 

@@ -4,6 +4,27 @@ from collections import defaultdict
 
 class Dictable:
     def to_dict(self, *keys, delimiter='.'):
+        """
+        Specify a list of keys to pull out of the Dictable object, and this will convert the object to a dictionary
+        containing those fields. Allows for nested fields to be specified by passing dotted fields:
+
+        obj.to_dict("name", "createTimestamp", "address.street", "friends.name")
+        {
+            "name": "John",
+            "createTimestamp": "2017-09-17T23:23:23Z",
+            "friends": [
+                {"name": "Erin"},
+                {"name": "Thomas"}
+            ],
+            "address": {
+                "street": "East 7th Street"
+            }
+        }
+
+        :param keys:
+        :param delimiter:
+        :return:
+        """
         result = {}
         sub_keys = defaultdict(list)
 

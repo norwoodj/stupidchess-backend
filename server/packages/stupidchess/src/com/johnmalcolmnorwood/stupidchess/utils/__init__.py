@@ -1,18 +1,10 @@
 #!/usr/local/bin/python
-from flask import jsonify
-from com.johnmalcolmnorwood.stupidchess.utils.game_rules import get_game_scores
+from uuid import uuid4
+import base64
+
+UUID_REGEX = "[A-Z2-7]{26}"
 
 
-def get_game_dict(game):
-    game_dict = game.to_dict(
-        'type',
-        'lastMove',
-        'pieces.color', 'pieces.type', 'pieces.square',
-        'captures.color', 'captures.type',
-        'currentTurn',
-        'possiblePiecesToBePlaced',
-        'squaresToBePlaced',
-    )
+def random_uuid():
+    return base64.b32encode(uuid4().bytes).decode("utf-8").rstrip("=")
 
-    game_dict['blackScore'], game_dict['whiteScore'] = get_game_scores(game)
-    return game_dict

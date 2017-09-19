@@ -3,8 +3,10 @@ import base64
 
 from flask import jsonify
 from flask_login.login_manager import LoginManager
-from com.johnmalcolmnorwood.auth.blueprint import auth_blueprint
-from com.johnmalcolmnorwood.auth.user_service import UserAlreadyExistsException
+
+from . import LOGGER
+from .blueprint import auth_blueprint
+from .user_service import UserAlreadyExistsException
 
 
 def create_user_loader(user_service):
@@ -26,16 +28,18 @@ def create_header_loader(user_service):
 
 def initialize_authentication(
     app,
-    auth_url_prefix='',
+    user_service,
+    auth_secret_key,
+    auth_blueprint_prefix=''
 ):
-    app.secret_key = "super secret key"
+    app.secret_key = auth_secret_key
     login_manager = LoginManager(app)
-    login_manager.user_loader(create_user_loader(app.context.user_service))
-    login_manager.header_loader(create_header_loader(app.context.user_service))
+    login_manager.user_loader(create_user_loader(user_service))
+    login_manager.header_loader(create_header_loader(user_service))
 
-    app.register_blueprint(auth_blueprint, url_prefix=auth_url_prefix)
+    LOGGER.debug(f"Registering auth blueprint with prefix {auth_blueprint_prefix}")
+    app.register_blueprint(auth_blueprint, url_prefix=auth_blueprint_prefix)
 
     @app.errorhandler(UserAlreadyExistsException)
     def handle_duplicate_user(error):
         return jsonify(message=f"User {error.username} already exists"), 400
-

@@ -1,45 +1,54 @@
 
 let MENU_CATEGORIES = [
     {
-        category: 'Pages',
+        category: "Pages",
         options: [
-            {text: 'Home', link: '/'},
-            {text: 'Create Game', link: '/create-game.html'}
+            {text: "Home", link: "/"},
+            {text: "Create Game", link: "/create-game.html"}
         ]
     }
 ];
 
-let APP_NAME = 'Stupid Chess';
+let APP_NAME = "Stupid Chess";
+
+let Color = {
+    BLACK: "BLACK",
+    WHITE: "WHITE"
+};
 
 let GameType = {
-    STUPID_CHESS: 'STUPID_CHESS',
-    CHESS: 'CHESS',
-    CHECKERS: 'CHECKERS'
-};
+    STUPID_CHESS: "STUPID_CHESS",
+    CHESS: "CHESS",
+    CHECKERS: "CHECKERS",
 
-let GAME_TYPES = [
-    GameType.STUPID_CHESS,
-    GameType.CHESS,
-    GameType.CHECKERS
-];
+    all: () => [
+        GameType.STUPID_CHESS,
+        GameType.CHESS,
+        GameType.CHECKERS
+    ]
+};
 
 let GameAuthType = {
-    ANONYMOUS: 'ANONYMOUS',
-    SINGLE_PLAYER: 'SINGLE_PLAYER',
-    TWO_PLAYER: 'TWO_PLAYER'
+    ONE_PLAYER: "ONE_PLAYER",
+    TWO_PLAYER: "TWO_PLAYER",
+
+    all: () => [
+        GameAuthType.ONE_PLAYER,
+        GameAuthType.TWO_PLAYER,
+    ]
 };
 
-let GAME_AUTHORIZATION_TYPES = [
-    GameAuthType.ANONYMOUS,
-    GameAuthType.SINGLE_PLAYER,
-    GameAuthType.TWO_PLAYER
-];
+let GameResult = {
+    WIN: "WIN",
+    LOSS: "LOSS",
+    TIE: "TIE"
+};
 
 export {
+    Color,
     GameType,
-    GAME_TYPES,
     GameAuthType,
-    GAME_AUTHORIZATION_TYPES,
+    GameResult,
     MENU_CATEGORIES,
     APP_NAME
 };

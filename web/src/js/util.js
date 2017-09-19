@@ -1,7 +1,11 @@
 function toTitleCase(input) {
-    return input.split('_')
+    return input.split("_")
         .map(str => str.charAt(0).toUpperCase() + str.substring(1).toLowerCase())
-        .join(' ');
+        .join(" ");
+}
+
+function toEnum(input) {
+    return input.toUpperCase().replace(" ", "_");
 }
 
 function range(size) {
@@ -14,19 +18,24 @@ function range(size) {
 }
 
 function getQueryParam(parameter) {
-    var match = new RegExp('[?&]' + parameter + '=([^&]*)').exec(window.location.search);
-    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    let match = new RegExp("[?&]" + parameter + "=([^&]*)").exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, " "));
 }
 
 function handleUnauthorized(error) {
     if (error.status == 401) {
         window.location.replace(`/login.html?next=${encodeURIComponent(window.location.pathname)}`);
+        return true;
     }
+
+    return false;
 }
 
-function redirectToNextQueryParam() {
-    var link = getQueryParam('next');
+function redirectToNextQueryParam(defaultNextLocation) {
+    let link = getQueryParam("next");
+
     if (link == null) {
+        window.location.replace(defaultNextLocation);
         return;
     }
 
@@ -34,4 +43,4 @@ function redirectToNextQueryParam() {
 }
 
 
-export {toTitleCase, range, getQueryParam, handleUnauthorized, redirectToNextQueryParam};
+export {toTitleCase, range, getQueryParam, handleUnauthorized, redirectToNextQueryParam, toEnum};

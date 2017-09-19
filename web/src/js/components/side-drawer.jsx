@@ -1,5 +1,5 @@
-import React from 'react';
-import {MenuCategory} from './menu-category';
+import React from "react";
+import {MenuCategory} from "./menu-category";
 
 class SideDrawer extends React.Component {
     render() {

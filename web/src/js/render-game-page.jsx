@@ -1,18 +1,18 @@
-import $ from 'jquery';
-import React from 'react';
-import ReactDOM from 'react-dom';
+import $ from "jquery";
+import React from "react";
+import ReactDOM from "react-dom";
 
-import {ScAppBar} from './components/app-bar';
-import {SideDrawer} from './components/side-drawer';
-import {Footer} from './components/footer';
-import {Game} from './components/game';
-import {getQueryParam} from './util';
-import {setupSideDrawerTransition} from './side-drawer-transition';
-import {MENU_CATEGORIES, APP_NAME} from './constants';
+import {ScAppBar} from "./components/app-bar";
+import {SideDrawer} from "./components/side-drawer";
+import {Footer} from "./components/footer";
+import {Game} from "./components/game";
+import {getQueryParam} from "./util";
+import {setupSideDrawerTransition} from "./side-drawer-transition";
+import {MENU_CATEGORIES, APP_NAME} from "./constants";
 
 
 $(() => {
-    let gameUuid = getQueryParam('gameuuid');
+    let gameUuid = getQueryParam("gameuuid");
 
     ReactDOM.render(
         <div id="react-root">
@@ -24,7 +24,7 @@ $(() => {
             </div>
             <Footer/>
         </div>,
-        document.getElementById('game-page')
+        document.getElementById("game-page")
     );
 
     setupSideDrawerTransition();

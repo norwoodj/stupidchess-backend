@@ -1,19 +1,18 @@
-import React from 'react';
-import getPieceImage from '../factories/piece-factory';
-import {range} from '../util';
+import React from "react";
+import getPieceImage from "../factories/piece-factory";
+import {range} from "../util";
 
 
 class PieceGridSquare extends React.Component {
     getSquareClassName() {
-        return `${this.props.defaultClass} ${this.props.piece != null ? 'piece-square' : ''}`;
+        return `${this.props.defaultClass} ${this.props.piece != null ? "piece-square" : ""}`;
     }
 
     getPieceImage() {
-        return this.props.piece != null ? <img className="piece" src={getPieceImage(this.props.piece)}/> : ''
+        return this.props.piece != null ? <img className="piece" src={getPieceImage(this.props.piece)}/> : ""
     }
 
     render() {
-        console.log('PieceGridSquare');
         return (
             <td className={this.getSquareClassName()} onClick={this.props.clickHandler}>
                 <div>{this.getPieceImage()}</div>
@@ -46,7 +45,6 @@ class PieceGrid extends React.Component {
     }
 
     render() {
-        console.log('PieceGrid');
         if (!this.shouldDisplay()) {
             return null;
         }

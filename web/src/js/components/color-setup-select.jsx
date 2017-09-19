@@ -1,10 +1,9 @@
-import React from 'react';
-import {toTitleCase} from '../util';
+import React from "react";
+import {toTitleCase} from "../util";
 
 
 class ColorSetupSelect extends React.Component {
     render() {
-        console.log('ColorSetupSelect');
         if (!this.props.gameState.inBoardSetupMode()) {
             return null;
         }

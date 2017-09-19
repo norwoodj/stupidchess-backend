@@ -17,7 +17,7 @@ class CompletedGameList extends GameList {
 
     getGamesTableData(game) {
         return [
-            <a className="link" href={`/game.html?gameuuid=${game.id}`}>{game.id}</a>,
+            <a className="uuid-link link" href={`/game.html?gameuuid=${game.id}`}>{game.id}</a>,
             game.type,
             <div className={`color-label-${this.getUserColor(game).toLowerCase()}`}>{this.getUserColor(game)}</div>,
             this.getOpponentNameElement(game, "link"),

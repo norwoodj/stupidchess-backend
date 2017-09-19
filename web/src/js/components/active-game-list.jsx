@@ -17,7 +17,7 @@ class ActiveGameList extends GameList {
 
     getGamesTableData(game) {
         return [
-            <a href={`/game.html?gameuuid=${game.id}`}>{game.id}</a>,
+            <a className="uuid-link" href={`/game.html?gameuuid=${game.id}`}>{game.id}</a>,
             game.type,
             this.getUserColor(game),
             this.getOpponentNameElement(game, ""),

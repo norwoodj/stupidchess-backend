@@ -38,6 +38,10 @@ buttons {
     color: white;
 }
 
+.uuid-link {
+    font-family: monospace;
+}
+
 .link {
     color: yellow;
 }

@@ -4,27 +4,9 @@ from flask_login import login_required, current_user
 
 from .. import LOGGER
 from ..models.move import Move
-from ..models.game import GameType, GameAuthType
-from ..utils.game_utils import get_game_dict
+from ..utils.game_utils import get_game_dict, get_move_dict
 
 game_blueprint = Blueprint("game", __name__)
-
-
-@game_blueprint.route("/types")
-def get_game_types():
-    return jsonify([
-        GameType.STUPID_CHESS,
-        GameType.CHESS,
-        GameType.CHECKERS,
-    ])
-
-
-@game_blueprint.route("/auth-types")
-def get_game_auth_types():
-    return jsonify([
-        GameAuthType.ONE_PLAYER,
-        GameAuthType.TWO_PLAYER,
-    ])
 
 
 @game_blueprint.route("/", methods=["POST"])
@@ -95,9 +77,12 @@ def get_game_by_uuid(game_uuid):
 def post_move_to_game(game_uuid):
     move = Move.from_json(request.json)
     move.disambiguating_capture = request.json.get("disambiguatingCapture")
-    current_app.context.move_application_service.apply_move(move, game_uuid)
+    moves_applied = current_app.context.move_application_service.apply_move(move, game_uuid)
 
-    return jsonify(message="Successfully made move"), 201
+    return jsonify(
+        moves=[get_move_dict(m) for m in moves_applied],
+        message=f"Successfully made move{'s' if len(moves_applied) > 1 else ''}",
+    ), 201
 
 
 def get_possible_move_json_element(possible_move):

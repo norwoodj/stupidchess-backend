@@ -34,3 +34,22 @@ def get_game_dict(game, user_uuid):
     )
 
     return game_dict
+
+
+def get_move_dict(move):
+    move_dict = move.to_dict(
+        "type",
+        "startSquare",
+        "destinationSquare",
+        "index",
+        "piece.color", "piece.type",
+        "captures.color", "captures.type",
+        "gameUuid",
+        "createTimestamp",
+        "lastUpdateTimestamp",
+    )
+
+    move_dict["id"] = move.get_id()
+    move_dict["createTimestamp"] = move_dict["createTimestamp"].isoformat()
+    move_dict["lastUpdateTimestamp"] = move_dict["lastUpdateTimestamp"].isoformat()
+    return move_dict

@@ -36,3 +36,4 @@ class MoveApplicationService(object):
         # If we've made it here, the move was legal, and we've written the move to the collection, essentially locking
         # the game state for us to make an update on it. Apply those updates now
         move_update_service.apply_game_updates_for_moves(moves_to_apply, game)
+        return moves_to_apply

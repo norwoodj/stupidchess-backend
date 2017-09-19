@@ -2,6 +2,9 @@
 import requests
 import click
 
+from jconfigure import configure
+from com.johnmalcolmnorwood.stupidchess import LOGGER
+
 
 def make_move(piece_type, color, square):
     return {
@@ -37,19 +40,6 @@ WHITE_SETUP_MOVES = [
 ]
 
 
-def create_game(stupidchess_url, username, password):
-    response = requests.post(
-        url=f"{stupidchess_url}/api/game/",
-        json={"type": "STUPID_CHESS", "gameAuthType": "ONE_PLAYER", "otherPlayer": "john"},
-        auth=(username, password),
-    )
-
-    response.raise_for_status()
-    game_uuid = response.json()["gameUuid"]
-    print("Created game {}".format(game_uuid))
-    return game_uuid
-
-
 def add_moves(stupidchess_url, game_uuid, moves, username, password):
     for idx, move in enumerate(moves):
         move["piece"]["index"] = idx
@@ -61,16 +51,36 @@ def add_moves(stupidchess_url, game_uuid, moves, username, password):
         )
 
         response.raise_for_status()
+        move_texts = "YAY",
+        #move_texts = (
+        #    f"{m['id']} ({m['type']} {m['piece']['color']} {m['piece']['type']} at {m['destinationSquare']})"
+        #    for m in response.json()["moves"]
+        #)
+
+        LOGGER.info(f"Added Move(s) {', '.join(move_texts)}")
 
 
 @click.command()
 @click.option("--stupidchess", "-s", default="http://localhost")
-@click.option("--username", "-u", default="veintitres")
-@click.option("--password", "-p", default="password")
-def main(stupidchess, username, password):
-    game_uuid = create_game(stupidchess, username, password)
-    add_moves(stupidchess, game_uuid, BLACK_SETUP_MOVES, username, password)
-    add_moves(stupidchess, game_uuid, WHITE_SETUP_MOVES, username, password)
+@click.option("--black_username", "-b", default="veintitres")
+@click.option("--black_password", "-c", default="password")
+@click.option("--white_username", "-w")
+@click.option("--white_password", "-x")
+@click.argument("game_uuid")
+def main(stupidchess, black_username, black_password, white_username, white_password, game_uuid):
+    configure()
+
+    if white_username is None:
+        white_username = black_username
+    if white_password is None:
+        white_password = black_password
+
+    LOGGER.info(f"Setting up game for board {game_uuid} on stupidchess server {stupidchess}")
+    LOGGER.info("Adding Black moves...")
+    add_moves(stupidchess, game_uuid, BLACK_SETUP_MOVES, black_username, black_password)
+
+    LOGGER.info("Adding White moves...")
+    add_moves(stupidchess, game_uuid, WHITE_SETUP_MOVES, white_username, white_password)
 
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ setup(
     namespace_packages=["com", "com.johnmalcolmnorwood"],
     entry_points={
         "console_scripts": [
-            "create_stupidchess_set_up_game=com.johnmalcolmnorwood.stupidchess.client.create_stupidchess_set_up_game:main",
+            "setup_stupidchess_game=com.johnmalcolmnorwood.stupidchess.client.setup_stupidchess_game:main",
         ],
     },
     install_requires=[

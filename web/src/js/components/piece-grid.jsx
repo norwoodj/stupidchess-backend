@@ -13,7 +13,6 @@ class PieceGridSquare extends React.Component {
     }
 
     render() {
-        console.log("PieceGridSquare");
         return (
             <td className={this.getSquareClassName()} onClick={this.props.clickHandler}>
                 <div>{this.getPieceImage()}</div>
@@ -46,7 +45,6 @@ class PieceGrid extends React.Component {
     }
 
     render() {
-        console.log("PieceGrid");
         if (!this.shouldDisplay()) {
             return null;
         }

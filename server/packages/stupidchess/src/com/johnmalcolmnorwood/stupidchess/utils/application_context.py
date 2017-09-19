@@ -65,7 +65,7 @@ class ApplicationContext:
         )
 
         self.game_service = GameService(self.possible_move_service)
-        self.record_service = RecordService()
+        self.record_service = RecordService(self.game_service)
 
         self.move_update_services = (
             PlaceMoveUpdateService(SETUP_SQUARES_FOR_COLOR),

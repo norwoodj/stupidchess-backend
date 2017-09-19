@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.move import Move, MoveType
-from com.johnmalcolmnorwood.stupidchess.models.piece import Color, PieceType
-from com.johnmalcolmnorwood.stupidchess.utils import get_game_scores
+from ..models.move import Move, MoveType
+from ..models.piece import Color, PieceType
+from ..utils.game_utils import get_game_scores
 
 
 class PossibleMoveGameState:

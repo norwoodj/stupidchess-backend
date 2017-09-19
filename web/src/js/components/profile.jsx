@@ -3,121 +3,91 @@ import Container from "muicss/lib/react/container";
 import Panel from "muicss/lib/react/panel";
 import UserService from "../services/user-service";
 import GameService from "../services/game-service";
-import RecordService from "../services/record-service";
+import {ActiveGameList} from "./active-game-list";
+import {PlayerRecord} from "./player-record";
+import {CompletedGameList} from "./completed-game-list";
 import {handleUnauthorized} from "../util";
-import {Color} from "../constants";
-
 
 
 class Profile extends React.Component {
     constructor() {
         super();
-
         this.state = {
+            playerUuid: null,
+            playerName: "",
             games: [],
-            user: {},
-            userRecords: []
         }
     }
 
     componentDidMount() {
         this.gameService = new GameService(this.props.httpService);
         this.userService = new UserService(this.props.httpService);
-        this.recordService = new RecordService(this.props.httpService);
 
-        this.gameService.getGames().then(
-            games => this.setState({games: games}),
-            handleUnauthorized
-        );
+        if (this.props.playerUuid != null) {
+            this.setState({playerUuid: this.props.playerUuid});
+        }
 
+        this.getCurrentUserAndRecords();
+    }
+
+    getCurrentUserAndRecords() {
         this.userService.getCurrentUser().then(
             user => {
-                this.setState({user: user});
-                this.recordService.getUserGameRecords(user.id).then(
-                    userRecords => this.setState({userRecords: userRecords}),
-                    handleUnauthorized
-                );
+                this.setState({userUuid: user.id});
+
+                if (this.state.playerUuid == null || user.id == this.state.playerUuid) {
+                    this.setState({
+                        playerName: user.username,
+                        playerUuid: user.id
+                    });
+                } else if (this.state.playerUuid != null) {
+                    this.getOtherPlayerInfo();
+                }
             },
             handleUnauthorized
         );
-
     }
 
-    getMyColor(game) {
-        if (this.state.user.username == game.blackPlayerName) {
-            return Color.BLACK;
+    getOtherPlayerInfo() {
+        this.userService.getUserForUuid(this.state.playerUuid).then(
+            user => this.setState({playerName: user.username}),
+            handleUnauthorized
+        )
+    }
+
+    getActiveGameListElements() {
+        if (this.state.playerUuid == null || this.state.userUuid == this.state.playerUuid) {
+            return (
+                <div>
+                    <div className="mui-divider"></div>
+                    <ActiveGameList httpService={this.props.httpService} userUuid={this.state.userUuid}/>
+                </div>
+            );
         } else {
-            return Color.WHITE;
+            return null;
         }
-    }
-
-    getOpponentName(game) {
-        if (this.getMyColor(game) == Color.BLACK) {
-            return game.whitePlayerName;
-        } else {
-            return game.blackPlayerName;
-        }
-    }
-
-    getGamesTableHeaders() {
-        return [
-            "Game Type",
-            "Opponent",
-            "Black Score",
-            "White Score",
-            "Your Color",
-            "Link"
-        ];
-    }
-
-    getGamesTableData(game) {
-        return [
-            game.type,
-            this.getOpponentName(game),
-            game.blackPlayerScore,
-            game.whitePlayerScore,
-            this.getMyColor(game),
-            <a href={`/game.html?gameuuid=${game["_id"]}`}>Continue</a>
-        ];
-    }
-
-    getRecordMetricsHeaders() {
-        return [
-            "Wins",
-            "Losses",
-            "Point Differential"
-        ]
-    }
-
-    getRecordMetricsData() {
-        return [
-            this.state.userRecords.wins,
-            this.state.userRecords.losses,
-            this.state.userRecords.point_differential
-        ];
     }
 
     render() {
         return (
             <Container>
                 <Panel>
-                    <h2>{this.state.user.username}</h2>
-                    <div className="mui-divider"></div>
+                    <h2>{this.state.playerName}</h2>
 
-                    <h3>Games In Progress</h3>
-                    <table className="mui-table mui-table--bordered">
-                        <thead><tr>{this.getGamesTableHeaders().map(header => <th>{header}</th>)}</tr></thead>
-                        <tbody>{this.state.games.map(g =>
-                            <tr>{this.getGamesTableData(g).map(data => <td>{data}</td>)}</tr>
-                        )}</tbody>
-                    </table>
+                    {this.getActiveGameListElements()}
 
                     <div className="mui-divider"></div>
-                    <h3>Stupidchess Record Against Other Players</h3>
-                    <table className="mui-table mui-table--bordered">
-                        <thead><tr>{this.getRecordMetricsHeaders().map(header => <th>{header}</th>)}</tr></thead>
-                        <tbody><tr>{this.getRecordMetricsData().map(data => <td>{data}</td>)}</tr></tbody>
-                    </table>
+                    {this.state.playerUuid != null ?
+                        <div>
+                            <CompletedGameList
+                                httpService={this.props.httpService}
+                                userUuid={this.state.playerUuid}
+                                gameType={this.state.selectedGameType}
+                            />
+                            <PlayerRecord httpService={this.props.httpService} playerUuid={this.state.playerUuid}/>
+                        </div>
+                        : null
+                    }
                 </Panel>
             </Container>
         );
@@ -126,6 +96,7 @@ class Profile extends React.Component {
 
 Profile.propTypes = {
     httpService: React.PropTypes.func.isRequired,
+    playerUuid: React.PropTypes.string
 };
 
 export {Profile};

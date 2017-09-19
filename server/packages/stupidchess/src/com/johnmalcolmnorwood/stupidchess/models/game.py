@@ -1,23 +1,37 @@
 #!/usr/local/bin/python
 from mongoengine import StringField, IntField, EmbeddedDocumentListField, ListField
-from com.johnmalcolmnorwood.stupidchess.models.dictable import Dictable
-from com.johnmalcolmnorwood.stupidchess.models.piece import Piece, COLOR_REGEX
-from com.johnmalcolmnorwood.stupidchess.models.base_document import BaseDocument
-from com.johnmalcolmnorwood.stupidchess.models import UUID_REGEX
+from .dictable import Dictable
+from .piece import Piece, COLOR_REGEX
+from .base_document import BaseDocument
+from ..utils import UUID_REGEX
 
 
 class GameAuthType:
-    ONE_PLAYER = 'ONE_PLAYER'
-    TWO_PLAYER = 'TWO_PLAYER'
+    ONE_PLAYER = "ONE_PLAYER"
+    TWO_PLAYER = "TWO_PLAYER"
+
+
+class GameResult:
+    WIN = "WIN"
+    LOSS = "LOSS"
+    TIE = "TIE"
 
 
 class GameType:
-    STUPID_CHESS = 'STUPID_CHESS'
-    CHESS = 'CHESS'
-    CHECKERS = 'CHECKERS'
+    STUPID_CHESS = "STUPID_CHESS"
+    CHESS = "CHESS"
+    CHECKERS = "CHECKERS"
+
+    @staticmethod
+    def all():
+        return [
+            GameType.STUPID_CHESS,
+            GameType.CHESS,
+            GameType.CHECKERS,
+        ]
 
 
-GAME_TYPE_REGEX = '|'.join([
+GAME_TYPE_REGEX = "|".join([
     GameType.STUPID_CHESS,
     GameType.CHESS,
     GameType.CHECKERS,
@@ -27,8 +41,8 @@ GAME_TYPE_REGEX = '|'.join([
 class Game(BaseDocument, Dictable):
     meta = {
         "indexes": [
-            "blackPlayerUuid",
-            "whitePlayerUuid",
+            {"fields": ("blackPlayerUuid", "lastUpdateTimestamp")},
+            {"fields": ("whitePlayerUuid", "lastUpdateTimestamp")},
         ],
     }
 

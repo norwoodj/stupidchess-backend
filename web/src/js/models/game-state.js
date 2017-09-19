@@ -10,10 +10,14 @@ class GameState {
         this.lastMove = -2;
         this.blackPlayerName = "Black";
         this.whitePlayerName = "White";
+        this.blackPlayerUuid = null;
+        this.whitePlayerUuid = null;
         this.blackPlayerScore = 0;
         this.whitePlayerScore = 0;
         this.possiblePiecesToBePlaced = [];
         this.squaresToBePlaced = new Set();
+        this.lastUpdateTimestamp = "";
+        this.gameResult = null;
     }
 
     hasPieceOnSquare(square) {
@@ -33,21 +37,7 @@ class GameState {
     }
 
     getColorsSettingUp() {
-        let blackPiece = false;
-        let whitePiece = false;
-        let colorsSettingUp = [];
-
-        this.possiblePiecesToBePlaced.forEach(piece => {
-            if (piece.color == Color.BLACK && !blackPiece) {
-                colorsSettingUp[colorsSettingUp.length] = Color.BLACK;
-                blackPiece = true;
-            } else if (piece.color == Color.WHITE && !whitePiece) {
-                colorsSettingUp[colorsSettingUp.length] = Color.WHITE;
-                whitePiece = true;
-            }
-        });
-
-        return colorsSettingUp;
+        return [Color.BLACK, Color.WHITE];
     }
 
     squareNeedsPiecePlaced(square) {
@@ -61,9 +51,13 @@ class GameState {
         this.lastMove = apiResponse.lastMove;
         this.blackPlayerName = apiResponse.blackPlayerName;
         this.whitePlayerName = apiResponse.whitePlayerName;
+        this.blackPlayerUuid = apiResponse.blackPlayerUuid;
+        this.whitePlayerUuid = apiResponse.whitePlayerUuid;
         this.blackPlayerScore = apiResponse.blackPlayerScore;
         this.whitePlayerScore = apiResponse.whitePlayerScore;
         this.possiblePiecesToBePlaced = apiResponse.possiblePiecesToBePlaced;
+        this.lastUpdateTimestamp = apiResponse.lastUpdateTimestamp;
+        this.gameResult = apiResponse.gameResult;
 
         this.pieces.clear();
         apiResponse.pieces.forEach(piece => this.pieces.set(piece.square, piece));

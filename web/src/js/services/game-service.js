@@ -27,34 +27,22 @@ export default class GameService {
         });
     }
 
-    getPossibleGameTypes() {
+    getActiveGames(gameType) {
         return new Promise((resolve, reject) => {
             this.http.ajax({
                 type: "GET",
-                url: "/api/game/types",
-                success: gameTypes => resolve(gameTypes),
-                error: error => reject(error)
-            });
+                url: `/api/game/active${gameType != null ? `?gameType=${gameType}` : ""}`,
+                success: game => resolve(game),
+                error: (error) => reject(error)
+            })
         });
     }
 
-
-    getPossibleGameAuthTypes() {
+    getCompletedGames(userUuid, gameType) {
         return new Promise((resolve, reject) => {
             this.http.ajax({
                 type: "GET",
-                url: "/api/game/auth-types",
-                success: gameAuthTypes => resolve(gameAuthTypes),
-                error: error => reject(error)
-            });
-        });
-    }
-
-    getGames() {
-        return new Promise((resolve, reject) => {
-            this.http.ajax({
-                type: "GET",
-                url: "/api/game/",
+                url: `/api/game/completed?userUuid=${userUuid}${gameType != null ? `&gameType=${gameType}` : ""}`,
                 success: game => resolve(game),
                 error: (error) => reject(error)
             })

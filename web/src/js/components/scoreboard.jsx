@@ -8,7 +8,6 @@ class Scoreboard extends React.Component {
     }
 
     render() {
-        console.log("Scoreboard");
         return (
             <table id="scoreboard">
                 <thead>

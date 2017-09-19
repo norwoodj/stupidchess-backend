@@ -4,7 +4,6 @@ import {toTitleCase} from "../util";
 
 class ColorSetupSelect extends React.Component {
     render() {
-        console.log("ColorSetupSelect");
         if (!this.props.gameState.inBoardSetupMode()) {
             return null;
         }

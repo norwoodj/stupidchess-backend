@@ -1,7 +1,6 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.piece import Color, PieceType
-from com.johnmalcolmnorwood.stupidchess.models.game import GameType
-
+from ..models.piece import Color, PieceType
+from ..models.game import GameType, GameResult
 
 SETUP_SQUARES_FOR_COLOR = {
     Color.BLACK: {0, 1, 2, 3, 10, 11, 12, 13, 20, 21, 22, 23},
@@ -68,4 +67,22 @@ def get_game_scores(game):
         return (
             count(filter(lambda piece: piece.color == Color.BLACK, game.pieces)),
             count(filter(lambda piece: piece.color == Color.WHITE, game.pieces)),
+        )
+
+
+def get_game_result(
+    game,
+    user_uuid,
+    black_player_score,
+    white_player_score
+):
+    if game.type == GameType.STUPID_CHESS and game.lastMove < 23:
+        return None
+
+    if 0 in (black_player_score, white_player_score):
+        return (
+            GameResult.TIE if (black_player_score, white_player_score) == (0, 0) else
+            GameResult.WIN if black_player_score == 0 and game.whitePlayerUuid == user_uuid else
+            GameResult.WIN if white_player_score == 0 and game.blackPlayerUuid == user_uuid else
+            GameResult.LOSS
         )

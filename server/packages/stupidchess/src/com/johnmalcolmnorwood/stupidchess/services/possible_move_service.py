@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.game import Game, GameType
-from com.johnmalcolmnorwood.stupidchess.move_generators.possible_move_game_state import PossibleMoveGameState
-from com.johnmalcolmnorwood.stupidchess.factories.piece_move_generator_factory import get_piece_move_generator_for_piece
+from ..models.game import GameType
+from ..move_generators.possible_move_game_state import PossibleMoveGameState
+from ..factories.piece_move_generator_factory import get_piece_move_generator_for_piece
 
 
 class PossibleMoveService(object):

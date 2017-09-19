@@ -4,6 +4,10 @@ function toTitleCase(input) {
         .join(" ");
 }
 
+function toEnum(input) {
+    return input.toUpperCase().replace(" ", "_");
+}
+
 function range(size) {
     let range = [];
     for (let i = 0; i < size; ++i) {
@@ -39,4 +43,4 @@ function redirectToNextQueryParam(defaultNextLocation) {
 }
 
 
-export {toTitleCase, range, getQueryParam, handleUnauthorized, redirectToNextQueryParam};
+export {toTitleCase, range, getQueryParam, handleUnauthorized, redirectToNextQueryParam, toEnum};

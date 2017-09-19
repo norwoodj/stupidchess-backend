@@ -3,7 +3,7 @@ cffi==1.10.0
 click==6.7
 Flask==0.11.1
 Flask-Login==0.4.0
-flask-mongoengine==0.8.2
+flask-mongoengine==0.9.3
 Flask-WTF==0.14.2
 healthcheck==1.3.2
 itsdangerous==0.24

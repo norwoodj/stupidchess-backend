@@ -15,6 +15,18 @@ export default class UserService {
         });
     }
 
+    getUserForUuid(userUuid) {
+        return new Promise((resolve, reject) => {
+            this.http.ajax({
+                type: "GET",
+                url: `/api/user/?userUuid=${userUuid}`,
+                contentType: "application/json",
+                success: response => resolve(response),
+                error: (error) => reject(error)
+            });
+        });
+    }
+
     login(username, password) {
         return new Promise((resolve, reject) => {
             this.http.ajax({

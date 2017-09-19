@@ -1,9 +1,10 @@
 #!/usr/local/bin/python
 from mongoengine import StringField, IntField, EmbeddedDocumentField, ListField
 
-from com.johnmalcolmnorwood.stupidchess.models.dictable import Dictable
-from com.johnmalcolmnorwood.stupidchess.models.piece import Piece
-from com.johnmalcolmnorwood.stupidchess.models.base_document import BaseDocument
+from .dictable import Dictable
+from .piece import Piece
+from .base_document import BaseDocument
+from ..utils import UUID_REGEX
 
 
 class MoveType:
@@ -34,7 +35,7 @@ class Move(BaseDocument, Dictable):
     index = IntField(required=True)
     piece = EmbeddedDocumentField(Piece)
     captures = ListField(EmbeddedDocumentField(Piece), default=None)
-    gameUuid = StringField(required=True)
+    gameUuid = StringField(required=True, regex=UUID_REGEX)
 
     @staticmethod
     def from_json(json, **kwargs):

@@ -91,8 +91,6 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         if len(score_updates) != 0:
             update_one['$inc'] = score_updates
 
-        from .. import LOGGER
-        LOGGER.info(update_one)
         Game.objects(_id=game.get_id()).update(__raw__=update_one)
 
     @staticmethod

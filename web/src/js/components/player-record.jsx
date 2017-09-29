@@ -1,7 +1,6 @@
 import React from "react";
 import RecordService from "../services/record-service";
 import {handleUnauthorized} from "../util";
-import {GameTypeSelect} from "../components/game-type-select";
 import {GameType} from "../constants";
 
 
@@ -43,17 +42,6 @@ class PlayerRecord extends React.Component {
             recordsForGameType.losses,
             recordsForGameType.pointDifferential
         ];
-    }
-
-    handleNewGameType(gameType) {
-        this.setState({
-            selectedGameType: gameType
-        });
-
-        this.recordService.getUserGameRecords(this.props.playerUuid, gameType).then(
-            playerRecords => this.setState({playerRecords: playerRecords}),
-            handleUnauthorized
-        );
     }
 
     render() {

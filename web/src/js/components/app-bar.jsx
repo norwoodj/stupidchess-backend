@@ -2,7 +2,6 @@ import React from "react";
 import Appbar from "muicss/lib/react/appbar";
 import Container from "muicss/lib/react/container";
 import UserService from "../services/user-service";
-import {redirectToNextQueryParam} from "../util";
 
 
 class ScAppBar extends React.Component {
@@ -15,18 +14,6 @@ class ScAppBar extends React.Component {
 
     componentDidMount() {
         this.userService = new UserService(this.props.httpService);
-        this.userService.getCurrentUser().then(
-            user => this.setState({
-                user: user
-            }),
-            () => null
-        );
-    }
-
-    handleLogout() {
-        this.userService.logout().then(
-            () => redirectToNextQueryParam("/")
-        )
     }
 
     render() {
@@ -41,9 +28,9 @@ class ScAppBar extends React.Component {
                                 <a className="link mui--text-title mui--invisible-xs" href="/">{this.props.appName}</a>
                             </td>
                             <td className="mui--text-right mui--invisible-xs">{
-                                this.state.user == null
-                                    ? <div><a className="link" href="/login.html">Login</a> | <a className="link" href="/create-account.html">Create Account</a></div>
-                                    : <div>Hello, <a className="link" href="/profile.html">{this.state.user.username}</a> | <a className="link" onClick={this.handleLogout.bind(this)}>Logout</a></div>
+                                this.props.currentUsername == null
+                                    ? <div><a className="link" href="/login">Login</a> | <a className="link" href="/create-account">Create Account</a></div>
+                                    : <div>Hello, <a className="link" href="/profile">{this.props.currentUsername}</a> | <a className="link" href="/logout">Logout</a></div>
                             }</td>
                         </tr></tbody></table>
                     </Container>
@@ -56,6 +43,7 @@ class ScAppBar extends React.Component {
 ScAppBar.propTypes = {
     appName: React.PropTypes.string.isRequired,
     httpService: React.PropTypes.func.isRequired,
+    currentUsername: React.PropTypes.string
 };
 
 export {ScAppBar};

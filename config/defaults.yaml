@@ -2,9 +2,17 @@ environment: !EnvVar {name: "JCONFIGURE_ACTIVE_PROFILES", default: "none"}
 
 endpoint_prefixes:
   healthcheck: /health
-  auth: /api/user
+  auth: ""
   game: /api/game
   record: /api/record
+  template: ""
+
+auth:
+  loginTemplate: login.html
+  createAccountTemplate: create-account.html
+  changePasswordTemplate: change-password.html
+  postLoginRedirect: /profile
+  postLogoutRedirect: /login
 
 MONGODB_SETTINGS:
   db: stupidchess

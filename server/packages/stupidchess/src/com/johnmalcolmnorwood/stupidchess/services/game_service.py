@@ -61,6 +61,19 @@ class GameService:
         return Game.objects(__raw__=query)
 
     @staticmethod
+    def query_two_player_games_for_user(user_uuid, game_type=None, extra_criteria=[]):
+        game_is_of_type = [{"type": game_type}] if game_type is not None else []
+        user_is_in_game_and_two_player = {
+            "$or": [
+                {"$and": [{"blackPlayerUuid": user_uuid}, {"whitePlayerUuid": {"$ne": user_uuid}}]},
+                {"$and": [{"whitePlayerUuid": user_uuid}, {"blackPlayerUuid": {"$ne": user_uuid}}]},
+            ],
+        }
+
+        query = {"$and": [user_is_in_game_and_two_player, *extra_criteria, *game_is_of_type]}
+        return Game.objects(__raw__=query)
+
+    @staticmethod
     def create_game(game_type, game_auth_type, other_player):
         game = create_new_game(game_type, game_auth_type, other_player)
         game.save()
@@ -100,8 +113,8 @@ class GameService:
         )
 
     @staticmethod
-    def query_completed_games_for_user(user_uuid, game_type=None):
-        return GameService.query_games_for_user(
+    def query_completed_two_player_games_for_user(user_uuid, game_type=None):
+        return GameService.query_two_player_games_for_user(
             user_uuid=user_uuid,
             game_type=game_type,
             extra_criteria=[GameService.__get_game_over_criteria()],

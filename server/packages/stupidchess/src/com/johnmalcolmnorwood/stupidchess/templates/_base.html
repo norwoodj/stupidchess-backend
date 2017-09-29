@@ -8,10 +8,16 @@
 
     <link href="//cdn.muicss.com/mui-0.9.7/css/mui.min.css" rel="stylesheet" type="text/css"/>
     <link href="/css/main.css" rel="stylesheet" type="text/css"/>
-    <link href="/css/form-page.css" rel="stylesheet" type="text/css"/>
-    <script src="/js/login.bundle.js"></script>
+    {% block extra_style %}{% endblock %}
+    {% block bundle %}{% endblock %}
 </head>
 <body>
-<div id="login-form"></div>
+
+<div id="csrf-token" data-token="{{ csrf_token() }}"></div>
+{% if current_user.is_authenticated %}
+    <div id="current-user" data-uuid="{{ current_user.id }}" data-name="{{ current_user.username }}"></div>
+{% endif %}
+
+{% block body %}{% endblock %}
 </body>
 </html>

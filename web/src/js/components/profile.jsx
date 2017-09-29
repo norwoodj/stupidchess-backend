@@ -23,29 +23,17 @@ class Profile extends React.Component {
         this.gameService = new GameService(this.props.httpService);
         this.userService = new UserService(this.props.httpService);
 
-        if (this.props.playerUuid != null) {
-            this.setState({playerUuid: this.props.playerUuid});
+        if (this.props.playerUuid == null || this.props.playerUuid == this.props.currentUserUuid) {
+            this.setState({
+                playerName: this.props.currentUsername,
+                playerUuid: this.props.currentUserUuid
+            });
+
+            return;
         }
 
-        this.getCurrentUserAndRecords();
-    }
-
-    getCurrentUserAndRecords() {
-        this.userService.getCurrentUser().then(
-            user => {
-                this.setState({userUuid: user.id});
-
-                if (this.state.playerUuid == null || user.id == this.state.playerUuid) {
-                    this.setState({
-                        playerName: user.username,
-                        playerUuid: user.id
-                    });
-                } else if (this.state.playerUuid != null) {
-                    this.getOtherPlayerInfo();
-                }
-            },
-            handleUnauthorized
-        );
+        this.setState({playerUuid: this.props.playerUuid});
+        this.getOtherPlayerInfo();
     }
 
     getOtherPlayerInfo() {
@@ -56,16 +44,16 @@ class Profile extends React.Component {
     }
 
     getActiveGameListElements() {
-        if (this.state.playerUuid == null || this.state.userUuid == this.state.playerUuid) {
+        if (this.props.currentUserUuid == this.state.playerUuid) {
             return (
                 <div>
                     <div className="mui-divider"></div>
-                    <ActiveGameList httpService={this.props.httpService} userUuid={this.state.userUuid}/>
+                    <ActiveGameList httpService={this.props.httpService} userUuid={this.state.playerUuid}/>
                 </div>
             );
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     render() {
@@ -96,6 +84,8 @@ class Profile extends React.Component {
 
 Profile.propTypes = {
     httpService: React.PropTypes.func.isRequired,
+    currentUsername: React.PropTypes.string.isRequired,
+    currentUserUuid: React.PropTypes.string.isRequired,
     playerUuid: React.PropTypes.string
 };
 

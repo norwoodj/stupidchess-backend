@@ -1,0 +1,12 @@
+{% extends "_base.html" %}
+
+{% block extra_style %}<link href="/css/profile.css" rel="stylesheet" type="text/css"/>{% endblock %}
+{% block bundle %}<script src="/js/profile.bundle.js"></script>{% endblock %}
+
+{% block body %}
+    {% if request.args.get('playeruuid') %}
+        <div id="profile-user" data-uuid="{{ request.args['playeruuid'] }}"></div>
+    {% endif %}
+
+    <div id="profile"></div>
+{% endblock %}

@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 function toTitleCase(input) {
     return input.split("_")
         .map(str => str.charAt(0).toUpperCase() + str.substring(1).toLowerCase())
@@ -42,5 +44,17 @@ function redirectToNextQueryParam(defaultNextLocation) {
     window.location.replace(link);
 }
 
+function setupCsrfRequests() {
+    let csrfToken = $("#csrf-token").data("token");
 
-export {toTitleCase, range, getQueryParam, handleUnauthorized, redirectToNextQueryParam, toEnum};
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrfToken);
+            }
+        }
+    });
+}
+
+
+export {toTitleCase, range, getQueryParam, handleUnauthorized, redirectToNextQueryParam, toEnum, setupCsrfRequests};

@@ -23,6 +23,10 @@ class AuthUser:
         return False
 
     @property
+    def id(self):
+        return self.get_id()
+
+    @property
     def username(self):
         return self.__user.username
 
@@ -58,9 +62,6 @@ class ScUserService(UserService):
             username=username,
             password=hashed_password,
         )
-
-        if self.__get_user_safe(username=username) is not None:
-            raise UserAlreadyExistsException(username)
 
         user.save()
         return AuthUser(user)

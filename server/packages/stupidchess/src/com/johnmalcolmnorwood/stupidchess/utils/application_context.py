@@ -2,6 +2,7 @@
 from datetime import timedelta
 from flask import jsonify
 from flask_mongoengine import MongoEngine
+from flask_wtf import CSRFProtect
 from healthcheck import HealthCheck
 from jconfigure import configure
 from mongoengine.connection import get_db
@@ -11,6 +12,7 @@ from ...auth.initialize_authentication import initialize_authentication
 from .. import LOGGER
 from ..blueprints.game_blueprint import game_blueprint
 from ..blueprints.record_blueprint import record_blueprint
+from ..blueprints.template_blueprint import template_blueprint
 from ..exceptions import IllegalMoveException, InvalidGameParameterException
 from ..services.ambiguous_move_service import AmbiguousMoveService
 from ..services.move_application_service import MoveApplicationService
@@ -31,6 +33,7 @@ class ApplicationContext:
         LOGGER.debug(self.config)
 
         self.__initialize_app(app)
+        self.__initialize_csrf(app)
         self.__initialize_healthcheck(app)
         self.__initialize_mongo(app)
         self.__initialize_services()
@@ -53,6 +56,9 @@ class ApplicationContext:
             return bool(stats["ok"]), "Mongo Database is UP" if stats["ok"] else "ERROR: Mongo Database is DOWN"
 
         health.add_check(mongo_okay)
+
+    def __initialize_csrf(self, app):
+        CSRFProtect(app)
 
     def __initialize_mongo(self, app):
         MongoEngine(app)
@@ -81,12 +87,14 @@ class ApplicationContext:
             user_service=self.user_service,
             auth_secret_key=self.config["app_secret_key"],
             auth_blueprint_prefix=self.config["endpoint_prefixes"].get("auth", ""),
+            login_view="/login",
         )
 
     def __register_blueprints(self, app):
         LOGGER.debug(f"Registering game blueprint with prefix {self.config['endpoint_prefixes']['game']}")
         app.register_blueprint(game_blueprint, url_prefix=self.config["endpoint_prefixes"]["game"])
         app.register_blueprint(record_blueprint, url_prefix=self.config["endpoint_prefixes"]["record"])
+        app.register_blueprint(template_blueprint, url_prefix=self.config["endpoint_prefixes"]["template"])
 
     def __register_error_handlers(self, app):
         @app.errorhandler(IllegalMoveException)

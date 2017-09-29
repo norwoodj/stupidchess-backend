@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from collections import defaultdict
 from ..models.game import GameResult, GameType
 
 
@@ -43,12 +42,8 @@ class RecordService:
             }
         }
 
-    def get_user_records(self, user_uuid):
-        results_for_game_type_and_result = self.__game_service.query_completed_games_for_user(user_uuid).aggregate(
-            RecordService.__get_game_result_projection(user_uuid),
-            RecordService.__get_game_type_and_result_group(),
-        )
-
+    @staticmethod
+    def __convert_to_per_game_type_records(results_for_game_type_and_result):
         records = {
             game_type: {
                 "wins": 0,
@@ -66,4 +61,14 @@ class RecordService:
             records[game_type][result_key] = r["count"]
 
         return records
+
+    def get_user_records(self, user_uuid):
+        results_for_game_type_and_result = self.__game_service.query_completed_two_player_games_for_user(
+            user_uuid,
+        ).aggregate(
+            RecordService.__get_game_result_projection(user_uuid),
+            RecordService.__get_game_type_and_result_group(),
+        )
+
+        return RecordService.__convert_to_per_game_type_records(results_for_game_type_and_result)
 

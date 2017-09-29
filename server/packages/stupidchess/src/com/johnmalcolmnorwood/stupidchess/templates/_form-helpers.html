@@ -1,0 +1,13 @@
+{% macro render_field(field) %}
+<div class="mui-textfield">
+    {{ field | safe }}
+    {{ field.label }}
+</div>
+{% if field.errors %}
+    <ul class="form-errors">
+        {% for error in field.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endmacro %}

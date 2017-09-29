@@ -49,11 +49,11 @@ class ScUserService(UserService):
     def get_user_with_credentials(self, username, password):
         user = ScUserService.__get_user_safe(username=username)
 
-        if user is not None and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+        if user is not None and bcrypt.checkpw(password.encode("utf-8"), user.password.encode("utf-8")):
             return AuthUser(user)
 
     def create_user(self, username, password, *args, **kwargs):
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
         user = User(
             username=username,
             password=hashed_password,
@@ -64,3 +64,10 @@ class ScUserService(UserService):
 
         user.save()
         return AuthUser(user)
+
+    def update_user_password(self, username, password):
+        hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+        User.objects(username=username).update(__raw__={
+            "$set": {"password": hashed_password},
+            "$currentDate": {"lastUpdateTimestamp": True},
+        })

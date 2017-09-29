@@ -51,11 +51,10 @@ def add_moves(stupidchess_url, game_uuid, moves, username, password):
         )
 
         response.raise_for_status()
-        move_texts = "YAY",
-        #move_texts = (
-        #    f"{m['id']} ({m['type']} {m['piece']['color']} {m['piece']['type']} at {m['destinationSquare']})"
-        #    for m in response.json()["moves"]
-        #)
+        move_texts = (
+            f"{m['id']} ({m['type']} {m['piece']['color']} {m['piece']['type']} at {m['destinationSquare']})"
+            for m in response.json()["moves"]
+        )
 
         LOGGER.info(f"Added Move(s) {', '.join(move_texts)}")
 

@@ -42,8 +42,8 @@ class ScAppBar extends React.Component {
                             </td>
                             <td className="mui--text-right mui--invisible-xs">{
                                 this.state.user == null
-                                    ? <div><a className="mui--hidden-xs link" href="/login.html">Login</a> | <a className="mui--hidden-xs link" href="/create-account.html">Create Account</a></div>
-                                    : <div>Hello, <a className="mui--hidden-xs link" href="/profile.html">{this.state.user.username}</a> | <a className="mui--hidden-xs link" onClick={this.handleLogout.bind(this)}>Logout</a></div>
+                                    ? <div><a className="link" href="/login.html">Login</a> | <a className="link" href="/create-account.html">Create Account</a></div>
+                                    : <div>Hello, <a className="link" href="/profile.html">{this.state.user.username}</a> | <a className="link" onClick={this.handleLogout.bind(this)}>Logout</a></div>
                             }</td>
                         </tr></tbody></table>
                     </Container>

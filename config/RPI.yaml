@@ -1,1 +1,3 @@
 app_secret_key: !EnvVar FLASK_APP_SECRET_KEY
+remember_cookie_duration_days: 30
+REMEMBER_COOKIE_SECURE: true

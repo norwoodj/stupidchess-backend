@@ -77,6 +77,8 @@ def get_new_stupid_chess_game(black_player_uuid, white_player_uuid, black_player
         whitePlayerUuid=white_player_uuid,
         blackPlayerName=black_player_name,
         whitePlayerName=white_player_name,
+        blackPlayerScore=1,
+        whitePlayerScore=1,
     )
 
 CHESS_INITIAL_PIECES = [
@@ -111,6 +113,8 @@ def get_new_chess_game(black_player_uuid, white_player_uuid, black_player_name, 
         whitePlayerUuid=white_player_uuid,
         blackPlayerName=black_player_name,
         whitePlayerName=white_player_name,
+        blackPlayerScore=1,
+        whitePlayerScore=1,
     )
 
 CHECKERS_INITIAL_PIECES = [
@@ -133,6 +137,8 @@ def get_new_checkers_game(black_player_uuid, white_player_uuid, black_player_nam
         whitePlayerUuid=white_player_uuid,
         blackPlayerName=black_player_name,
         whitePlayerName=white_player_name,
+        blackPlayerScore=12,
+        whitePlayerScore=12,
     )
 
 

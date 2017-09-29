@@ -25,7 +25,7 @@ def post_game():
 
     return jsonify(
         message="Successfully created game",
-        gameUuid=game.get_id(),
+        game=get_game_dict(game, current_user.get_id()),
     ), 201
 
 

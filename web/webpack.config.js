@@ -8,6 +8,7 @@ module.exports = {
         createGame: "./src/js/render-game-form.jsx",
         login: "./src/js/render-login-form.jsx",
         createAccount: "./src/js/render-create-account-form.jsx",
+        changePassword: "./src/js/render-change-password-form.jsx",
         profile: "./src/js/render-profile-page.jsx"
     },
     resolve: {

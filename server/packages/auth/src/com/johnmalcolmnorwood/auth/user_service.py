@@ -15,3 +15,6 @@ class UserService:
 
     def create_user(self, username, password, *args, **kwargs):
         raise NotImplementedError()
+
+    def update_user_password(self, username, password):
+        raise NotImplementedError()

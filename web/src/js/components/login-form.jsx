@@ -11,6 +11,7 @@ class LoginForm extends AbstractForm {
 
         this.username = "";
         this.password = "";
+        this.remember = false;
     }
 
     componentDidMount() {
@@ -27,7 +28,7 @@ class LoginForm extends AbstractForm {
     }
 
     submitForm() {
-        return this.userService.login(this.username, this.password);
+        return this.userService.login(this.username, this.password, this.remember);
     }
 
     updateUsername(event) {
@@ -36,6 +37,11 @@ class LoginForm extends AbstractForm {
 
     updatePassword(event) {
         this.password = event.target.value;
+    }
+
+    updateRememberMe(event) {
+        console.log(event.target.checked);
+        this.remember = event.target.checked;
     }
 
     getLegend() {
@@ -64,6 +70,13 @@ class LoginForm extends AbstractForm {
                 hint="password"
                 required={true}
                 onChange={this.updatePassword.bind(this)}
+            />,
+            <Input
+                key="2"
+                name="remember"
+                type="checkbox"
+                label="Remember Me"
+                onChange={this.updateRememberMe.bind(this)}
             />
         ];
     }

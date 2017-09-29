@@ -1,7 +1,5 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.move_generators.forward_non_capturing_move_generator import (
-    ForwardNonCapturingMoveGenerator,
-)
+from .forward_non_capturing_move_generator import ForwardNonCapturingMoveGenerator
 
 
 class CheckerMoveGenerator:
@@ -15,9 +13,11 @@ class CheckerMoveGenerator:
             (capture_offset, capture_offset * 2) for capture_offset in forward_offsets
         ]
 
-        self.__middle_board_possible_capture_move = (middle_board_offset, middle_board_offset * 2) \
-            if middle_board_offset is not None \
+        self.__middle_board_possible_capture_move = (
+            (middle_board_offset, middle_board_offset * 2)
+            if middle_board_offset is not None
             else None
+        )
 
     def get_possible_moves(self, possible_move_game_state):
         moves = []
@@ -47,7 +47,6 @@ class CheckerMoveGenerator:
             m.captures = captures_so_far
 
         moves += non_capturing_moves
-
         captures_set = set() if captures_so_far is None else set(map(lambda c: c.square, captures_so_far))
 
         self.__add_captures_from_square(
@@ -112,7 +111,7 @@ class CheckerMoveGenerator:
                 move_offset,
             )
 
-        if self.__middle_board_possible_capture_move is not None:
+        if self.__middle_board_possible_capture_move is not None and possible_move_game_state.is_piece_in_middle_board():
             capture_offset, move_offset = self.__middle_board_possible_capture_move
 
             self.__add_capture_for_capture_move_pair(

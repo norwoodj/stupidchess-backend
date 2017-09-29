@@ -1,8 +1,8 @@
 #!/usr/local/bin/python
 from com.johnmalcolmnorwood.stupidchess.exceptions import IllegalMoveException
 from com.johnmalcolmnorwood.stupidchess.models.move import MoveType, Move
-from com.johnmalcolmnorwood.stupidchess.models.game import Game
-from com.johnmalcolmnorwood.stupidchess.models.piece import Color, FirstMove, Piece
+from com.johnmalcolmnorwood.stupidchess.models.game import Game, GameType
+from com.johnmalcolmnorwood.stupidchess.models.piece import Color, FirstMove, Piece, PieceType
 from com.johnmalcolmnorwood.stupidchess.services.abstract_move_update_service import AbstractMoveUpdateService
 
 
@@ -42,8 +42,32 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
         raise IllegalMoveException(move)
 
-    def apply_game_updates_for_moves(self, moves, game):
-        move = moves[0]
+    @staticmethod
+    def __capture_affects_score(game_type, capture_type):
+        return game_type == GameType.CHECKERS or capture_type in (PieceType.CHECKER_KING, PieceType.KING)
+
+    @staticmethod
+    def __get_score_update_increment(game_type, captures):
+        if captures is None:
+            return {}
+
+        score_update = {
+            "blackPlayerScore": sum(-1 for _ in (
+                c for c in captures
+                if c.color == Color.BLACK and MoveMoveUpdateService.__capture_affects_score(game_type, c.type)
+            )),
+            "whitePlayerScore": sum(-1 for _ in (
+                c for c in captures
+                if c.color == Color.WHITE and MoveMoveUpdateService.__capture_affects_score(game_type, c.type)
+            )),
+        }
+
+        return {
+            score_field: increment for score_field, increment in score_update.items() if increment != 0
+        }
+
+    @staticmethod
+    def __remove_captures_and_moved_piece_update_score(game, move):
         captures = [capture.to_dict('color', 'type', 'square') for capture in move.captures] \
             if move.captures is not None \
             else None
@@ -52,7 +76,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
         # Need to apply two updates because we can't add to and remove from the pieces array twice in one update
         # This one adds all of the new captures, removes the pieces that were captured and removes the piece that was
-        # just moved
+        # just moved, and also updates the score
         update_one = {
             '$pull': {'pieces': piece_removals},
             '$currentDate': {'lastUpdateTimestamp': True},
@@ -63,8 +87,16 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
                 'captures': {'$each': captures}
             }
 
+        score_updates = MoveMoveUpdateService.__get_score_update_increment(game.type, move.captures)
+        if len(score_updates) != 0:
+            update_one['$inc'] = score_updates
+
+        from .. import LOGGER
+        LOGGER.info(update_one)
         Game.objects(_id=game.get_id()).update(__raw__=update_one)
 
+    @staticmethod
+    def __add_moved_piece_update_turn_increment_move_count(game, move):
         new_current_turn = Color.BLACK if game.currentTurn == Color.WHITE else Color.WHITE
 
         piece_addition = Piece(
@@ -92,6 +124,12 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         }
 
         Game.objects(_id=game.get_id()).update(__raw__=update_two)
+
+    def apply_game_updates_for_moves(self, moves, game):
+        move = moves[0]
+        MoveMoveUpdateService.__remove_captures_and_moved_piece_update_score(game, move)
+        MoveMoveUpdateService.__add_moved_piece_update_turn_increment_move_count(game, move)
+
 
     def get_move_for_insert(self, move):
         move_captures = (

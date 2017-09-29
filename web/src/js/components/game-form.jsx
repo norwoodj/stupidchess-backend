@@ -36,7 +36,7 @@ class GameForm extends AbstractForm {
     }
 
     getFormRedirectDefault(response) {
-        return `/game.html?gameuuid=${response.gameUuid}`;
+        return `/game.html?gameuuid=${response.game.id}`;
     }
 
     updateGameType(gameType) {

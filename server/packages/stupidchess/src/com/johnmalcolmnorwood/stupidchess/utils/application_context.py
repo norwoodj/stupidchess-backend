@@ -1,7 +1,5 @@
 #!/usr/local/bin/python
-import logging
-import os
-
+from datetime import timedelta
 from flask import jsonify
 from flask_mongoengine import MongoEngine
 from healthcheck import HealthCheck
@@ -41,6 +39,7 @@ class ApplicationContext:
         self.__register_error_handlers(app)
 
     def __initialize_app(self, app):
+        self.config["REMEMBER_COOKIE_DURATION"] = timedelta(days=self.config.get('remember_cookie_duration_days', 365))
         app.config.update(self.config)
 
     def __initialize_healthcheck(self, app):

@@ -57,3 +57,5 @@ class Game(BaseDocument, Dictable):
     whitePlayerUuid = StringField(required=True, regex=UUID_REGEX)
     blackPlayerName = StringField(required=True)
     whitePlayerName = StringField(required=True)
+    blackPlayerScore = IntField(required=True)
+    whitePlayerScore = IntField(required=True)

@@ -9,7 +9,7 @@ class PlayerRecord extends React.Component {
     constructor() {
         super();
         this.state = {
-            playerRecords: [],
+            playerRecords: null,
         };
     }
 
@@ -23,17 +23,25 @@ class PlayerRecord extends React.Component {
 
     getPlayerRecordHeaders() {
         return [
+            "Type",
             "Games",
             "Wins",
-            "Losses"
+            "Losses",
+            "Point Differential"
         ]
     }
 
-    getPlayerRecordData() {
+    getPlayerRecordDataForGameType(gameType) {
+        console.log(gameType);
+        console.log(this.state.playerRecords);
+        let recordsForGameType = this.state.playerRecords[gameType];
+
         return [
-            this.state.playerRecords.completedGames,
-            this.state.playerRecords.wins,
-            this.state.playerRecords.losses
+            gameType,
+            recordsForGameType.wins + recordsForGameType.losses,
+            recordsForGameType.wins,
+            recordsForGameType.losses,
+            recordsForGameType.pointDifferential
         ];
     }
 
@@ -49,22 +57,21 @@ class PlayerRecord extends React.Component {
     }
 
     render() {
+        if (this.state.playerRecords == null) {
+            return null;
+        }
+
         return (
             <div>
                 <div className="mui-divider"></div>
                 <h3>Record Against Other Players</h3>
-                <GameTypeSelect
-                    optionChangeHandler={this.handleNewGameType.bind(this)}
-                    options={GameType.all()}
-                    allOption={true}
-                />
                 <table className="mui-table mui-table--bordered">
                     <thead>
                     <tr>{this.getPlayerRecordHeaders().map((header, index) => <th key={index}>{header}</th>)}</tr>
                     </thead>
-                    <tbody>
-                    <tr>{this.getPlayerRecordData().map((data, index) => <td key={index}>{data}</td>)}</tr>
-                    </tbody>
+                    <tbody>{GameType.all().map((gameType, rowIndex) =>
+                        <tr key={rowIndex}>{this.getPlayerRecordDataForGameType(gameType).map((data, index) => <td key={index}>{data}</td>)}</tr>
+                    )}</tbody>
                 </table>
             </div>
         );

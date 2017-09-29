@@ -1,7 +1,6 @@
 #!/usr/local/bin/python
 from ..models.move import Move, MoveType
 from ..models.piece import Color, PieceType
-from ..utils.game_utils import get_game_scores
 
 
 class PossibleMoveGameState:
@@ -28,8 +27,7 @@ class PossibleMoveGameState:
         return self.__game.lastMove
 
     def is_game_over(self):
-        black_score, white_score = get_game_scores(self.__game)
-        return black_score == 0 or white_score == 0
+        return self.__game.blackPlayerScore == 0 or self.__game.whitePlayerScore == 0
 
     def is_pieces_turn(self):
         return self.__game.currentTurn == self.__piece_being_moved.color

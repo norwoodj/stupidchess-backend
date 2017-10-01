@@ -4,11 +4,13 @@ import click
 
 from jconfigure import configure
 from com.johnmalcolmnorwood.stupidchess import LOGGER
+from com.johnmalcolmnorwood.stupidchess.models.piece import PieceType, Color
+from com.johnmalcolmnorwood.stupidchess.models.move import MoveType
 
 
 def make_move(piece_type, color, square):
     return {
-        "type": "PLACE",
+        "type": MoveType.PLACE,
         "destinationSquare": square,
         "piece": {
             "type": piece_type,
@@ -18,25 +20,25 @@ def make_move(piece_type, color, square):
 
 STUPID_CHESS_URL = "http://localhost/api/{endpoint}"
 BLACK_SETUP_MOVES = [
-    *[make_move("PAWN", "BLACK", i) for i in range(20, 24)],
-    make_move("PONY", "BLACK", 12),
-    make_move("CHECKER", "BLACK", 11),
-    make_move("CASTLE", "BLACK", 10),
-    make_move("CASTLE", "BLACK", 13),
-    make_move("BISHOP", "BLACK", 0),
-    make_move("BISHOP", "BLACK", 3),
-    make_move("QUEEN", "BLACK", 1),
+    *[make_move(PieceType.PAWN, Color.BLACK, i) for i in range(20, 24)],
+    make_move(PieceType.PONY, Color.BLACK, 12),
+    make_move(PieceType.CHECKER, Color.BLACK, 11),
+    make_move(PieceType.CASTLE, Color.BLACK, 10),
+    make_move(PieceType.CASTLE, Color.BLACK, 13),
+    make_move(PieceType.BISHOP, Color.BLACK, 0),
+    make_move(PieceType.BISHOP, Color.BLACK, 3),
+    make_move(PieceType.QUEEN, Color.BLACK, 1),
 ]
 
 WHITE_SETUP_MOVES = [
-    *[make_move("PAWN", "WHITE", i) for i in range(94, 98)],
-    make_move("PONY", "WHITE", 106),
-    make_move("CHECKER", "WHITE", 105),
-    make_move("CASTLE", "WHITE", 104),
-    make_move("CASTLE", "WHITE", 107),
-    make_move("BISHOP", "WHITE", 114),
-    make_move("BISHOP", "WHITE", 117),
-    make_move("QUEEN", "WHITE", 115),
+    *[make_move(PieceType.PAWN, Color.WHITE, i) for i in range(94, 98)],
+    make_move(PieceType.PONY, Color.WHITE, 106),
+    make_move(PieceType.CHECKER, Color.WHITE, 105),
+    make_move(PieceType.CASTLE, Color.WHITE, 104),
+    make_move(PieceType.CASTLE, Color.WHITE, 107),
+    make_move(PieceType.BISHOP, Color.WHITE, 114),
+    make_move(PieceType.BISHOP, Color.WHITE, 117),
+    make_move(PieceType.QUEEN, Color.WHITE, 115),
 ]
 
 

@@ -6,21 +6,24 @@ import {ScAppBar} from "./components/app-bar";
 import {SideDrawer} from "./components/side-drawer";
 import {Footer} from "./components/footer";
 import {Game} from "./components/game";
-import {getQueryParam} from "./util";
 import {setupSideDrawerTransition} from "./side-drawer-transition";
 import {MENU_CATEGORIES, APP_NAME} from "./constants";
+import {setupCsrfRequests} from "./util";
 
 
 $(() => {
-    let gameUuid = getQueryParam("gameuuid");
+    let gameUuid = $("#game-data").data("uuid");
+    let currentUsername = $("#current-user").data("name");
+    let error = $("#error-data").data("error");
+    setupCsrfRequests();
 
     ReactDOM.render(
         <div id="react-root">
             <SideDrawer pageName={APP_NAME} menuCategories={MENU_CATEGORIES}/>
-            <ScAppBar appName={APP_NAME} httpService={$}/>
+            <ScAppBar appName={APP_NAME} httpService={$} currentUsername={currentUsername}/>
             <div id="content-wrapper">
                 <div className="mui--appbar-height"></div>
-                <Game httpService={$} gameUuid={gameUuid}/>
+                <Game httpService={$} gameUuid={gameUuid} error={error}/>
             </div>
             <Footer/>
         </div>,

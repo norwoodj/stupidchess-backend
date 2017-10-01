@@ -10,11 +10,12 @@ class GameAuthType:
     ONE_PLAYER = "ONE_PLAYER"
     TWO_PLAYER = "TWO_PLAYER"
 
-
-class GameResult:
-    WIN = "WIN"
-    LOSS = "LOSS"
-    TIE = "TIE"
+    @staticmethod
+    def all():
+        return [
+            GameAuthType.ONE_PLAYER,
+            GameAuthType.TWO_PLAYER,
+        ]
 
 
 class GameType:
@@ -31,11 +32,13 @@ class GameType:
         ]
 
 
-GAME_TYPE_REGEX = "|".join([
-    GameType.STUPID_CHESS,
-    GameType.CHESS,
-    GameType.CHECKERS,
-])
+class GameResult:
+    WIN = "WIN"
+    LOSS = "LOSS"
+    TIE = "TIE"
+
+
+GAME_TYPE_REGEX = "|".join(GameType.all())
 
 
 class Game(BaseDocument, Dictable):

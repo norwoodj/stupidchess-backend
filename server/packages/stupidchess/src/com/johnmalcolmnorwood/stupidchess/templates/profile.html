@@ -4,9 +4,7 @@
 {% block bundle %}<script src="/js/profile.bundle.js"></script>{% endblock %}
 
 {% block body %}
-    {% if request.args.get('playeruuid') %}
-        <div id="profile-user" data-uuid="{{ request.args['playeruuid'] }}"></div>
-    {% endif %}
-
+    <div id="profile-user" data-uuid="{{ profile_user_uuid }}" data-name="{{ profile_user_name }}"></div>
+    <div id="error-data" data-error="{{ error }}"></div>
     <div id="profile"></div>
 {% endblock %}

@@ -1,15 +1,12 @@
 import React from "react";
-import {GameTypeSelect} from "../components/game-type-select"
+import {UpdatingSelect} from "../components/updating-select"
 import GameService from "../services/game-service"
-import {handleUnauthorized} from "../util";
 import {Color, GameResult, GameType} from "../constants";
 
 
 class GameList extends React.Component {
     constructor() {
         super();
-        this.gameTypes = ["ALL", ...GameType.all()];
-
         this.state = {
             selectedGameType: "ALL",
             games: []
@@ -18,10 +15,7 @@ class GameList extends React.Component {
 
     componentDidMount() {
         this.gameService = new GameService(this.props.httpService);
-        this.retrieveGames().then(
-            games => this.setState({games: games}),
-            handleUnauthorized
-        );
+        this.retrieveGames().then(games => this.setState({games: games}));
 
     }
 
@@ -38,9 +32,9 @@ class GameList extends React.Component {
 
         if (game.blackPlayerUuid != game.whitePlayerUuid) {
             if (myColor == Color.BLACK) {
-                return <a className={className} href={`/profile.html?playeruuid=${game.whitePlayerUuid}`}>{game.whitePlayerName}</a>;
+                return <a className={className} href={`/profile?userUuid=${game.whitePlayerUuid}`}>{game.whitePlayerName}</a>;
             } else {
-                return <a className={className} href={`/profile.html?playeruuid=${game.blackPlayerUuid}`}>{game.blackPlayerName}</a>;
+                return <a className={className} href={`/profile?userUuid=${game.blackPlayerUuid}`}>{game.blackPlayerName}</a>;
             }
         } else {
             return (myColor == Color.BLACK) ? game.whitePlayerName : game.blackPlayerName;
@@ -80,10 +74,7 @@ class GameList extends React.Component {
             selectedGameType: gameType
         });
 
-        this.retrieveGames(gameType).then(
-            games => this.setState({games: games}),
-            handleUnauthorized
-        );
+        this.retrieveGames(gameType).then(games => this.setState({games: games}));
     }
 
     render() {
@@ -91,7 +82,8 @@ class GameList extends React.Component {
             <div>
                 <div className="mui-divider"></div>
                 <h3>{this.getGameListHeader()}</h3>
-                <GameTypeSelect
+                <UpdatingSelect
+                    label="Filter By Game Type"
                     optionChangeHandler={this.handleNewGameType.bind(this)}
                     options={GameType.all()}
                     allOption={true}

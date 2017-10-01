@@ -2,31 +2,10 @@
 from flask import Blueprint, request, current_app, jsonify
 from flask_login import login_required, current_user
 
-from .. import LOGGER
 from ..models.move import Move
 from ..utils.game_utils import get_game_dict, get_move_dict
 
 game_blueprint = Blueprint("game", __name__)
-
-
-@game_blueprint.route("/", methods=["POST"])
-@login_required
-def post_game():
-    LOGGER.debug(f"New game requested with body {request.json}")
-
-    game_type = request.json.get("type")
-    game_auth_type = request.json.get("gameAuthType")
-    other_player = request.json.get("otherPlayer")
-
-    if None in (game_type, game_auth_type, other_player):
-        return jsonify(message="Fields 'otherPlayer', 'type', and 'auth_type' are required!"), 400
-
-    game = current_app.context.game_service.create_game(game_type, game_auth_type, other_player)
-
-    return jsonify(
-        message="Successfully created game",
-        game=get_game_dict(game, current_user.get_id()),
-    ), 201
 
 
 @game_blueprint.route("/active")
@@ -83,14 +62,6 @@ def post_move_to_game(game_uuid):
         moves=[get_move_dict(m) for m in moves_applied],
         message=f"Successfully made move{'s' if len(moves_applied) > 1 else ''}",
     ), 201
-
-
-def get_possible_move_json_element(possible_move):
-    return {
-        "captures": [{"color": c.color, "type": c.type, "square": c.square} for c in possible_move.captures or []],
-        "startSquare": possible_move.startSquare,
-        "destinationSquare": possible_move.destinationSquare,
-    }
 
 
 @game_blueprint.route("/<game_uuid>/move/possible")

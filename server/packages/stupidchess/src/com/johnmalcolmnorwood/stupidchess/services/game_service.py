@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from ..factories.game_factory import create_new_game
-from ..models.game import Game
+from ..models.game import Game, GameType
 from ..models.piece import Color
 
 
@@ -10,7 +10,7 @@ class GameService:
 
     @staticmethod
     def __is_in_board_setup_mode(game):
-        return game.type == "STUPID_CHESS" and game.lastMove < 23
+        return game.type == GameType.STUPID_CHESS and game.lastMove < 23
 
     @staticmethod
     def __is_players_turn(game, user_uuid):
@@ -44,6 +44,15 @@ class GameService:
             "$or": [
                 {"blackPlayerScore": {"$eq": 0}},
                 {"whitePlayerScore": {"$eq": 0}}
+            ],
+        }
+
+    @staticmethod
+    def __get_game_for_user_and_game_uuid_criteria(user_uuid, game_uuid):
+        return {
+            "$and": [
+                {"_id": game_uuid},
+                {"$or": [{"blackPlayerUuid": user_uuid}, {"whitePlayerUuid": user_uuid}]}
             ],
         }
 
@@ -93,14 +102,12 @@ class GameService:
 
     @staticmethod
     def get_game_for_user_and_game_uuid(user_uuid, game_uuid):
-        game = Game.objects.get_or_404(__raw__={
-            "$and": [
-                {"_id": game_uuid},
-                {"$or": [{"blackPlayerUuid": user_uuid}, {"whitePlayerUuid": user_uuid}]}
-            ],
-        })
-
+        game = Game.objects.get_or_404(__raw__=GameService.__get_game_for_user_and_game_uuid_criteria(user_uuid, game_uuid))
         return GameService.__remove_unprivileged_moves(game, user_uuid)
+
+    @staticmethod
+    def query_game_for_user_and_game_uuid(user_uuid, game_uuid):
+        return Game.objects(__raw__=GameService.__get_game_for_user_and_game_uuid_criteria(user_uuid, game_uuid))
 
     @staticmethod
     def get_active_games_for_user(user_uuid, game_type=None, skip=0, results=10):

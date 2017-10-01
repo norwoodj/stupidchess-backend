@@ -12,9 +12,11 @@ import {setupCsrfRequests} from "./util";
 
 
 $(() => {
-    let currentUserUuid = $("#current-user").data("uuid");
     let currentUsername = $("#current-user").data("name");
     let profileUserUuid = $("#profile-user").data("uuid");
+    let profileUsername = $("#profile-user").data("name");
+    let error = $("#error-data").data("error");
+
     setupCsrfRequests();
 
     ReactDOM.render(
@@ -29,9 +31,9 @@ $(() => {
                 <div className="mui--appbar-height"></div>
                 <Profile
                     httpService={$}
-                    currentUserUuid={currentUserUuid}
-                    currentUsername={currentUsername}
-                    playerUuid={profileUserUuid}
+                    profileUserUuid={profileUserUuid}
+                    profileUsername={profileUsername}
+                    error={error}
                 />
             </div>
             <Footer/>

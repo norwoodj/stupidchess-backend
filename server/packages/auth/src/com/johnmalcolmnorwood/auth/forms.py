@@ -57,7 +57,6 @@ class CreateAccountForm(FlaskForm):
 
 
 class ChangePasswordForm(FlaskForm):
-    username = StringField("Username", validators=_LOGIN_USERNAME_VALIDATORS, render_kw=_get_render_kw(placeholder="username"))
     password = PasswordField("Password", validators=_PASSWORD_VALIDATORS, render_kw=_get_render_kw(placeholder="password"))
     new_password = PasswordField("New Password", validators=_PASSWORD_VALIDATORS, render_kw=_get_render_kw(placeholder="new password"))
     confirm_new_password = PasswordField("Confirm New Password", validators=[validators.EqualTo("new_password")], render_kw=_get_render_kw(placeholder="confirm new password"))

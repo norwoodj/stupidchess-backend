@@ -4,7 +4,8 @@ let MENU_CATEGORIES = [
         category: "Pages",
         options: [
             {text: "Home", link: "/"},
-            {text: "Create Game", link: "/create-game.html"}
+            {text: "Create Game", link: "/create-game"},
+            {text: "Change Password", link: "/change-password"}
         ]
     }
 ];
@@ -13,7 +14,12 @@ let APP_NAME = "Stupid Chess";
 
 let Color = {
     BLACK: "BLACK",
-    WHITE: "WHITE"
+    WHITE: "WHITE",
+
+    all: () => [
+        Color.BLACK,
+        Color.WHITE
+    ]
 };
 
 let GameType = {

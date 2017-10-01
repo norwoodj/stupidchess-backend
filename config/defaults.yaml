@@ -11,8 +11,8 @@ auth:
   loginTemplate: login.html
   createAccountTemplate: create-account.html
   changePasswordTemplate: change-password.html
-  postLoginRedirect: /profile
-  postLogoutRedirect: /login
+  postLoginRedirect: template.profile
+  postLogoutRedirect: auth.login
 
 MONGODB_SETTINGS:
   db: stupidchess

@@ -1,5 +1,5 @@
 import React from "react";
-import {toTitleCase, toEnum} from "../util";
+import {toTitleCase} from "../util";
 
 
 class UpdatingSelect extends React.Component {
@@ -15,7 +15,7 @@ class UpdatingSelect extends React.Component {
     }
 
     handleChangeEvent(e) {
-        let value = toEnum(e.nativeEvent.srcElement.value);
+        let value = e.nativeEvent.srcElement.value;
 
         if (value == "ALL") {
             this.props.optionChangeHandler(null);
@@ -27,9 +27,9 @@ class UpdatingSelect extends React.Component {
     render() {
         return this.state.options != null ? (
             <div className="mui-select">
-                <label>{this.getSelectLabel()}</label>
+                <label>{this.props.label}</label>
                 <select onChange={this.handleChangeEvent.bind(this)}>
-                    {this.state.options.map(option => <option key={option}>{toTitleCase(option)}</option>)}
+                    {this.state.options.map(option => <option value={option} key={option}>{toTitleCase(option)}</option>)}
                 </select>
             </div>
         ) : null;
@@ -37,9 +37,10 @@ class UpdatingSelect extends React.Component {
 }
 
 UpdatingSelect.propTypes = {
+    label: React.PropTypes.string.isRequired,
     optionChangeHandler: React.PropTypes.func.isRequired,
     options: React.PropTypes.array.isRequired,
-    allOption: React.PropTypes.bool.isRequired
+    allOption: React.PropTypes.bool
 };
 
 export {UpdatingSelect};

@@ -6,6 +6,7 @@ import {CaptureGrid} from "./capture-grid";
 import {Scoreboard} from "./scoreboard"
 import {ColorSetupSelect} from "./color-setup-select"
 import {PieceSelectGrid} from "./piece-select-grid"
+import {ErrorElement} from "./error-element";
 
 import {BoardSetupState} from "../models/board-setup-state";
 import {DisplayState} from "../models/display-state";
@@ -15,7 +16,6 @@ import {AmbiguousMoveState} from "../models/ambiguous-move-state";
 
 import GameService from "../services/game-service";
 import {getMoveObjectForPieceMove, getMoveObjectForPlacePiece} from "../factories/move-factory";
-import {handleUnauthorized} from "../util";
 
 
 class Game extends React.Component {
@@ -48,7 +48,7 @@ class Game extends React.Component {
 
     pollGameState() {
         this.retrieveNewGameState();
-        //setTimeout(() => this.pollGameState(), 5000);
+        setTimeout(() => this.pollGameState(), 5000);
     }
 
     retrieveNewGameState() {
@@ -71,8 +71,7 @@ class Game extends React.Component {
                         ambiguousMoveState: this.ambiguousMoveState
                     })
                 }
-            },
-            handleUnauthorized
+            }
         );
     }
 
@@ -152,16 +151,13 @@ class Game extends React.Component {
     }
 
     handleClickAmbiguousDestinationSelected(square) {
-        var movePieceMove = getMoveObjectForPieceMove(
+        let movePieceMove = getMoveObjectForPieceMove(
             this.squareSelectionState.getSelected(),
             this.ambiguousMoveState.getSelectedAmbiguousDestination(),
             square
         );
 
-        this.gameService.makeMove(this.gameUuid, movePieceMove).then(
-            () => this.retrieveNewGameState(),
-            handleUnauthorized
-        );
+        this.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
     }
 
     handleClickOnPossibleMoveSquare(square) {
@@ -169,16 +165,14 @@ class Game extends React.Component {
             this.ambiguousMoveState.selectAmbiguousDestination(square);
             this.setState({ambiguousMoveState: this.ambiguousMoveState})
         } else {
-            var movePieceMove = getMoveObjectForPieceMove(this.squareSelectionState.getSelected(), square);
-            this.gameService.makeMove(this.gameUuid, movePieceMove).then(
-                () => this.retrieveNewGameState(),
-                handleUnauthorized
-            );
+            let movePieceMove = getMoveObjectForPieceMove(this.squareSelectionState.getSelected(), square);
+            this.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
         }
     }
 
     handleClickOnPieceSquareNothingSelected(square) {
-        var piece = this.gameState.getPieceOnSquare(square);
+        let  piece = this.gameState.getPieceOnSquare(square);
+
         if (piece.color != this.gameState.currentTurn) {
             return;
         }
@@ -204,8 +198,7 @@ class Game extends React.Component {
 
                 this.squareSelectionState.setSelected(square);
                 this.setState({squareSelectionState: this.squareSelectionState})
-            },
-            handleUnauthorized
+            }
         );
     }
 
@@ -214,19 +207,19 @@ class Game extends React.Component {
             return;
         }
 
-        var placeMove = getMoveObjectForPlacePiece(this.squareSelectionState.getSelected(), piece);
-        this.gameService.makeMove(this.gameUuid, placeMove).then(
-            () => this.retrieveNewGameState(),
-            handleUnauthorized
-        );
+        let placeMove = getMoveObjectForPlacePiece(this.squareSelectionState.getSelected(), piece);
+        this.gameService.makeMove(this.gameUuid, placeMove).then(() => this.retrieveNewGameState());
     }
 
     render() {
         return (
             <Container className="game-panel" fluid={true}>
+                <ErrorElement error={this.props.error}/>
+
                 <div className="row">
                     <Scoreboard gameState={this.state.gameState}/>
                 </div>
+
                 <div className="row">
                     <Board clickHandler={this.handleBoardClick.bind(this)} {...this.state}/>
                     <div className="content-block mui-col-md-4 mui-col-sm-12">
@@ -255,7 +248,8 @@ class Game extends React.Component {
 
 Game.propTypes = {
     httpService: React.PropTypes.func.isRequired,
-    gameUuid: React.PropTypes.string.isRequired
+    gameUuid: React.PropTypes.string.isRequired,
+    error: React.PropTypes.string
 };
 
 export {Game};

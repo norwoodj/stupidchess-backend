@@ -1,5 +1,6 @@
 import React from "react";
-import {toTitleCase} from "../util";
+import {Color} from "../constants"
+import {UpdatingSelect} from "../components/updating-select";
 
 
 class ColorSetupSelect extends React.Component {
@@ -10,16 +11,11 @@ class ColorSetupSelect extends React.Component {
 
         return (
             <div id="color-setup-select" className="content-block mui-col-lg-12 mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
-                <form>
-                    <div className="mui-select">
-                        <label>Select Color to set up</label>
-                        <select
-                            onChange={e => this.props.colorChangeHandler(e.nativeEvent.srcElement.value.toUpperCase())}
-                            value={toTitleCase(this.props.boardSetupState.getCurrentBoardBeingSetUp())}>
-                            {this.props.gameState.getColorsSettingUp().map(color => <option key={color}>{toTitleCase(color)}</option>)}
-                        </select>
-                    </div>
-                </form>
+                <UpdatingSelect
+                    label="Select Color to set up"
+                    optionChangeHandler={this.props.colorChangeHandler}
+                    options={Color.all()}
+                />
             </div>
         );
     }

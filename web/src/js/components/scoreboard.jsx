@@ -1,4 +1,5 @@
 import React from "react";
+import {Color} from "../constants"
 
 
 class Scoreboard extends React.Component {
@@ -12,20 +13,20 @@ class Scoreboard extends React.Component {
             <table id="scoreboard">
                 <thead>
                     <tr>
-                        <td className={this.getScoreCellClass("BLACK", "score-name-cell")}>
+                        <td className={this.getScoreCellClass(Color.BLACK, "score-name-cell")}>
                             {this.props.gameState.blackPlayerName}
                         </td>
-                        <td className={this.getScoreCellClass("WHITE", "score-name-cell")}>
+                        <td className={this.getScoreCellClass(Color.WHITE, "score-name-cell")}>
                             {this.props.gameState.whitePlayerName}
                         </td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td className={this.getScoreCellClass("BLACK", "score-score-cell")}>
+                        <td className={this.getScoreCellClass(Color.BLACK, "score-score-cell")}>
                             {this.props.gameState.blackPlayerScore}
                         </td>
-                        <td className={this.getScoreCellClass("WHITE", "score-score-cell")}>
+                        <td className={this.getScoreCellClass(Color.WHITE, "score-score-cell")}>
                             {this.props.gameState.whitePlayerScore}
                         </td>
                     </tr>

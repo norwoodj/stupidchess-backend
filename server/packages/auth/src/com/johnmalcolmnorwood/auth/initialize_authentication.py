@@ -1,12 +1,12 @@
 #!/usr/local/bin/python
 import base64
 
-from flask import jsonify
+from flask import request, url_for, redirect
 from flask_login.login_manager import LoginManager
 
 from . import LOGGER
 from .auth_blueprint import auth_blueprint
-from .user_service import UserAlreadyExistsException
+from .utils import NEXT_QUERY_PARAM_PREFIX
 
 
 def create_user_loader(user_service):
@@ -26,6 +26,12 @@ def create_header_loader(user_service):
     return load_user_from_header
 
 
+def handle_unauthorized():
+    next_path = request.endpoint
+    next_args = {f"{NEXT_QUERY_PARAM_PREFIX}{k}": v for k, v in request.args.items()}
+    return redirect(url_for("auth.login", next=next_path, **next_args))
+
+
 def initialize_authentication(
     app,
     user_service,
@@ -36,12 +42,9 @@ def initialize_authentication(
     app.secret_key = auth_secret_key
     login_manager = LoginManager(app)
     login_manager.user_loader(create_user_loader(user_service))
+    login_manager.unauthorized_handler(handle_unauthorized)
     login_manager.header_loader(create_header_loader(user_service))
     login_manager.login_view =  login_view
 
     LOGGER.debug(f"Registering auth blueprint with prefix {auth_blueprint_prefix}")
     app.register_blueprint(auth_blueprint, url_prefix=auth_blueprint_prefix)
-
-    @app.errorhandler(UserAlreadyExistsException)
-    def handle_duplicate_user(error):
-        return jsonify(message=f"User {error.username} already exists"), 400

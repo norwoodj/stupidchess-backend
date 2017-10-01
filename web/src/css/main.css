@@ -46,6 +46,20 @@ buttons {
     color: yellow;
 }
 
+.error-bar {
+    background: red;
+    text-align: center;
+    display: table;
+    width: 100%;
+}
+
+.error-bar > div {
+    background: red;
+    vertical-align: middle;
+    display: table-cell;
+    color: white;
+}
+
 #sidedrawer {
     position: fixed;
     top: 0;

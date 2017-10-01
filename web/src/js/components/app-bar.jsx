@@ -1,7 +1,6 @@
 import React from "react";
 import Appbar from "muicss/lib/react/appbar";
 import Container from "muicss/lib/react/container";
-import UserService from "../services/user-service";
 
 
 class ScAppBar extends React.Component {
@@ -10,10 +9,6 @@ class ScAppBar extends React.Component {
         this.state = {
             user: null
         }
-    }
-
-    componentDidMount() {
-        this.userService = new UserService(this.props.httpService);
     }
 
     render() {

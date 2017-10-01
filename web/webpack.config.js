@@ -20,7 +20,6 @@ module.exports = {
     },
     plugins: [
         new CopyWebpackPlugin([
-            { from: "src/html" },
             { from: "src/_version.json" },
             { from: "src/css", to: "css/" },
             { from: "src/img", to: "img/" }

@@ -1,6 +1,5 @@
 import React from "react";
 import RecordService from "../services/record-service";
-import {handleUnauthorized} from "../util";
 import {GameType} from "../constants";
 
 
@@ -14,9 +13,8 @@ class PlayerRecord extends React.Component {
 
     componentDidMount() {
         this.recordService = new RecordService(this.props.httpService);
-        this.recordService.getUserGameRecords(this.props.playerUuid, this.state.selectedGameType).then(
-            playerRecords => this.setState({playerRecords: playerRecords}),
-            handleUnauthorized
+        this.recordService.getUserGameRecords(this.props.userUuid, this.state.selectedGameType).then(
+            playerRecords => this.setState({playerRecords: playerRecords})
         );
     }
 
@@ -31,8 +29,6 @@ class PlayerRecord extends React.Component {
     }
 
     getPlayerRecordDataForGameType(gameType) {
-        console.log(gameType);
-        console.log(this.state.playerRecords);
         let recordsForGameType = this.state.playerRecords[gameType];
 
         return [
@@ -68,7 +64,7 @@ class PlayerRecord extends React.Component {
 
 PlayerRecord.propTypes = {
     httpService: React.PropTypes.func.isRequired,
-    playerUuid: React.PropTypes.string.isRequired
+    userUuid: React.PropTypes.string.isRequired
 };
 
 export {PlayerRecord};

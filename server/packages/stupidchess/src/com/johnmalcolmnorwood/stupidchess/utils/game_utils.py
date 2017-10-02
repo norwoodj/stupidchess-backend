@@ -1,24 +1,39 @@
 from .game_rules import get_game_result
 
 
-def get_game_dict(game, user_uuid):
-    game_dict = game.to_dict(
-        "type",
-        "lastMove",
-        "pieces.color", "pieces.type", "pieces.square",
-        "captures.color", "captures.type",
-        "currentTurn",
-        "possiblePiecesToBePlaced",
-        "squaresToBePlaced",
-        "blackPlayerUuid",
-        "whitePlayerUuid",
-        "blackPlayerName",
-        "whitePlayerName",
-        "blackPlayerScore",
-        "whitePlayerScore",
-        "createTimestamp",
-        "lastUpdateTimestamp",
-    )
+SINGLE_GAME_DICT_FIELDS = [
+    "type",
+    "lastMove",
+    "pieces.color", "pieces.type", "pieces.square",
+    "captures.color", "captures.type",
+    "currentTurn",
+    "possiblePiecesToBePlaced",
+    "squaresToBePlaced",
+    "blackPlayerUuid",
+    "whitePlayerUuid",
+    "blackPlayerName",
+    "whitePlayerName",
+    "blackPlayerScore",
+    "whitePlayerScore",
+    "createTimestamp",
+    "lastUpdateTimestamp",
+]
+
+LIST_GAME_DICT_FIELDS = [
+    "type",
+    "blackPlayerUuid",
+    "whitePlayerUuid",
+    "blackPlayerName",
+    "whitePlayerName",
+    "blackPlayerScore",
+    "whitePlayerScore",
+    "createTimestamp",
+    "lastUpdateTimestamp",
+]
+
+
+def get_game_dict(game, user_uuid, fields):
+    game_dict = game.to_dict(*fields)
 
     game_dict["id"] = game.get_id()
     game_dict["createTimestamp"] = game_dict["createTimestamp"].isoformat()

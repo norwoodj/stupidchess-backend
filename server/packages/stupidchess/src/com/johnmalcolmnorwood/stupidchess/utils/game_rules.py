@@ -2,6 +2,7 @@
 from ..models.piece import Color, PieceType
 from ..models.game import GameType, GameResult
 
+
 SETUP_SQUARES_FOR_COLOR = {
     Color.BLACK: {0, 1, 2, 3, 10, 11, 12, 13, 20, 21, 22, 23},
     Color.WHITE: {94, 95, 96, 97, 104, 105, 106, 107, 114, 115, 116, 117},
@@ -60,9 +61,6 @@ def get_game_result(
     game,
     user_uuid
 ):
-    if game.type == GameType.STUPID_CHESS and game.lastMove < 23:
-        return None
-
     if 0 in (game.blackPlayerScore, game.whitePlayerScore):
         return (
             GameResult.TIE if (game.blackPlayerScore, game.whitePlayerScore) == (0, 0) else

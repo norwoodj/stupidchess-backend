@@ -1,53 +1,60 @@
 #!/usr/local/bin/python
 from flask import Blueprint, request, current_app, jsonify
 from flask_login import login_required, current_user
-
 from ..models.move import Move
-from ..utils.game_utils import get_game_dict, get_move_dict
+from ..utils.game_utils import get_game_dict, get_move_dict, LIST_GAME_DICT_FIELDS, SINGLE_GAME_DICT_FIELDS
 
 game_blueprint = Blueprint("game", __name__)
 
 
-@game_blueprint.route("/active")
-@login_required
-def get_active_games():
-    game_type = request.args.get("gameType")
-    skip = int(request.args.get("skip", 0))
-    results = int(request.args.get("results", 10))
-
-    games = current_app.context.game_service.get_active_games_for_user(
-        user_uuid=current_user.get_id(),
-        game_type=game_type,
-        skip=skip,
-        results=results,
-    )
-
-    return jsonify([get_game_dict(g, current_user.get_id()) for g in games[skip:skip+results]])
-
-
-@game_blueprint.route("/completed")
-@login_required
-def get_completed_games():
+def _retrieve_game_list(one_player_retrieval_method, two_player_retrieval_method):
     user_uuid = request.args.get("userUuid") or current_user.get_id()
     game_type = request.args.get("gameType")
     skip = int(request.args.get("skip", 0))
     results = int(request.args.get("results", 10))
 
-    games = current_app.context.game_service.get_completed_games_for_user(
-        user_uuid=user_uuid,
-        game_type=game_type,
-        skip=skip,
-        results=results,
+    if user_uuid == current_user.get_id():
+        games = one_player_retrieval_method(
+            user_uuid=user_uuid,
+            game_type=game_type,
+            skip=skip,
+            results=results,
+        )
+    else:
+        games = two_player_retrieval_method(
+            user_one_uuid=current_user.get_id(),
+            user_two_uuid=user_uuid,
+            game_type=game_type,
+            skip=skip,
+            results=results,
+        )
+
+    return jsonify([get_game_dict(g, current_user.get_id(), LIST_GAME_DICT_FIELDS) for g in games])
+
+
+@game_blueprint.route("/active")
+@login_required
+def get_active_games():
+    return _retrieve_game_list(
+        current_app.context.game_service.get_active_games_for_user,
+        current_app.context.game_service.get_active_games_for_users,
     )
 
-    return jsonify([get_game_dict(g, user_uuid) for g in games[skip:skip+results]])
+
+@game_blueprint.route("/completed")
+@login_required
+def get_completed_games():
+    return _retrieve_game_list(
+        current_app.context.game_service.get_completed_games_for_user,
+        current_app.context.game_service.get_completed_games_for_users,
+    )
 
 
 @game_blueprint.route("/<game_uuid>")
 @login_required
 def get_game_by_uuid(game_uuid):
     game = current_app.context.game_service.get_game_for_user_and_game_uuid(current_user.get_id(), game_uuid)
-    game_dict = get_game_dict(game, current_user.get_id())
+    game_dict = get_game_dict(game, current_user.get_id(), SINGLE_GAME_DICT_FIELDS)
     return jsonify(game_dict)
 
 
@@ -56,7 +63,7 @@ def get_game_by_uuid(game_uuid):
 def post_move_to_game(game_uuid):
     move = Move.from_json(request.json)
     move.disambiguating_capture = request.json.get("disambiguatingCapture")
-    moves_applied = current_app.context.move_application_service.apply_move(move, game_uuid)
+    moves_applied = current_app.context.game_service.apply_move(current_user.get_id(), game_uuid, move)
 
     return jsonify(
         moves=[get_move_dict(m) for m in moves_applied],

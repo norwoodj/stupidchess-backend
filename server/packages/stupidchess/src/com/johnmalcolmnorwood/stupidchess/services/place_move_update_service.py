@@ -1,8 +1,9 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.move import Move, MoveType
-from com.johnmalcolmnorwood.stupidchess.models.game import Game
-from com.johnmalcolmnorwood.stupidchess.models.piece import Piece
-from com.johnmalcolmnorwood.stupidchess.services.abstract_move_update_service import AbstractMoveUpdateService
+from ..exceptions import InvalidMoveException
+from ..models.move import Move, MoveType
+from ..models.game import Game
+from ..models.piece import Piece
+from .abstract_move_update_service import AbstractMoveUpdateService
 
 
 class PlaceMoveUpdateService(AbstractMoveUpdateService):
@@ -12,21 +13,19 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
     def get_move_type(self):
         return MoveType.PLACE
 
-    def get_game_for_move(self, move, game_uuid):
-        # In the case of a PLACE move, we do the verification of the legality of the move in the query to retrieve the
-        # game, if we can find a game with the matching game_uuid, and a square to be placed and piece that match with
-        # the input place move, then the move is legal
-        piece_to_be_placed_match = move.piece.to_dict('color', 'type', 'index')
-
-        game_query = {
-            '_id': game_uuid,
-            'squaresToBePlaced': move.destinationSquare,
-            'possiblePiecesToBePlaced': {'$elemMatch': piece_to_be_placed_match},
-        }
-
-        return Game.objects.only('lastMove', 'squaresToBePlaced', 'possiblePiecesToBePlaced').get(__raw__=game_query)
-
     def get_moves_to_apply(self, move, game):
+        if move.destinationSquare not in game.squaresToBePlaced:
+            raise InvalidMoveException(move, f"Square {move.destinationSquare} is not available to be placed!")
+
+        if not self.__is_square_in_setup_zone_for_color(move.piece.color, move.destinationSquare):
+            raise InvalidMoveException(move, f"{move.piece.color} pieces cannot be placed at {move.destinationSquare}!")
+
+        for p in game.possiblePiecesToBePlaced:
+            if move.piece == p:
+                break
+        else:
+            raise InvalidMoveException(move, f"That piece is not available to be placed!")
+
         additional_necessary_placements = self.__get_additional_necessary_placements(move, game)
         return [move, *additional_necessary_placements]
 
@@ -36,15 +35,15 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
         piece_additions = [PlaceMoveUpdateService.__get_piece_addition_for_move(move) for move in moves]
 
         updates = {
-            '$pull': {
-                'squaresToBePlaced': {'$in': square_removals},
-                'possiblePiecesToBePlaced': piece_removals,
+            "$pull": {
+                "squaresToBePlaced": {"$in": square_removals},
+                "possiblePiecesToBePlaced": piece_removals,
             },
-            '$push': {
-                'pieces': {'$each': piece_additions},
+            "$push": {
+                "pieces": {"$each": piece_additions},
             },
-            '$inc': {'lastMove': len(moves)},
-            '$currentDate': {'lastUpdateTimestamp': True},
+            "$inc": {"lastMove": len(moves)},
+            "$currentDate": {"lastUpdateTimestamp": True},
         }
 
         Game.objects(_id=game.get_id()).update(__raw__=updates)
@@ -66,10 +65,10 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
     @staticmethod
     def __get_piece_removal_for_place_moves(moves, color):
         return {
-            '$and': [
-                {'color': color},
-                {'$or': [
-                    move.piece.to_dict('type', 'index') for move in moves
+            "$and": [
+                {"color": color},
+                {"$or": [
+                    move.piece.to_dict("type", "index") for move in moves
                 ]},
             ],
         }
@@ -80,7 +79,7 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
             color=move.piece.color,
             type=move.piece.type,
             square=move.destinationSquare,
-        ).to_dict('color', 'type', 'square')
+        ).to_dict("color", "type", "square")
 
     def __get_additional_necessary_placements(self, last_move, game):
         """

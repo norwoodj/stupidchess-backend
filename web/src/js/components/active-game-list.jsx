@@ -32,7 +32,7 @@ class ActiveGameList extends GameList {
     }
 
     doRetrieveGames(gameType) {
-        return this.gameService.getActiveGames(gameType);
+        return this.gameService.getActiveGames(this.props.userUuid, gameType);
     }
 }
 

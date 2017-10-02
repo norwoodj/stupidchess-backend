@@ -1,12 +1,12 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.move import Move
+from ..models.move import Move
 
 
-class AbstractMoveUpdateService(object):
+class AbstractMoveUpdateService:
     def get_move_type(self):
         raise NotImplementedError()
 
-    def get_game_for_move(self, move, game_uuid):
+    def get_game_for_move(self, user_uuid, game_uuid, move):
         raise NotImplementedError()
 
     def get_moves_to_apply(self, move, game):

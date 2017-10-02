@@ -46,5 +46,5 @@ def initialize_authentication(
     login_manager.header_loader(create_header_loader(user_service))
     login_manager.login_view =  login_view
 
-    LOGGER.debug(f"Registering auth blueprint with prefix {auth_blueprint_prefix}")
+    LOGGER.debug(f"Registering auth blueprint with prefix '{auth_blueprint_prefix}'")
     app.register_blueprint(auth_blueprint, url_prefix=auth_blueprint_prefix)

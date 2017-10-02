@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 from mongoengine import EmbeddedDocument, IntField, StringField, EmbeddedDocumentField
-from com.johnmalcolmnorwood.stupidchess.models.dictable import Dictable
+from .dictable import Dictable
 
 
 class Color:
@@ -46,6 +46,14 @@ class Piece(EmbeddedDocument, Dictable):
     square = IntField()
     index = IntField()
     firstMove = EmbeddedDocumentField(FirstMove)
+
+    def __eq__(self, other):
+        return all([
+            self.type == other.type,
+            self.color == other.color,
+            self.square == other.square,
+            self.index == other.index,
+        ])
 
     @staticmethod
     def from_json(json, **kwargs):

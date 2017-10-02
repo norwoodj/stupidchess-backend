@@ -2,8 +2,8 @@
 from flask import Blueprint, render_template, request, current_app, redirect, url_for
 from flask_login import current_user
 from flask.ext.login import login_required
+from ..utils.forms import CreateGameForm
 
-from com.johnmalcolmnorwood.stupidchess.utils.forms import CreateGameForm
 
 template_blueprint = Blueprint("template", __name__)
 

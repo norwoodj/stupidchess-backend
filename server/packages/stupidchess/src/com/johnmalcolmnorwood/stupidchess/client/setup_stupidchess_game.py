@@ -52,7 +52,10 @@ def add_moves(stupidchess_url, game_uuid, moves, username, password):
             auth=(username, password),
         )
 
-        response.raise_for_status()
+        if response.status_code != 201:
+            LOGGER.error(f"Request failed with response: {response.json()}")
+            response.raise_for_status()
+
         move_texts = (
             f"{m['id']} ({m['type']} {m['piece']['color']} {m['piece']['type']} at {m['destinationSquare']})"
             for m in response.json()["moves"]

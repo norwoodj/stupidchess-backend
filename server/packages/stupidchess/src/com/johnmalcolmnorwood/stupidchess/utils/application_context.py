@@ -1,6 +1,7 @@
 #!/usr/local/bin/python
 from datetime import timedelta
 from flask import jsonify
+from flask_login import current_user
 from flask_mongoengine import MongoEngine
 from flask_wtf import CSRFProtect
 from healthcheck import HealthCheck
@@ -10,10 +11,10 @@ from mongoengine.connection import get_db
 from ...auth.initialize_authentication import initialize_authentication
 
 from .. import LOGGER
-from ..blueprints.game_blueprint import game_blueprint
+from ..blueprints.game_blueprint import game_blueprint, post_move_to_game
 from ..blueprints.record_blueprint import record_blueprint
 from ..blueprints.template_blueprint import template_blueprint
-from ..exceptions import IllegalMoveException, InvalidGameParameterException
+from ..exceptions import InvalidMoveException, InvalidGameParameterException, ForbiddenMoveException
 from ..services.ambiguous_move_service import AmbiguousMoveService
 from ..services.move_application_service import MoveApplicationService
 from ..services.move_move_update_service import MoveMoveUpdateService
@@ -28,6 +29,12 @@ from .game_rules import BOARD_MIDDLE_SECTION_FOR_GAME_TYPE
 
 
 class ApplicationContext:
+    BLUEPRINTS = [
+        ("game", game_blueprint),
+        ("record", record_blueprint),
+        ("template", template_blueprint),
+    ]
+
     def __init__(self, app):
         self.config = configure()
         LOGGER.debug(self.config)
@@ -58,19 +65,20 @@ class ApplicationContext:
         health.add_check(mongo_okay)
 
     def __initialize_csrf(self, app):
-        CSRFProtect(app)
+        self.csrf = CSRFProtect(app)
+        self.csrf.exempt(post_move_to_game)
 
     def __initialize_mongo(self, app):
         MongoEngine(app)
 
     def __initialize_services(self):
+        self.ambiguous_move_service = AmbiguousMoveService()
+        self.user_service = ScUserService()
+
         self.possible_move_service = PossibleMoveService(
             BOARD_SQUARES_FOR_GAME_TYPE,
             BOARD_MIDDLE_SECTION_FOR_GAME_TYPE,
         )
-
-        self.game_service = GameService(self.possible_move_service)
-        self.record_service = RecordService(self.game_service)
 
         self.move_update_services = (
             PlaceMoveUpdateService(SETUP_SQUARES_FOR_COLOR),
@@ -78,8 +86,9 @@ class ApplicationContext:
         )
 
         self.move_application_service = MoveApplicationService(self.move_update_services)
-        self.ambiguous_move_service = AmbiguousMoveService()
-        self.user_service = ScUserService()
+        self.game_service = GameService(self.possible_move_service, self.move_application_service)
+        self.record_service = RecordService(self.game_service)
+
 
     def __initialize_auth(self, app):
         initialize_authentication(
@@ -91,19 +100,26 @@ class ApplicationContext:
         )
 
     def __register_blueprints(self, app):
-        LOGGER.debug(f"Registering game blueprint with prefix {self.config['endpoint_prefixes']['game']}")
-        app.register_blueprint(game_blueprint, url_prefix=self.config["endpoint_prefixes"]["game"])
-        app.register_blueprint(record_blueprint, url_prefix=self.config["endpoint_prefixes"]["record"])
-        app.register_blueprint(template_blueprint, url_prefix=self.config["endpoint_prefixes"]["template"])
+        for name, blueprint in ApplicationContext.BLUEPRINTS:
+            LOGGER.debug(f"Registering {name} blueprint with prefix '{self.config['endpoint_prefixes'][name]}'")
+            app.register_blueprint(blueprint, url_prefix=self.config["endpoint_prefixes"][name])
 
     def __register_error_handlers(self, app):
-        @app.errorhandler(IllegalMoveException)
-        def handle_invalid_usage(error):
+        @app.errorhandler(InvalidMoveException)
+        def handle_invalid_move_error(error):
             return jsonify(
-                message="Failed to apply illegal move",
+                message=f"Failed to apply invalid move",
+                reason=error.reason,
                 move=error.move.to_dict("startSquare", "destinationSquare", "type"),
             ), 400
 
         @app.errorhandler(InvalidGameParameterException)
-        def handle_invalid_usage(error):
+        def handle_invalid_game_parameter_error(error):
             return jsonify(message=error.message), 400
+
+        @app.errorhandler(ForbiddenMoveException)
+        def handle_forbidden_move_error(error):
+            return jsonify(
+                message=f"User '{current_user.username}' is not authorized to perform this move",
+                move=error.move.to_dict("startSquare", "destinationSquare", "type"),
+            ), 403

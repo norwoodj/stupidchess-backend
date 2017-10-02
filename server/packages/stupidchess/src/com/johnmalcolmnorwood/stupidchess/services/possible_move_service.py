@@ -4,7 +4,7 @@ from ..move_generators.possible_move_game_state import PossibleMoveGameState
 from ..factories.piece_move_generator_factory import get_piece_move_generator_for_piece
 
 
-class PossibleMoveService(object):
+class PossibleMoveService:
     def __init__(self, board_squares_for_game_type, board_middle_section_for_game_type):
         self.__board_squares_for_game_type = board_squares_for_game_type
         self.__board_middle_section_for_game_type = board_middle_section_for_game_type

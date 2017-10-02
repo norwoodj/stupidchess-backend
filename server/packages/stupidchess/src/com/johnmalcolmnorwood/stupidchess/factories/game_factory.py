@@ -2,9 +2,9 @@
 from flask import current_app
 from flask_login import current_user
 
-from com.johnmalcolmnorwood.stupidchess.exceptions import InvalidGameParameterException
-from com.johnmalcolmnorwood.stupidchess.models.game import Game, GameType, GameAuthType
-from com.johnmalcolmnorwood.stupidchess.models.piece import Piece, Color, PieceType
+from ..exceptions import InvalidGameParameterException
+from ..models.game import Game, GameType, GameAuthType
+from ..models.piece import Piece, Color, PieceType
 
 
 def create_new_game(game_type, game_auth_type, other_player):

@@ -1,10 +1,10 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.piece import PieceType
-from com.johnmalcolmnorwood.stupidchess.move_generators.checker_move_generator import CheckerMoveGenerator
-from com.johnmalcolmnorwood.stupidchess.move_generators.offset_list_move_generator import OffsetListMoveGenerator
-from com.johnmalcolmnorwood.stupidchess.move_generators.directional_move_generator import DirectionalMoveGenerator
-from com.johnmalcolmnorwood.stupidchess.move_generators.pawn_move_generator import PawnMoveGenerator
-from com.johnmalcolmnorwood.stupidchess.move_generators.offsets import Offsets
+from ..models.piece import PieceType
+from ..move_generators.checker_move_generator import CheckerMoveGenerator
+from ..move_generators.offset_list_move_generator import OffsetListMoveGenerator
+from ..move_generators.directional_move_generator import DirectionalMoveGenerator
+from ..move_generators.pawn_move_generator import PawnMoveGenerator
+from ..move_generators.offsets import Offsets
 
 
 KING_OFFSETS = (

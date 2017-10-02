@@ -1,9 +1,9 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.exceptions import IllegalMoveException
-from com.johnmalcolmnorwood.stupidchess.models.move import MoveType, Move
-from com.johnmalcolmnorwood.stupidchess.models.game import Game, GameType
-from com.johnmalcolmnorwood.stupidchess.models.piece import Color, FirstMove, Piece, PieceType
-from com.johnmalcolmnorwood.stupidchess.services.abstract_move_update_service import AbstractMoveUpdateService
+from ..exceptions import InvalidMoveException
+from ..models.move import MoveType, Move
+from ..models.game import Game, GameType
+from ..models.piece import Color, FirstMove, Piece, PieceType
+from .abstract_move_update_service import AbstractMoveUpdateService
 
 
 class MoveMoveUpdateService(AbstractMoveUpdateService):
@@ -13,12 +13,20 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
     def get_move_type(self):
         return MoveType.MOVE
 
-    def get_game_for_move(self, move, game_uuid):
-        exclude_fields = [
-            'createTimestamp', 'lastUpdateTimestamp'
-        ]
+    def get_game_for_move(self, user_uuid, game_uuid, move):
+        game_query = {
+            "$and": [
+                {"_id": game_uuid},
+                {
+                    "$or": [
+                        {"blackPlayerUuid": user_uuid},
+                        {"whitePlayerUuid": user_uuid},
+                    ],
+                },
+            ],
+        }
 
-        return Game.objects.exclude(*exclude_fields).get(_id=game_uuid)
+        return Game.objects.exclude("createTimestamp", "updateTimestamp").get_or_404(__raw__=game_query)
 
     @staticmethod
     def __move_matches_requested_move(requested_move, move):
@@ -40,7 +48,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
                 m.gameUuid = game.get_id()
                 return [m]
 
-        raise IllegalMoveException(move)
+        raise InvalidMoveException(move, "No such move is possible!")
 
     @staticmethod
     def __capture_affects_score(game_type, capture_type):
@@ -68,28 +76,28 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
     @staticmethod
     def __remove_captures_and_moved_piece_update_score(game, move):
-        captures = [capture.to_dict('color', 'type', 'square') for capture in move.captures] \
+        captures = [capture.to_dict("color", "type", "square") for capture in move.captures] \
             if move.captures is not None \
             else None
 
         piece_removals = MoveMoveUpdateService.__get_piece_removals_for_move_move(move, captures)
 
-        # Need to apply two updates because we can't add to and remove from the pieces array twice in one update
+        # Need to apply two updates because we can"t add to and remove from the pieces array twice in one update
         # This one adds all of the new captures, removes the pieces that were captured and removes the piece that was
         # just moved, and also updates the score
         update_one = {
-            '$pull': {'pieces': piece_removals},
-            '$currentDate': {'lastUpdateTimestamp': True},
+            "$pull": {"pieces": piece_removals},
+            "$currentDate": {"lastUpdateTimestamp": True},
         }
 
         if captures is not None:
-            update_one['$push'] = {
-                'captures': {'$each': captures}
+            update_one["$push"] = {
+                "captures": {"$each": captures}
             }
 
         score_updates = MoveMoveUpdateService.__get_score_update_increment(game.type, move.captures)
         if len(score_updates) != 0:
-            update_one['$inc'] = score_updates
+            update_one["$inc"] = score_updates
 
         Game.objects(_id=game.get_id()).update(__raw__=update_one)
 
@@ -110,15 +118,15 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
             destinationSquare=move.destinationSquare,
         )
 
-        first_move_fields = ('firstMove.gameMoveIndex', 'firstMove.startSquare', 'firstMove.destinationSquare')
-        piece_addition_dict = piece_addition.to_dict('type', 'color', 'square', *first_move_fields)
+        first_move_fields = ("firstMove.gameMoveIndex", "firstMove.startSquare", "firstMove.destinationSquare")
+        piece_addition_dict = piece_addition.to_dict("type", "color", "square", *first_move_fields)
 
-        # Second update sets the turn to the other player, adds the piece at it's new square, and increments the last
+        # Second update sets the turn to the other player, adds the piece at it"s new square, and increments the last
         # move index of the game
         update_two = {
-            '$push': {'pieces': piece_addition_dict},
-            '$set': {'currentTurn': new_current_turn},
-            '$inc': {'lastMove': 1},
+            "$push": {"pieces": piece_addition_dict},
+            "$set": {"currentTurn": new_current_turn},
+            "$inc": {"lastMove": 1},
         }
 
         Game.objects(_id=game.get_id()).update(__raw__=update_two)
@@ -164,8 +172,8 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         captures = captures or []
 
         removals = [
-            move.piece.to_dict('color', 'type', 'square'),
+            move.piece.to_dict("color", "type", "square"),
             *captures,
         ]
 
-        return {'$or': removals}
+        return {"$or": removals}

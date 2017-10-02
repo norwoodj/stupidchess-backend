@@ -3,19 +3,6 @@ export default class GameService {
         this.http = http;
     }
 
-    createGame(createRequest) {
-        return new Promise((resolve, reject) => {
-            this.http.ajax({
-                type: "POST",
-                url: "/api/game/",
-                data: JSON.stringify(createRequest),
-                contentType: "application/json",
-                success: game => resolve(game),
-                error: error => reject(error)
-            });
-        });
-    }
-
     getPossibleMoves(gameUuid, square) {
         return new Promise((resolve, reject) => {
             this.http.ajax({
@@ -27,11 +14,15 @@ export default class GameService {
         });
     }
 
-    getActiveGames(gameType) {
+    static getGameListQueryString(userUuid, gameType) {
+        return `?userUuid=${userUuid}${gameType != null ? `&gameType=${gameType}` : ""}`
+    }
+
+    getActiveGames(userUuid, gameType) {
         return new Promise((resolve, reject) => {
             this.http.ajax({
                 type: "GET",
-                url: `/api/game/active${gameType != null ? `?gameType=${gameType}` : ""}`,
+                url: `/api/game/active${GameService.getGameListQueryString(userUuid, gameType)}`,
                 success: game => resolve(game),
                 error: (error) => reject(error)
             })
@@ -42,7 +33,7 @@ export default class GameService {
         return new Promise((resolve, reject) => {
             this.http.ajax({
                 type: "GET",
-                url: `/api/game/completed?userUuid=${userUuid}${gameType != null ? `&gameType=${gameType}` : ""}`,
+                url: `/api/game/completed${GameService.getGameListQueryString(userUuid, gameType)}`,
                 success: game => resolve(game),
                 error: (error) => reject(error)
             })

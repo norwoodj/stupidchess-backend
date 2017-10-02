@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask import current_app
 from wtforms import StringField, validators, ValidationError, SelectField
 from ..models.game import GameType, GameAuthType
-from ..utils import to_title_case
+from . import to_title_case
 
 
 def _get_render_kw(**kwargs):

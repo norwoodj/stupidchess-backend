@@ -2,8 +2,8 @@
 import bcrypt
 from mongoengine import DoesNotExist
 
-from com.johnmalcolmnorwood.auth.user_service import UserService, UserAlreadyExistsException
-from com.johnmalcolmnorwood.stupidchess.models.user import User
+from ...auth.user_service import UserService, UserAlreadyExistsException
+from ..models.user import User
 
 
 class AuthUser:

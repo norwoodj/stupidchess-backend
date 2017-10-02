@@ -1,6 +1,7 @@
 import React from "react";
 import Container from "muicss/lib/react/container";
 import Panel from "muicss/lib/react/panel";
+import Button from "muicss/lib/react/button";
 import GameService from "../services/game-service";
 
 import {ActiveGameList} from "./active-game-list";
@@ -38,6 +39,10 @@ class Profile extends React.Component {
 
                     <div className="mui-divider"></div>
                     <PlayerRecord httpService={this.props.httpService} userUuid={this.props.profileUserUuid}/>
+
+                    <a href="/create-game">
+                        <Button className="button" variant="fab">+</Button>
+                    </a>
                 </Panel>
             </Container>
         );

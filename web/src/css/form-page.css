@@ -1,15 +1,5 @@
-.submit-button {
-    background-color: navy;
-    color: white;
-}
-
 .form-errors {
     color: red;
-}
-
-.submit-button:hover {
-    background-color: navy;
-    color: yellow;
 }
 
 #input-form {

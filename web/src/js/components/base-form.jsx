@@ -14,7 +14,7 @@ class BaseForm extends React.Component {
                     <Form id="input-form" className="mui-form" method="POST">
                         <legend>{this.props.legend}</legend>
                         {ReactHtmlParser(this.props.formInnerHtml)}
-                        <Button className="submit-button" variant="raised">Submit</Button>
+                        <Button className="button" variant="raised">Submit</Button>
                     </Form>
                 </Panel>
             </Container>

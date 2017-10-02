@@ -38,6 +38,17 @@ buttons {
     color: white;
 }
 
+.button {
+    background-color: navy;
+    color: white;
+}
+
+.button:hover {
+    background-color: navy;
+    color: yellow;
+}
+
+
 .uuid-link {
     font-family: monospace;
 }

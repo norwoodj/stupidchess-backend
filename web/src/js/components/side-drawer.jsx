@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {MenuCategory} from "./menu-category";
 
 class SideDrawer extends React.Component {
@@ -18,8 +19,8 @@ class SideDrawer extends React.Component {
 }
 
 SideDrawer.propTypes = {
-    pageName: React.PropTypes.string.isRequired,
-    menuCategories: React.PropTypes.array.isRequired
+    pageName: PropTypes.string.isRequired,
+    menuCategories: PropTypes.array.isRequired
 };
 
 export {SideDrawer};

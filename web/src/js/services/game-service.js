@@ -14,27 +14,53 @@ export default class GameService {
         });
     }
 
-    static getGameListQueryString(userUuid, gameType) {
+    static getGameListQueryString(userUuid, gameType, offset, limit) {
+        return `?userUuid=${userUuid}&offset=${offset}&limit=${limit}${gameType != null ? `&gameType=${gameType}` : ""}`
+    }
+
+    static getGameCountQueryString(userUuid, gameType) {
         return `?userUuid=${userUuid}${gameType != null ? `&gameType=${gameType}` : ""}`
     }
 
-    getActiveGames(userUuid, gameType) {
+    getActiveGames(userUuid, gameType, offset, limit) {
         return new Promise((resolve, reject) => {
             this.http.ajax({
                 type: "GET",
-                url: `/api/game/active${GameService.getGameListQueryString(userUuid, gameType)}`,
+                url: `/api/game/active${GameService.getGameListQueryString(userUuid, gameType, offset, limit)}`,
                 success: game => resolve(game),
                 error: (error) => reject(error)
             })
         });
     }
 
-    getCompletedGames(userUuid, gameType) {
+    getCompletedGames(userUuid, gameType, offset, limit) {
         return new Promise((resolve, reject) => {
             this.http.ajax({
                 type: "GET",
-                url: `/api/game/completed${GameService.getGameListQueryString(userUuid, gameType)}`,
+                url: `/api/game/completed${GameService.getGameListQueryString(userUuid, gameType, offset, limit)}`,
                 success: game => resolve(game),
+                error: (error) => reject(error)
+            })
+        });
+    }
+
+    getActiveGameCount(userUuid, gameType) {
+        return new Promise((resolve, reject) => {
+            this.http.ajax({
+                type: "GET",
+                url: `/api/game/active/count${GameService.getGameCountQueryString(userUuid, gameType)}`,
+                success: res => resolve(res.gameCount),
+                error: (error) => reject(error)
+            })
+        });
+    }
+
+    getCompletedGameCount(userUuid, gameType) {
+        return new Promise((resolve, reject) => {
+            this.http.ajax({
+                type: "GET",
+                url: `/api/game/completed/count${GameService.getGameCountQueryString(userUuid, gameType)}`,
+                success: res => resolve(res.gameCount),
                 error: (error) => reject(error)
             })
         });

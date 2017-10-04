@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import getPieceImage from "../factories/piece-factory";
 import {range} from "../util";
 
@@ -22,9 +23,9 @@ class PieceGridSquare extends React.Component {
 }
 
 PieceGridSquare.propTypes = {
-    piece: React.PropTypes.object,
-    defaultClass: React.PropTypes.string.isRequired,
-    clickHandler: React.PropTypes.func.isRequired
+    piece: PropTypes.object,
+    defaultClass: PropTypes.string.isRequired,
+    clickHandler: PropTypes.func.isRequired
 };
 
 

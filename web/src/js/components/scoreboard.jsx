@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {Color} from "../constants"
 
 
@@ -37,7 +38,7 @@ class Scoreboard extends React.Component {
 }
 
 Scoreboard.propTypes = {
-    gameState: React.PropTypes.object.isRequired
+    gameState: PropTypes.object.isRequired
 };
 
 export {Scoreboard};

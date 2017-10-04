@@ -1,3 +1,4 @@
+from datetime import timezone
 from .game_rules import get_game_result
 
 
@@ -36,8 +37,8 @@ def get_game_dict(game, user_uuid, fields):
     game_dict = game.to_dict(*fields)
 
     game_dict["id"] = game.get_id()
-    game_dict["createTimestamp"] = game_dict["createTimestamp"].isoformat()
-    game_dict["lastUpdateTimestamp"] = game_dict["lastUpdateTimestamp"].isoformat()
+    game_dict["createTimestamp"] = game_dict["createTimestamp"].replace(tzinfo=timezone.utc).isoformat()
+    game_dict["lastUpdateTimestamp"] = game_dict["lastUpdateTimestamp"].replace(tzinfo=timezone.utc).isoformat()
 
     game_dict["gameResult"] = get_game_result(
         game=game,

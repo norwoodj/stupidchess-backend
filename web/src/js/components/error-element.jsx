@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 
 class ErrorElement extends React.Component {
@@ -12,7 +13,7 @@ class ErrorElement extends React.Component {
 }
 
 ErrorElement.propTypes = {
-    error: React.PropTypes.string
+    error: PropTypes.string
 };
 
 export {ErrorElement};

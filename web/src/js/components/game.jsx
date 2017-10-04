@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Container from "muicss/lib/react/container";
 
 import {Board} from "./board";
@@ -247,9 +248,9 @@ class Game extends React.Component {
 }
 
 Game.propTypes = {
-    httpService: React.PropTypes.func.isRequired,
-    gameUuid: React.PropTypes.string.isRequired,
-    error: React.PropTypes.string
+    httpService: PropTypes.func.isRequired,
+    gameUuid: PropTypes.string.isRequired,
+    error: PropTypes.string
 };
 
 export {Game};

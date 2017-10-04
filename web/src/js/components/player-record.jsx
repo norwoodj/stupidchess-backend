@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import RecordService from "../services/record-service";
 import {GameType} from "../constants";
 
@@ -63,8 +64,8 @@ class PlayerRecord extends React.Component {
 }
 
 PlayerRecord.propTypes = {
-    httpService: React.PropTypes.func.isRequired,
-    userUuid: React.PropTypes.string.isRequired
+    httpService: PropTypes.func.isRequired,
+    userUuid: PropTypes.string.isRequired
 };
 
 export {PlayerRecord};

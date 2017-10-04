@@ -5,6 +5,9 @@ from ..models.game import Game, GameType
 from ..models.piece import Color
 from ..exceptions import ForbiddenMoveException, InvalidMoveException
 
+DEFAULT_OFFSET = 0
+DEFAULT_LIMIT = 10
+
 
 class GameService:
     def __init__(self, possible_move_service, move_application_service):
@@ -74,10 +77,10 @@ class GameService:
         }
 
     @staticmethod
-    def __apply_default_paging_and_ordering(queryset, skip, results):
+    def __apply_default_paging_and_ordering(queryset, offset, limit):
         queryset = queryset.order_by("-lastUpdateTimestamp")
         queryset = queryset.only(*LIST_GAME_DICT_FIELDS)
-        return queryset[skip:skip+results]
+        return queryset[offset:offset+limit]
 
     @staticmethod
     def create_game(game_type, game_auth_type, other_player):
@@ -141,61 +144,103 @@ class GameService:
         return Game.objects(__raw__=GameService.__get_game_for_user_and_game_uuid_criteria(user_uuid, game_uuid))
 
     @staticmethod
-    def get_games_for_user(user_uuid, game_type=None, skip=0, results=10, extra_criteria=[]):
+    def get_games_for_user(user_uuid, game_type=None, offset=DEFAULT_OFFSET, limit=DEFAULT_LIMIT, extra_criteria=[]):
         queryset = GameService.query_games_for_user(user_uuid, game_type, extra_criteria)
-        return GameService.__apply_default_paging_and_ordering(queryset, skip, results)
+        return GameService.__apply_default_paging_and_ordering(queryset, offset, limit)
 
     @staticmethod
-    def get_games_for_users(user_one_uuid, user_two_uuid, game_type=None, skip=0, results=10, extra_criteria=[]):
+    def count_games_for_user(user_uuid, game_type=None, extra_criteria=[]):
+        return len(GameService.query_games_for_user(user_uuid, game_type, extra_criteria))
+
+    @staticmethod
+    def get_games_for_users(user_one_uuid, user_two_uuid, game_type=None, offset=DEFAULT_OFFSET, limit=DEFAULT_LIMIT, extra_criteria=[]):
         queryset = GameService.query_games_for_users(user_one_uuid, user_two_uuid, game_type, extra_criteria)
-        return GameService.__apply_default_paging_and_ordering(queryset, skip, results)
+        return GameService.__apply_default_paging_and_ordering(queryset, offset, limit)
+
+    @staticmethod
+    def count_games_for_users(user_one_uuid, user_two_uuid, game_type=None, extra_criteria=[]):
+        return len(GameService.query_games_for_users(user_one_uuid, user_two_uuid, game_type, extra_criteria))
+
+    @staticmethod
+    def get_active_games_for_user(user_uuid, game_type=None, offset=DEFAULT_OFFSET, limit=DEFAULT_LIMIT):
+        return GameService.get_games_for_user(
+            user_uuid=user_uuid,
+            game_type=game_type,
+            offset=offset,
+            limit=limit,
+            extra_criteria=[GameService.__get_game_active_criteria()],
+        )
+
+    @staticmethod
+    def get_active_games_for_users(user_one_uuid, user_two_uuid, game_type=None, offset=DEFAULT_OFFSET, limit=DEFAULT_LIMIT):
+        return GameService.get_games_for_users(
+            user_one_uuid=user_one_uuid,
+            user_two_uuid=user_two_uuid,
+            game_type=game_type,
+            offset=offset,
+            limit=limit,
+            extra_criteria=[GameService.__get_game_active_criteria()],
+        )
+
+    @staticmethod
+    def count_active_games_for_user(user_uuid, game_type=None):
+        return GameService.count_games_for_user(
+            user_uuid=user_uuid,
+            game_type=game_type,
+            extra_criteria=[GameService.__get_game_active_criteria()],
+        )
+
+    @staticmethod
+    def count_active_games_for_users(user_one_uuid, user_two_uuid, game_type=None):
+        return GameService.count_games_for_users(
+            user_one_uuid=user_one_uuid,
+            user_two_uuid=user_two_uuid,
+            game_type=game_type,
+            extra_criteria=[GameService.__get_game_active_criteria()],
+        )
+
+    @staticmethod
+    def get_completed_games_for_user(user_uuid, game_type=None, offset=DEFAULT_OFFSET, limit=DEFAULT_LIMIT):
+        return GameService.get_games_for_user(
+            user_uuid=user_uuid,
+            game_type=game_type,
+            offset=offset,
+            limit=limit,
+            extra_criteria=[GameService.__get_game_over_criteria()],
+        )
+
+    @staticmethod
+    def get_completed_games_for_users(user_one_uuid, user_two_uuid, game_type=None, offset=DEFAULT_OFFSET, limit=DEFAULT_LIMIT):
+        return GameService.get_games_for_users(
+            user_one_uuid=user_one_uuid,
+            user_two_uuid=user_two_uuid,
+            game_type=game_type,
+            offset=offset,
+            limit=limit,
+            extra_criteria=[GameService.__get_game_over_criteria()],
+        )
+
+    @staticmethod
+    def count_completed_games_for_user(user_uuid, game_type=None):
+        return GameService.count_games_for_user(
+            user_uuid=user_uuid,
+            game_type=game_type,
+            extra_criteria=[GameService.__get_game_over_criteria()],
+        )
+
+    @staticmethod
+    def count_completed_games_for_users(user_one_uuid, user_two_uuid, game_type=None):
+        return GameService.count_games_for_users(
+            user_one_uuid=user_one_uuid,
+            user_two_uuid=user_two_uuid,
+            game_type=game_type,
+            extra_criteria=[GameService.__get_game_over_criteria()],
+        )
 
     @staticmethod
     def get_game_for_user_and_game_uuid(user_uuid, game_uuid):
         game = Game.objects.get_or_404(__raw__=GameService.__get_game_for_user_and_game_uuid_criteria(user_uuid, game_uuid))
         return GameService.__remove_unprivileged_moves(game, user_uuid)
-
-    @staticmethod
-    def get_active_games_for_user(user_uuid, game_type=None, skip=0, results=10):
-        return GameService.get_games_for_user(
-            user_uuid=user_uuid,
-            game_type=game_type,
-            skip=skip,
-            results=results,
-            extra_criteria=[GameService.__get_game_active_criteria()],
-        )
-
-    @staticmethod
-    def get_completed_games_for_user(user_uuid, game_type=None, skip=0, results=10):
-        return GameService.get_games_for_user(
-            user_uuid=user_uuid,
-            game_type=game_type,
-            skip=skip,
-            results=results,
-            extra_criteria=[GameService.__get_game_over_criteria()],
-        )
-
-    @staticmethod
-    def get_active_games_for_users(user_one_uuid, user_two_uuid, game_type=None, skip=0, results=10):
-        return GameService.get_games_for_users(
-            user_one_uuid=user_one_uuid,
-            user_two_uuid=user_two_uuid,
-            game_type=game_type,
-            skip=skip,
-            results=results,
-            extra_criteria=[GameService.__get_game_active_criteria()],
-        )
-
-    @staticmethod
-    def get_completed_games_for_users(user_one_uuid, user_two_uuid, game_type=None, skip=0, results=10):
-        return GameService.get_games_for_users(
-            user_one_uuid=user_one_uuid,
-            user_two_uuid=user_two_uuid,
-            game_type=game_type,
-            skip=skip,
-            results=results,
-            extra_criteria=[GameService.__get_game_over_criteria()],
-        )
 
     def get_possible_moves(self, user_uuid, game_uuid, square):
         game = GameService.get_game_for_user_and_game_uuid(user_uuid, game_uuid)

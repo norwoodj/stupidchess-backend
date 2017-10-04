@@ -10,26 +10,45 @@ game_blueprint = Blueprint("game", __name__)
 def _retrieve_game_list(one_player_retrieval_method, two_player_retrieval_method):
     user_uuid = request.args.get("userUuid") or current_user.get_id()
     game_type = request.args.get("gameType")
-    skip = int(request.args.get("skip", 0))
-    results = int(request.args.get("results", 10))
+    offset = int(request.args.get("offset", 0))
+    limit = int(request.args.get("limit", 10))
 
     if user_uuid == current_user.get_id():
         games = one_player_retrieval_method(
             user_uuid=user_uuid,
             game_type=game_type,
-            skip=skip,
-            results=results,
+            offset=offset,
+            limit=limit,
         )
     else:
         games = two_player_retrieval_method(
             user_one_uuid=current_user.get_id(),
             user_two_uuid=user_uuid,
             game_type=game_type,
-            skip=skip,
-            results=results,
+            offset=offset,
+            limit=limit,
         )
 
     return jsonify([get_game_dict(g, current_user.get_id(), LIST_GAME_DICT_FIELDS) for g in games])
+
+
+def _retrieve_game_count(one_player_retrieval_method, two_player_retrieval_method):
+    user_uuid = request.args.get("userUuid") or current_user.get_id()
+    game_type = request.args.get("gameType")
+
+    if user_uuid == current_user.get_id():
+        count = one_player_retrieval_method(
+            user_uuid=user_uuid,
+            game_type=game_type,
+        )
+    else:
+        count = two_player_retrieval_method(
+            user_one_uuid=current_user.get_id(),
+            user_two_uuid=user_uuid,
+            game_type=game_type,
+        )
+
+    return jsonify(gameCount=count)
 
 
 @game_blueprint.route("/active")
@@ -41,12 +60,30 @@ def get_active_games():
     )
 
 
+@game_blueprint.route("/active/count")
+@login_required
+def count_active_games():
+    return _retrieve_game_count(
+        current_app.context.game_service.count_active_games_for_user,
+        current_app.context.game_service.count_active_games_for_users,
+    )
+
+
 @game_blueprint.route("/completed")
 @login_required
 def get_completed_games():
     return _retrieve_game_list(
         current_app.context.game_service.get_completed_games_for_user,
         current_app.context.game_service.get_completed_games_for_users,
+    )
+
+
+@game_blueprint.route("/completed/count")
+@login_required
+def count_completed_games():
+    return _retrieve_game_count(
+        current_app.context.game_service.count_completed_games_for_user,
+        current_app.context.game_service.count_completed_games_for_users,
     )
 
 

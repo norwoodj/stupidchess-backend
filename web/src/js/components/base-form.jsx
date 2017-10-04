@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ReactHtmlParser from "react-html-parser"
 import Button from "muicss/lib/react/button";
 import Form from "muicss/lib/react/form";
@@ -24,8 +25,8 @@ class BaseForm extends React.Component {
 
 
 BaseForm.propTypes = {
-    legend: React.PropTypes.string.isRequired,
-    formInnerHtml: React.PropTypes.string.isRequired
+    legend: PropTypes.string.isRequired,
+    formInnerHtml: PropTypes.string.isRequired
 };
 
 export {BaseForm};

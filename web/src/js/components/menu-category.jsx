@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 
 class MenuCategory extends React.Component {
@@ -17,8 +18,8 @@ class MenuCategory extends React.Component {
 }
 
 MenuCategory.propTypes = {
-    menuOptions: React.PropTypes.array.isRequired,
-    name: React.PropTypes.string.isRequired
+    menuOptions: PropTypes.array.isRequired,
+    name: PropTypes.string.isRequired
 };
 
 export {MenuCategory};

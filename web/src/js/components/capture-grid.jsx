@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 import {PieceGrid} from "./piece-grid";
 import {getCaptureShapeForGameType} from "../factories/board-shapes-factory";
 
@@ -29,8 +29,8 @@ class CaptureGrid extends PieceGrid {
 }
 
 CaptureGrid.propTypes = {
-    gameState: React.PropTypes.object.isRequired,
-    captureColor: React.PropTypes.string.isRequired
+    gameState: PropTypes.object.isRequired,
+    captureColor: PropTypes.string.isRequired
 };
 
 export {CaptureGrid};

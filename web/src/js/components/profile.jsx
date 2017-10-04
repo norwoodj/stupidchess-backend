@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Container from "muicss/lib/react/container";
 import Panel from "muicss/lib/react/panel";
 import Button from "muicss/lib/react/button";
@@ -50,10 +51,10 @@ class Profile extends React.Component {
 }
 
 Profile.propTypes = {
-    httpService: React.PropTypes.func.isRequired,
-    profileUsername: React.PropTypes.string.isRequired,
-    profileUserUuid: React.PropTypes.string.isRequired,
-    error: React.PropTypes.string
+    httpService: PropTypes.func.isRequired,
+    profileUsername: PropTypes.string.isRequired,
+    profileUserUuid: PropTypes.string.isRequired,
+    error: PropTypes.string
 };
 
 export {Profile};

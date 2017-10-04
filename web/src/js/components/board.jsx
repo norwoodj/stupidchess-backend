@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import getPieceImage from "../factories/piece-factory"
 import {getHalfBoardShapeForColor, getBoardShapeForGameType} from "../factories/board-shapes-factory"
 
@@ -79,12 +80,12 @@ class Board extends React.Component {
 }
 
 Board.propTypes = {
-    boardSetupState: React.PropTypes.object.isRequired,
-    gameState: React.PropTypes.object.isRequired,
-    displayState: React.PropTypes.object.isRequired,
-    squareSelectionState: React.PropTypes.object.isRequired,
-    ambiguousMoveState: React.PropTypes.object.isRequired,
-    clickHandler: React.PropTypes.func.isRequired
+    boardSetupState: PropTypes.object.isRequired,
+    gameState: PropTypes.object.isRequired,
+    displayState: PropTypes.object.isRequired,
+    squareSelectionState: PropTypes.object.isRequired,
+    ambiguousMoveState: PropTypes.object.isRequired,
+    clickHandler: PropTypes.func.isRequired
 };
 
 export {Board};

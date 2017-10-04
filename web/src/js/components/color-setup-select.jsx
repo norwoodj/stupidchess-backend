@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {Color} from "../constants"
 import {UpdatingSelect} from "../components/updating-select";
 
@@ -22,9 +23,9 @@ class ColorSetupSelect extends React.Component {
 }
 
 ColorSetupSelect.propTypes = {
-    gameState: React.PropTypes.object.isRequired,
-    boardSetupState: React.PropTypes.object.isRequired,
-    colorChangeHandler: React.PropTypes.func.isRequired
+    gameState: PropTypes.object.isRequired,
+    boardSetupState: PropTypes.object.isRequired,
+    colorChangeHandler: PropTypes.func.isRequired
 };
 
 export {ColorSetupSelect};

@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 import {PieceGrid} from "./piece-grid";
 import {getPieceSelectShapeForSetupMode} from "../factories/board-shapes-factory";
 
@@ -36,9 +36,9 @@ class PieceSelectGrid extends PieceGrid {
 }
 
 PieceSelectGrid.propTypes = {
-    gameState: React.PropTypes.object.isRequired,
-    boardSetupState: React.PropTypes.object.isRequired,
-    pieceSelectionCallback: React.PropTypes.func.isRequired
+    gameState: PropTypes.object.isRequired,
+    boardSetupState: PropTypes.object.isRequired,
+    pieceSelectionCallback: PropTypes.func.isRequired
 };
 
 export {PieceSelectGrid};

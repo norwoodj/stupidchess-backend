@@ -1,7 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
+import ReactTable from "react-table";
 import {UpdatingSelect} from "../components/updating-select"
 import GameService from "../services/game-service"
 import {Color, GameResult, GameType} from "../constants";
+import timeago from "timeago.js";
 
 
 class GameList extends React.Component {
@@ -9,14 +12,38 @@ class GameList extends React.Component {
         super();
         this.state = {
             selectedGameType: "ALL",
-            games: []
-        }
+            pages: -1,
+            gameCount: -1,
+            loading: true,
+            games: [],
+            offset: 0,
+            limit: 5
+        };
+
+        this.timeAgo = timeago();
     }
 
     componentDidMount() {
         this.gameService = new GameService(this.props.httpService);
-        this.retrieveGames().then(games => this.setState({games: games}));
+        this.retrieveGames(this.state.offset, this.state.limit);
+        this.retrieveGameCount();
+    }
 
+    static getClassNameForGameResult(game) {
+        if (!game || game.gameResult == null) {
+            return "game-active"
+        } else if (game.gameResult == GameResult.WIN) {
+            return "game-win"
+        } else if (game.gameResult == GameResult.LOSS) {
+            return "game-loss"
+        } else if (game.gameResult == GameResult.TIE) {
+            return "game-tie"
+        }
+    }
+
+    static getUuidLinkElementForGame(game) {
+        let className = game.gameResult == null ? "uuid-link" : "uuid-link link";
+        return <a className={className} href={`/game?gameUuid=${game.id}`}>{game.id}</a>
     }
 
     getUserColor(game) {
@@ -41,40 +68,61 @@ class GameList extends React.Component {
         }
     }
 
-    static getClassNameForGameResult(gameResult) {
-        if (gameResult == null) {
-            return "game-active"
-        } else if (gameResult == GameResult.WIN) {
-            return "game-win"
-        } else if (gameResult == GameResult.LOSS) {
-            return "game-loss"
-        } else if (gameResult == GameResult.TIE) {
-            return "game-tie"
-        }
+    getUserColorElement(game) {
+        let myColor = this.getUserColor(game);
+        return <div className={`color-label-${myColor.toLowerCase()}`}>{myColor}</div>;
     }
 
-    retrieveGames(gameType) {
-        if (gameType == "ALL") {
-            return this.doRetrieveGames(null);
-        } else {
-            return this.doRetrieveGames(gameType);
-        }
-    }
+    retrieveGameCount() {
+        let gameType = (this.state.selectedGameType == "ALL") ? null : this.state.selectedGameType;
 
-    getGamesTableDataRow(game, gameIndex) {
-        return (
-            <tr className={GameList.getClassNameForGameResult(game.gameResult)} key={gameIndex}>{this.getGamesTableData(game).map(
-                (data, cellIndex) => <td key={gameIndex * 10 + cellIndex}>{data}</td>
-            )}</tr>
+        this.doRetrieveGameCount(gameType).then((gameCount) => this.setState({
+                gameCount: gameCount,
+                pages: Math.ceil(gameCount / this.state.limit)
+            })
         );
     }
 
-    handleNewGameType(gameType) {
-        this.setState({
-            selectedGameType: gameType
-        });
+    retrieveGames() {
+        let gameType = (this.state.selectedGameType == "ALL") ? null : this.state.selectedGameType;
 
-        this.retrieveGames(gameType).then(games => this.setState({games: games}));
+        this.doRetrieveGames(gameType, this.state.offset, this.state.limit).then((games) => this.setState({
+                games: games,
+                loading: false
+            })
+        );
+    }
+
+    handlePageChange(page) {
+        this.setState({
+            offset: page * this.state.limit,
+            loading: true
+        }, () => this.retrieveGames());
+    }
+
+    handlePageSizeChange(pageSize, page) {
+        this.setState({
+            offset: page * pageSize,
+            limit: pageSize,
+            pages: Math.ceil(this.state.gameCount / pageSize),
+            loading: true
+        }, () => this.retrieveGames());
+    }
+
+    getGamesTableColumns() {
+        return [
+            {Header: "ID", Cell: row => GameList.getUuidLinkElementForGame(row.original)},
+            {Header: "Game Type", Cell: row => row.original.type},
+            {Header: "User Color", Cell: row => this.getUserColorElement(row.original)},
+            {Header: "Opponent", Cell: row => this.getOpponentNameElement(row.original, "")},
+            {Header: "Black Score", Cell: row => row.original.blackPlayerScore},
+            {Header: "White Score", Cell: row => row.original.whitePlayerScore},
+            {Header: "Last Move", Cell: row => this.timeAgo.format(row.original.lastUpdateTimestamp + "Z")}
+        ];
+    }
+
+    handleNewGameType(gameType) {
+        this.setState({selectedGameType: gameType}, () => this.retrieveGames(this.state.offset, this.state.limit));
     }
 
     render() {
@@ -88,22 +136,26 @@ class GameList extends React.Component {
                     options={GameType.all()}
                     allOption={true}
                 />
-                <table className="mui-table mui-table--bordered">
-                    <thead>
-                    <tr>{this.getGamesTableHeaders().map((header, index) =>
-                        <th key={index}>{header}</th>
-                    )}</tr>
-                    </thead>
-                    <tbody>{this.state.games.map((game, gameIndex) => this.getGamesTableDataRow(game, gameIndex))}</tbody>
-                </table>
+                <ReactTable
+                    manual
+                    getTrProps={(state, rowInfo) => { return {className: rowInfo ? GameList.getClassNameForGameResult(rowInfo.original) : {}}; }}
+                    columns={this.getGamesTableColumns()}
+                    defaultPageSize={this.state.limit}
+                    pageSizeOptions={[5, 10, 15, 25, 50]}
+                    data={this.state.games}
+                    pages={this.state.pages}
+                    loading={this.state.loading}
+                    onPageChange={this.handlePageChange.bind(this)}
+                    onPageSizeChange={this.handlePageSizeChange.bind(this)}
+                />
             </div>
         );
     }
 }
 
 GameList.propTypes = {
-    httpService: React.PropTypes.func.isRequired,
-    userUuid: React.PropTypes.string.isRequired
+    httpService: PropTypes.func.isRequired,
+    userUuid: PropTypes.string.isRequired
 };
 
 export {GameList};

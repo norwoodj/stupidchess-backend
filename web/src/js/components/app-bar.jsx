@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Appbar from "muicss/lib/react/appbar";
 import Container from "muicss/lib/react/container";
 
@@ -36,9 +37,9 @@ class ScAppBar extends React.Component {
 }
 
 ScAppBar.propTypes = {
-    appName: React.PropTypes.string.isRequired,
-    httpService: React.PropTypes.func.isRequired,
-    currentUsername: React.PropTypes.string
+    appName: PropTypes.string.isRequired,
+    httpService: PropTypes.func.isRequired,
+    currentUsername: PropTypes.string
 };
 
 export {ScAppBar};

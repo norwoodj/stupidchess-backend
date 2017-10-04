@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {toTitleCase} from "../util";
 
 
@@ -37,10 +38,10 @@ class UpdatingSelect extends React.Component {
 }
 
 UpdatingSelect.propTypes = {
-    label: React.PropTypes.string.isRequired,
-    optionChangeHandler: React.PropTypes.func.isRequired,
-    options: React.PropTypes.array.isRequired,
-    allOption: React.PropTypes.bool
+    label: PropTypes.string.isRequired,
+    optionChangeHandler: PropTypes.func.isRequired,
+    options: PropTypes.array.isRequired,
+    allOption: PropTypes.bool
 };
 
 export {UpdatingSelect};

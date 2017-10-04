@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
+
 module.exports = {
     entry: {
         game: "./src/js/render-game-page.jsx",
@@ -12,35 +13,35 @@ module.exports = {
         profile: "./src/js/render-profile-page.jsx"
     },
     resolve: {
-        extensions: ["", ".js", ".jsx"]
+        extensions: [".js", ".jsx"]
     },
     output: {
         path: path.join(__dirname, "dist"),
         filename: "js/[name].bundle.js"
     },
     plugins: [
+        new webpack.optimize.UglifyJsPlugin({minimize: true}),
         new CopyWebpackPlugin([
             { from: "src/_version.json" },
             { from: "src/css", to: "css/" },
-            { from: "src/img", to: "img/" }
+            { from: "src/img", to: "img/" },
+            { from: "node_modules/react-table/react-table.css", to: "css/" }
         ])
     ],
     module: {
-        preLoaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loaders: ["eslint"]
-            }
-        ],
-        loaders: [
-            {
+                enforce: "pre",
+                loader: "eslint-loader",
+                exclude: /node_modules/
+            }, {
                 test: /\.jsx?$/,
-                loader: "babel",
+                loader: "babel-loader",
                 exclude: /node_modules/
             }, {
                 test: /\.json$/,
-                loader: 'json'
+                loader: "json-loader"
             }
         ]
     }

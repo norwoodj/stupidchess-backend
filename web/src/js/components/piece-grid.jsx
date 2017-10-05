@@ -15,7 +15,7 @@ class PieceGridSquare extends React.Component {
 
     render() {
         return (
-            <td className={this.getSquareClassName()} onClick={this.props.clickHandler}>
+            <td className={this.getSquareClassName()} style={{background: this.props.color}} onClick={this.props.clickHandler}>
                 <div>{this.getPieceImage()}</div>
             </td>
         );
@@ -23,6 +23,7 @@ class PieceGridSquare extends React.Component {
 }
 
 PieceGridSquare.propTypes = {
+    color: PropTypes.string.isRequired,
     piece: PropTypes.object,
     defaultClass: PropTypes.string.isRequired,
     clickHandler: PropTypes.func.isRequired
@@ -38,6 +39,7 @@ class PieceGrid extends React.Component {
         return (
             <PieceGridSquare
                 key={index}
+                color={this.props.color}
                 defaultClass={this.getDefaultClassName()}
                 piece={piece}
                 clickHandler={() => clickHandler(piece)}
@@ -53,7 +55,7 @@ class PieceGrid extends React.Component {
         let gridShape = this.getGridShape();
 
         return (
-            <div className="content-block mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
+            <div className="content-block mui-col-md-12 mui-col-sm-6 mui-col-xs-6" >
                 <table className="piece-grid non-board-grid">
                     <tbody>{ range(gridShape.rows).map(rowIndex => (
                         <tr key={rowIndex}>{ range(gridShape.columns).map(cellIndex => (
@@ -65,5 +67,9 @@ class PieceGrid extends React.Component {
         );
     }
 }
+
+PieceGrid.propTypes = {
+    color: PropTypes.string.isRequired
+};
 
 export {PieceGrid};

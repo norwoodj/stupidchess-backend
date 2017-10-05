@@ -6,11 +6,12 @@ import {Board} from "./board";
 import {CaptureGrid} from "./capture-grid";
 import {Scoreboard} from "./scoreboard";
 import {ColorSetupSelect} from "./color-setup-select";
+import {UpdatingSelect} from "./updating-select";
 import {PieceSelectGrid} from "./piece-select-grid";
 import {ErrorElement} from "./error-element";
 
+import {DISPLAY_STATES_BY_NAME, DISPLAY_STATES_OPTIONS, DefaultDisplayState} from "../models/display-states";
 import {BoardSetupState} from "../models/board-setup-state";
-import {DisplayState} from "../models/display-state";
 import {SquareSelectionState} from "../models/square-selection-state";
 import {GameState} from "../models/game-state";
 import {AmbiguousMoveState} from "../models/ambiguous-move-state";
@@ -24,7 +25,7 @@ class Game extends React.Component {
         super();
         this.gameState = new GameState();
         this.boardSetupState = new BoardSetupState();
-        this.displayState = new DisplayState();
+        this.displayState = new DefaultDisplayState();
         this.squareSelectionState = new SquareSelectionState();
         this.ambiguousMoveState = new AmbiguousMoveState();
 
@@ -212,9 +213,15 @@ class Game extends React.Component {
         this.gameService.makeMove(this.gameUuid, placeMove).then(() => this.retrieveNewGameState());
     }
 
+    handleDisplayStateChange(displayStateName) {
+        let displayStateClass = DISPLAY_STATES_BY_NAME.get(displayStateName);
+        this.displayState = new displayStateClass();
+        this.setState({displayState: this.displayState});
+    }
+
     render() {
         return (
-            <Container className="game-panel" fluid={true}>
+            <Container className="game-panel" style={this.displayState.getGamePanelStyle()} fluid={true}>
                 <ErrorElement error={this.props.error}/>
 
                 <div className="row">
@@ -225,11 +232,20 @@ class Game extends React.Component {
                     <Board clickHandler={this.handleBoardClick.bind(this)} {...this.state}/>
                     <div className="content-block mui-col-md-4 mui-col-sm-12">
                         <div className="row">
-                            <CaptureGrid gameState={this.state.gameState} captureColor="WHITE"/>
-                            <CaptureGrid gameState={this.state.gameState} captureColor="BLACK"/>
+                            <CaptureGrid
+                                color={this.displayState.getCaptureGridColor()}
+                                gameState={this.state.gameState}
+                                captureColor="WHITE"
+                            />
+                            <CaptureGrid
+                                color={this.displayState.getCaptureGridColor()}
+                                gameState={this.state.gameState}
+                                captureColor="BLACK"
+                            />
                         </div>
                         <div className="row">
                             <PieceSelectGrid
+                                color={this.displayState.getPieceSelectGridColor()}
                                 gameState={this.state.gameState}
                                 boardSetupState={this.state.boardSetupState}
                                 pieceSelectionCallback={this.handlePlacePieceSelection.bind(this)}
@@ -239,6 +255,13 @@ class Game extends React.Component {
                                 boardSetupState={this.state.boardSetupState}
                                 colorChangeHandler={this.handleColorSetupSelect.bind(this)}
                             />
+                            <div className="content-block game-page-select mui-col-lg-12 mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
+                                <UpdatingSelect
+                                    label="Change Theme"
+                                    options={DISPLAY_STATES_OPTIONS}
+                                    optionChangeHandler={this.handleDisplayStateChange.bind(this)}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

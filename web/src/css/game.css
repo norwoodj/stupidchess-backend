@@ -1,5 +1,4 @@
 .game-panel {
-    background-image: url("/img/wood.jpg");
     min-height: 100%;
     padding-top: 30px;
     padding-bottom: 30px;
@@ -30,7 +29,7 @@ table {
     margin-top: 30px;
 }
 
-#color-setup-select {
+.game-page-select {
     background-color: white;
 }
 
@@ -43,14 +42,6 @@ table {
     content: '';
     display: block;
     margin-top: 100%;
-}
-
-.piece-grid .capture {
-    background-color: green;
-}
-
-.piece-grid .piece-selection {
-    background-color: green;
 }
 
 .piece {

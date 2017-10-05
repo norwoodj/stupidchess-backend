@@ -29,6 +29,7 @@ class CaptureGrid extends PieceGrid {
 }
 
 CaptureGrid.propTypes = {
+    color: PropTypes.string.isRequired,
     gameState: PropTypes.object.isRequired,
     captureColor: PropTypes.string.isRequired
 };

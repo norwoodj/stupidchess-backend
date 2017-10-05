@@ -11,3 +11,4 @@ jscripts/utilities/*.sh
 requirements.lock
 _version.json
 .idea
+.DS_Store

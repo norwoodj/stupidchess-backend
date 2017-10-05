@@ -4,13 +4,17 @@ import {getCaptureShapeForGameType} from "../factories/board-shapes-factory";
 
 
 class CaptureGrid extends PieceGrid {
-    getDefaultClassName() {
-        return "capture";
-    }
-
     getPieceForIndex(index) {
         let piecesForColor = this.props.gameState.captures.filter(piece => piece.color == this.props.captureColor);
         return (piecesForColor.length > index) ? piecesForColor[index] : null;
+    }
+
+    getSquareClassName() {
+        return "capture";
+    }
+
+    getGridClassName() {
+        return "content-block mui-col-lg-12 mui-col-md-12 mui-col-sm-6 mui-col-xs-6";
     }
 
     shouldDisplay() {
@@ -22,8 +26,7 @@ class CaptureGrid extends PieceGrid {
     }
 
     getClickHandler() {
-        return () => {
-        };
+        return () => {};
     }
 
 }

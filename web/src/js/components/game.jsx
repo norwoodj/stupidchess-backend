@@ -173,7 +173,7 @@ class Game extends React.Component {
     }
 
     handleClickOnPieceSquareNothingSelected(square) {
-        let  piece = this.gameState.getPieceOnSquare(square);
+        let piece = this.gameState.getPieceOnSquare(square);
 
         if (piece.color != this.gameState.currentTurn) {
             return;
@@ -231,7 +231,7 @@ class Game extends React.Component {
                 <div className="row">
                     <Board clickHandler={this.handleBoardClick.bind(this)} {...this.state}/>
                     <div className="content-block mui-col-md-4 mui-col-sm-12">
-                        <div className="row">
+                        <Container>
                             <CaptureGrid
                                 color={this.displayState.getCaptureGridColor()}
                                 gameState={this.state.gameState}
@@ -242,26 +242,24 @@ class Game extends React.Component {
                                 gameState={this.state.gameState}
                                 captureColor="BLACK"
                             />
-                        </div>
-                        <div className="row">
-                            <PieceSelectGrid
-                                color={this.displayState.getPieceSelectGridColor()}
-                                gameState={this.state.gameState}
-                                boardSetupState={this.state.boardSetupState}
-                                pieceSelectionCallback={this.handlePlacePieceSelection.bind(this)}
+                        </Container>
+                        <PieceSelectGrid
+                            color={this.displayState.getPieceSelectGridColor()}
+                            gameState={this.state.gameState}
+                            boardSetupState={this.state.boardSetupState}
+                            pieceSelectionCallback={this.handlePlacePieceSelection.bind(this)}
+                        />
+                        <ColorSetupSelect
+                            gameState={this.state.gameState}
+                            boardSetupState={this.state.boardSetupState}
+                            colorChangeHandler={this.handleColorSetupSelect.bind(this)}
+                        />
+                        <div className="content-block game-page-select">
+                            <UpdatingSelect
+                                label="Change Theme"
+                                options={DISPLAY_STATES_OPTIONS}
+                                optionChangeHandler={this.handleDisplayStateChange.bind(this)}
                             />
-                            <ColorSetupSelect
-                                gameState={this.state.gameState}
-                                boardSetupState={this.state.boardSetupState}
-                                colorChangeHandler={this.handleColorSetupSelect.bind(this)}
-                            />
-                            <div className="content-block game-page-select mui-col-lg-12 mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
-                                <UpdatingSelect
-                                    label="Change Theme"
-                                    options={DISPLAY_STATES_OPTIONS}
-                                    optionChangeHandler={this.handleDisplayStateChange.bind(this)}
-                                />
-                            </div>
                         </div>
                     </div>
                 </div>

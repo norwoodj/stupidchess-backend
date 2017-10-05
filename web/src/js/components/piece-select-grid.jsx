@@ -6,7 +6,7 @@ import {getPieceSelectShapeForSetupMode} from "../factories/board-shapes-factory
 class PieceSelectGrid extends PieceGrid {
     getPieceForIndex(index) {
         if (this.props.gameState.inBoardSetupMode()) {
-            var pieces = this.props.gameState.possiblePiecesToBePlaced
+            let pieces = this.props.gameState.possiblePiecesToBePlaced
                 .filter(piece => (piece.color == this.props.boardSetupState.getCurrentBoardBeingSetUp() && piece.index == index));
             return (pieces.length > 0) ? pieces[0] : null;
         } else{
@@ -14,8 +14,12 @@ class PieceSelectGrid extends PieceGrid {
         }
     }
 
-    getDefaultClassName() {
+    getSquareClassName() {
         return "piece-selection";
+    }
+
+    getGridClassName() {
+        return "content-block";
     }
 
     shouldDisplay() {

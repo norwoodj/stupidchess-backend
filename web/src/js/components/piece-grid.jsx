@@ -40,7 +40,7 @@ class PieceGrid extends React.Component {
             <PieceGridSquare
                 key={index}
                 color={this.props.color}
-                defaultClass={this.getDefaultClassName()}
+                defaultClass={this.getSquareClassName()}
                 piece={piece}
                 clickHandler={() => clickHandler(piece)}
             />
@@ -55,7 +55,7 @@ class PieceGrid extends React.Component {
         let gridShape = this.getGridShape();
 
         return (
-            <div className="content-block mui-col-md-12 mui-col-sm-6 mui-col-xs-6" >
+            <div className={this.getGridClassName()}>
                 <table className="piece-grid non-board-grid">
                     <tbody>{ range(gridShape.rows).map(rowIndex => (
                         <tr key={rowIndex}>{ range(gridShape.columns).map(cellIndex => (

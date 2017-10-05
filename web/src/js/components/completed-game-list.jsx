@@ -14,6 +14,18 @@ class CompletedGameList extends GameList {
     doRetrieveGameCount(gameType) {
         return this.gameService.getCompletedGameCount(this.props.userUuid, gameType);
     }
+
+    getUuidLinkClassName() {
+        return "uuid-link link";
+    }
+
+    getOtherPlayerLinkClassName() {
+        return "link";
+    }
+
+    getRowPropsForGame(game) {
+        return {className: `game-${game.gameResult.toLowerCase()}`};
+    }
 }
 
 CompletedGameList.propTypes = {

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ReactHtmlParser from "react-html-parser"
+import ReactHtmlParser from "react-html-parser";
 import Button from "muicss/lib/react/button";
 import Form from "muicss/lib/react/form";
 import Panel from "muicss/lib/react/panel";

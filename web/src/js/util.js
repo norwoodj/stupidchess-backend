@@ -1,4 +1,5 @@
 import $ from "jquery";
+import {GameType} from "./constants";
 
 
 function toTitleCase(input) {
@@ -28,5 +29,9 @@ function setupCsrfRequests() {
     });
 }
 
+function isGameInBoardSetupMode(game) {
+    return game.type == GameType.STUPID_CHESS && game.lastMove < 23;
+}
 
-export {toTitleCase, range, setupCsrfRequests};
+
+export {toTitleCase, range, setupCsrfRequests, isGameInBoardSetupMode};

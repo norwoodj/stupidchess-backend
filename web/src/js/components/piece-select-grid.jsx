@@ -27,11 +27,7 @@ class PieceSelectGrid extends PieceGrid {
     }
 
     getClickHandler() {
-        return piece => {
-            if (piece != null) {
-                this.props.pieceSelectionCallback(piece);
-            }
-        }
+        return piece => (piece != null) ? this.props.pieceSelectionCallback(piece) : null;
     }
 }
 

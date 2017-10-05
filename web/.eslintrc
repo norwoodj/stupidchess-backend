@@ -10,8 +10,9 @@
         "browser": true
     },
     "rules": {
-        "no-console": 0,
-        "no-underscore-dangle": 1,
-        "quotes": [2, "double"]
+        "no-console": "off",
+        "no-underscore-dangle": "error",
+        "quotes": ["error", "double"],
+        "semi": "error"
     }
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Color} from "../constants"
+import {Color} from "../constants";
 
 
 class Scoreboard extends React.Component {

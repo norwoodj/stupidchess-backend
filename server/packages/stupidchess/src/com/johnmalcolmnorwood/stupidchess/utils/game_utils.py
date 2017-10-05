@@ -22,6 +22,8 @@ SINGLE_GAME_DICT_FIELDS = [
 
 LIST_GAME_DICT_FIELDS = [
     "type",
+    "lastMove",
+    "currentTurn",
     "blackPlayerUuid",
     "whitePlayerUuid",
     "blackPlayerName",

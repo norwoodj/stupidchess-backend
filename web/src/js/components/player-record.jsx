@@ -26,7 +26,7 @@ class PlayerRecord extends React.Component {
             "Wins",
             "Losses",
             "Point Differential"
-        ]
+        ];
     }
 
     getPlayerRecordDataForGameType(gameType) {

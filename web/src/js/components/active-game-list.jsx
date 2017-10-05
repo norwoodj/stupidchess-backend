@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import {GameList} from "./game-list";
+import {isGameInBoardSetupMode} from "../util";
 
 
 class ActiveGameList extends GameList {
@@ -13,6 +14,14 @@ class ActiveGameList extends GameList {
 
     doRetrieveGameCount(gameType) {
         return this.gameService.getActiveGameCount(this.props.userUuid, gameType);
+    }
+
+    getRowPropsForGame(game) {
+        if (this.getUserColor(game) == game.currentTurn || isGameInBoardSetupMode(game)) {
+            return {className: "game-my-turn"};
+        }
+
+        return "";
     }
 }
 

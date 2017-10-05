@@ -13,12 +13,17 @@ table, body {
 
 .game-loss {
     background: red;
-    color: black;
+    color: white;
 }
 
 .game-tie {
     background: navy;
     color: white;
+}
+
+.game-my-turn {
+    background: yellow;
+    color: black;
 }
 
 .game-win .color-label-black {

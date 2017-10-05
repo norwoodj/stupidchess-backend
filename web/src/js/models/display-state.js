@@ -8,7 +8,7 @@ class DisplayState {
 
     getSquareColor(square) {
         var rowIndex = Math.floor(square / 10);
-        return this.squareColors[(rowIndex + square) % 2]
+        return this.squareColors[(rowIndex + square) % 2];
     }
 
     getSelectedBackground() {

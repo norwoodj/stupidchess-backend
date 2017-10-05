@@ -9,7 +9,7 @@ class ScAppBar extends React.Component {
         super();
         this.state = {
             user: null
-        }
+        };
     }
 
     render() {

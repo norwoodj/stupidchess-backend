@@ -4,9 +4,9 @@ import Container from "muicss/lib/react/container";
 
 import {Board} from "./board";
 import {CaptureGrid} from "./capture-grid";
-import {Scoreboard} from "./scoreboard"
-import {ColorSetupSelect} from "./color-setup-select"
-import {PieceSelectGrid} from "./piece-select-grid"
+import {Scoreboard} from "./scoreboard";
+import {ColorSetupSelect} from "./color-setup-select";
+import {PieceSelectGrid} from "./piece-select-grid";
 import {ErrorElement} from "./error-element";
 
 import {BoardSetupState} from "../models/board-setup-state";
@@ -70,7 +70,7 @@ class Game extends React.Component {
                         displayState: this.displayState,
                         squareSelectionState: this.squareSelectionState,
                         ambiguousMoveState: this.ambiguousMoveState
-                    })
+                    });
                 }
             }
         );
@@ -164,7 +164,7 @@ class Game extends React.Component {
     handleClickOnPossibleMoveSquare(square) {
         if (this.ambiguousMoveState.isAmbiguousDestination(square)) {
             this.ambiguousMoveState.selectAmbiguousDestination(square);
-            this.setState({ambiguousMoveState: this.ambiguousMoveState})
+            this.setState({ambiguousMoveState: this.ambiguousMoveState});
         } else {
             let movePieceMove = getMoveObjectForPieceMove(this.squareSelectionState.getSelected(), square);
             this.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
@@ -198,7 +198,7 @@ class Game extends React.Component {
                 });
 
                 this.squareSelectionState.setSelected(square);
-                this.setState({squareSelectionState: this.squareSelectionState})
+                this.setState({squareSelectionState: this.squareSelectionState});
             }
         );
     }

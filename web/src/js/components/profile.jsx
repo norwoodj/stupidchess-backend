@@ -18,7 +18,7 @@ class Profile extends React.Component {
             playerUuid: null,
             playerName: "",
             games: [],
-        }
+        };
     }
 
     componentDidMount() {

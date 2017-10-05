@@ -1,4 +1,5 @@
-import {Color, GameType} from "../constants";
+import {Color} from "../constants";
+import {isGameInBoardSetupMode} from "../util";
 
 
 class GameState {
@@ -33,7 +34,7 @@ class GameState {
     }
 
     inBoardSetupMode() {
-        return this.type == GameType.STUPID_CHESS && this.lastMove < 23;
+        return isGameInBoardSetupMode(this);
     }
 
     getColorsSettingUp() {

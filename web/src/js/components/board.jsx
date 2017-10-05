@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import getPieceImage from "../factories/piece-factory"
-import {getHalfBoardShapeForColor, getBoardShapeForGameType} from "../factories/board-shapes-factory"
+import getPieceImage from "../factories/piece-factory";
+import {getHalfBoardShapeForColor, getBoardShapeForGameType} from "../factories/board-shapes-factory";
 
 
 class Board extends React.Component {
@@ -30,7 +30,7 @@ class Board extends React.Component {
             return "";
         }
 
-        return `square ${this.props.gameState.hasPieceOnSquare(square) ? "piece-square" : ""}`
+        return `square ${this.props.gameState.hasPieceOnSquare(square) ? "piece-square" : ""}`;
     }
 
     getPieceImageElementForSquare(square) {
@@ -39,7 +39,7 @@ class Board extends React.Component {
         }
 
         let piece = this.props.gameState.getPieceOnSquare(square);
-        return <img className="piece" src={getPieceImage(piece)}/>
+        return <img className="piece" src={getPieceImage(piece)}/>;
     }
 
     getStyleForSquare(square) {
@@ -49,7 +49,7 @@ class Board extends React.Component {
 
         return {
             background: this.getBackgroundForSquare(square)
-        }
+        };
     }
 
     render() {

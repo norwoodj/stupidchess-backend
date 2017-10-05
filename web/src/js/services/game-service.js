@@ -15,11 +15,11 @@ export default class GameService {
     }
 
     static getGameListQueryString(userUuid, gameType, offset, limit) {
-        return `?userUuid=${userUuid}&offset=${offset}&limit=${limit}${gameType != null ? `&gameType=${gameType}` : ""}`
+        return `?userUuid=${userUuid}&offset=${offset}&limit=${limit}${gameType != null ? `&gameType=${gameType}` : ""}`;
     }
 
     static getGameCountQueryString(userUuid, gameType) {
-        return `?userUuid=${userUuid}${gameType != null ? `&gameType=${gameType}` : ""}`
+        return `?userUuid=${userUuid}${gameType != null ? `&gameType=${gameType}` : ""}`;
     }
 
     getActiveGames(userUuid, gameType, offset, limit) {
@@ -29,7 +29,7 @@ export default class GameService {
                 url: `/api/game/active${GameService.getGameListQueryString(userUuid, gameType, offset, limit)}`,
                 success: game => resolve(game),
                 error: (error) => reject(error)
-            })
+            });
         });
     }
 
@@ -40,7 +40,7 @@ export default class GameService {
                 url: `/api/game/completed${GameService.getGameListQueryString(userUuid, gameType, offset, limit)}`,
                 success: game => resolve(game),
                 error: (error) => reject(error)
-            })
+            });
         });
     }
 
@@ -51,7 +51,7 @@ export default class GameService {
                 url: `/api/game/active/count${GameService.getGameCountQueryString(userUuid, gameType)}`,
                 success: res => resolve(res.gameCount),
                 error: (error) => reject(error)
-            })
+            });
         });
     }
 
@@ -62,7 +62,7 @@ export default class GameService {
                 url: `/api/game/completed/count${GameService.getGameCountQueryString(userUuid, gameType)}`,
                 success: res => resolve(res.gameCount),
                 error: (error) => reject(error)
-            })
+            });
         });
     }
 

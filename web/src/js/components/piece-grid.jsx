@@ -10,7 +10,7 @@ class PieceGridSquare extends React.Component {
     }
 
     getPieceImage() {
-        return this.props.piece != null ? <img className="piece" src={getPieceImage(this.props.piece)}/> : ""
+        return this.props.piece != null ? <img className="piece" src={getPieceImage(this.props.piece)}/> : "";
     }
 
     render() {

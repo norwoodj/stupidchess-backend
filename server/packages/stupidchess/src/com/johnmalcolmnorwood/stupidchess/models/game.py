@@ -35,7 +35,6 @@ class GameType:
 class GameResult:
     WIN = "WIN"
     LOSS = "LOSS"
-    TIE = "TIE"
 
 
 GAME_TYPE_REGEX = "|".join(GameType.all())

@@ -63,7 +63,6 @@ def get_game_result(
 ):
     if 0 in (game.blackPlayerScore, game.whitePlayerScore):
         return (
-            GameResult.TIE if (game.blackPlayerScore, game.whitePlayerScore) == (0, 0) else
             GameResult.WIN if game.blackPlayerScore == 0 and game.whitePlayerUuid == user_uuid else
             GameResult.WIN if game.whitePlayerScore == 0 and game.blackPlayerUuid == user_uuid else
             GameResult.LOSS

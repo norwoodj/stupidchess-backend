@@ -1,43 +1,42 @@
 import React from "react";
 import PropTypes from "prop-types";
+import ReactTable from "react-table";
 import RecordService from "../services/record-service";
 import {GameType} from "../constants";
+import {toTitleCase} from "../util";
 
 
 class PlayerRecord extends React.Component {
     constructor() {
         super();
         this.state = {
-            playerRecords: null,
+            playerRecords: [],
+            loading: true
         };
     }
 
     componentDidMount() {
         this.recordService = new RecordService(this.props.httpService);
         this.recordService.getUserGameRecords(this.props.userUuid, this.state.selectedGameType).then(
-            playerRecords => this.setState({playerRecords: playerRecords})
-        );
+            playerRecords => {
+            this.setState({
+                playerRecords: this.convertPlayerRecordResponse(playerRecords),
+                loading: false
+            });
+        });
     }
 
-    getPlayerRecordHeaders() {
-        return [
-            "Type",
-            "Games",
-            "Wins",
-            "Losses",
-            "Point Differential"
-        ];
+    convertPlayerRecordResponse(playerRecords) {
+        return GameType.all().map(gameType => Object.assign({gameType: toTitleCase(gameType)}, playerRecords[gameType]));
     }
 
-    getPlayerRecordDataForGameType(gameType) {
-        let recordsForGameType = this.state.playerRecords[gameType];
-
+    getPlayerRecordColumns() {
         return [
-            gameType,
-            recordsForGameType.wins + recordsForGameType.losses,
-            recordsForGameType.wins,
-            recordsForGameType.losses,
-            recordsForGameType.pointDifferential
+            {Header: "Type", Cell: row => row.original.gameType},
+            {Header: "Games", Cell: row => row.original.wins + row.original.losses},
+            {Header: "Wins", Cell: row => row.original.wins},
+            {Header: "Losses", Cell: row => row.original.losses},
+            {Header: "Point Differential", Cell: row => row.original.pointDifferential}
         ];
     }
 
@@ -50,14 +49,15 @@ class PlayerRecord extends React.Component {
             <div>
                 <div className="mui-divider"></div>
                 <h3>Record Against Other Players</h3>
-                <table className="mui-table mui-table--bordered">
-                    <thead>
-                    <tr>{this.getPlayerRecordHeaders().map((header, index) => <th key={index}>{header}</th>)}</tr>
-                    </thead>
-                    <tbody>{GameType.all().map((gameType, rowIndex) =>
-                        <tr key={rowIndex}>{this.getPlayerRecordDataForGameType(gameType).map((data, index) => <td key={index}>{data}</td>)}</tr>
-                    )}</tbody>
-                </table>
+                <ReactTable
+                    manual
+                    defaultPageSize={GameType.all().length}
+                    columns={this.getPlayerRecordColumns()}
+                    sortable={false}
+                    showPagination={false}
+                    data={this.state.playerRecords}
+                    loading={this.state.loading}
+                />
             </div>
         );
     }

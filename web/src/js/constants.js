@@ -46,8 +46,7 @@ let GameAuthType = {
 
 let GameResult = {
     WIN: "WIN",
-    LOSS: "LOSS",
-    TIE: "TIE"
+    LOSS: "LOSS"
 };
 
 export {

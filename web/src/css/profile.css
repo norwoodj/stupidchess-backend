@@ -34,18 +34,10 @@ table, body {
     color: black;
 }
 
-.game-tie .color-label-black {
-    color: black;
-}
-
 .game-win .color-label-white {
     color: white;
 }
 
 .game-loss .color-label-white {
-    color: white;
-}
-
-.game-tie .color-label-white {
     color: white;
 }

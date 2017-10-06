@@ -64,6 +64,6 @@ def get_move_dict(move):
     )
 
     move_dict["id"] = move.get_id()
-    move_dict["createTimestamp"] = move_dict["createTimestamp"].isoformat()
-    move_dict["lastUpdateTimestamp"] = move_dict["lastUpdateTimestamp"].isoformat()
+    move_dict["createTimestamp"] = move_dict["createTimestamp"].replace(tzinfo=timezone.utc).isoformat()
+    move_dict["lastUpdateTimestamp"] = move_dict["lastUpdateTimestamp"].replace(tzinfo=timezone.utc).isoformat()
     return move_dict

@@ -1,48 +1,21 @@
 #!/usr/bin/env python
 from ..factories.game_factory import create_new_game
 from ..utils.game_utils import LIST_GAME_DICT_FIELDS
-from ..models.game import Game, GameType
+from ..models.game import Game
 from ..models.piece import Color
-from ..exceptions import ForbiddenMoveException, InvalidMoveException
+from ..utils.game_rules import is_in_board_setup_mode, is_players_turn
 
 DEFAULT_OFFSET = 0
 DEFAULT_LIMIT = 10
 
 
 class GameService:
-    def __init__(self, possible_move_service, move_application_service):
+    def __init__(self, possible_move_service):
         self.__possible_move_service = possible_move_service
-        self.__move_application_service = move_application_service
 
     @staticmethod
-    def __is_in_board_setup_mode(game):
-        return game.type == GameType.STUPID_CHESS and game.lastMove < 23
-
-    @staticmethod
-    def __is_players_turn(game, user_uuid):
-        return any([
-            game.blackPlayerUuid == game.whitePlayerUuid,
-            game.currentTurn == Color.BLACK and game.blackPlayerUuid == user_uuid,
-            game.currentTurn == Color.WHITE and game.whitePlayerUuid == user_uuid,
-        ])
-
-    @staticmethod
-    def __color_for_move_move(game, move):
-        for p in game.pieces:
-            if p.square == move.startSquare:
-                return p.color
-
-
-    @staticmethod
-    def __is_player_authorized_to_perform_move(game, user_uuid, move):
-        color = move.piece.color if move.piece is not None else GameService.__color_for_move_move(game, move)
-        move_player_uuid = game.blackPlayerUuid if color == Color.BLACK else game.whitePlayerUuid
-        return move_player_uuid == user_uuid
-
-
-    @staticmethod
-    def __remove_unprivileged_moves(game, user_uuid):
-        if GameService.__is_in_board_setup_mode(game) and game.whitePlayerUuid != game.blackPlayerUuid:
+    def __remove_unprivileged_game_info(game, user_uuid):
+        if is_in_board_setup_mode(game) and game.whitePlayerUuid != game.blackPlayerUuid:
             user_color = Color.BLACK if game.blackPlayerUuid == user_uuid else Color.WHITE
             game.possiblePiecesToBePlaced = [p for p in game.possiblePiecesToBePlaced if p.color == user_color]
             game.pieces = [p for p in game.pieces if p.color == user_color]
@@ -238,29 +211,15 @@ class GameService:
         )
 
     @staticmethod
-    def get_game_for_user_and_game_uuid(user_uuid, game_uuid):
-        game = Game.objects.get_or_404(__raw__=GameService.__get_game_for_user_and_game_uuid_criteria(user_uuid, game_uuid))
-        return GameService.__remove_unprivileged_moves(game, user_uuid)
+    def get_game_for_user_and_game_uuid(user_uuid, game_uuid, only_fields=None):
+        queryset = Game.objects.only(*only_fields) if only_fields is not None else Game.objects
+        game = queryset.get_or_404(__raw__=GameService.__get_game_for_user_and_game_uuid_criteria(user_uuid, game_uuid))
+        return GameService.__remove_unprivileged_game_info(game, user_uuid)
 
     def get_possible_moves(self, user_uuid, game_uuid, square):
         game = GameService.get_game_for_user_and_game_uuid(user_uuid, game_uuid)
 
-        if not GameService.__is_players_turn(game, user_uuid):
+        if not is_players_turn(game, user_uuid):
             return []
 
         return self.__possible_move_service.get_possible_moves_from_square(square, game)
-
-    def apply_move(self, user_uuid, game_uuid, move):
-        game = GameService.get_game_for_user_and_game_uuid(user_uuid, game_uuid)
-
-        if not GameService.__is_player_authorized_to_perform_move(game, user_uuid, move):
-            raise ForbiddenMoveException(move)
-
-        if not any([
-            GameService.__is_in_board_setup_mode(game),
-            GameService.__is_players_turn(game, user_uuid),
-        ]):
-            color = move.piece.color if move.piece is not None else GameService.__color_for_move_move(game, move)
-            raise InvalidMoveException(move, f"It is not {color}'s turn to move!")
-
-        return self.__move_application_service.apply_move(game, move)

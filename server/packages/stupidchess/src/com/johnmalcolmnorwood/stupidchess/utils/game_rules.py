@@ -57,6 +57,18 @@ def count(iterable):
     return sum(1 for _ in iterable)
 
 
+def is_in_board_setup_mode(game):
+    return game.type == GameType.STUPID_CHESS and game.lastMove < 23
+
+
+def is_players_turn(game, user_uuid):
+    return any([
+        game.blackPlayerUuid == game.whitePlayerUuid,
+        game.currentTurn == Color.BLACK and game.blackPlayerUuid == user_uuid,
+        game.currentTurn == Color.WHITE and game.whitePlayerUuid == user_uuid,
+    ])
+
+
 def get_game_result(
     game,
     user_uuid

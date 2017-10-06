@@ -7,11 +7,18 @@ from ..utils.game_utils import get_game_dict, get_move_dict, LIST_GAME_DICT_FIEL
 game_blueprint = Blueprint("game", __name__)
 
 
+DEFAULT_PAGE_OFFSET = 0
+DEFAULT_PAGE_LIMIT = 10
+
+
+def _get_page_query_parameters():
+    return int(request.args.get("offset", DEFAULT_PAGE_OFFSET)), int(request.args.get("limit", DEFAULT_PAGE_LIMIT))
+
+
 def _retrieve_game_list(one_player_retrieval_method, two_player_retrieval_method):
     user_uuid = request.args.get("userUuid") or current_user.get_id()
     game_type = request.args.get("gameType")
-    offset = int(request.args.get("offset", 0))
-    limit = int(request.args.get("limit", 10))
+    offset, limit = _get_page_query_parameters()
 
     if user_uuid == current_user.get_id():
         games = one_player_retrieval_method(
@@ -95,12 +102,20 @@ def get_game_by_uuid(game_uuid):
     return jsonify(game_dict)
 
 
+@game_blueprint.route("/<game_uuid>/move")
+@login_required
+def get_moves_for_game(game_uuid):
+    offset, limit = _get_page_query_parameters()
+    moves = current_app.context.move_service.get_moves_for_game_and_user(game_uuid, current_user.get_id(), offset, limit)
+    return jsonify([get_move_dict(m) for m in moves])
+
+
 @game_blueprint.route("/<game_uuid>/move/", methods=["POST"])
 @login_required
 def post_move_to_game(game_uuid):
     move = Move.from_json(request.json)
     move.disambiguating_capture = request.json.get("disambiguatingCapture")
-    moves_applied = current_app.context.game_service.apply_move(current_user.get_id(), game_uuid, move)
+    moves_applied = current_app.context.move_service.apply_move(current_user.get_id(), game_uuid, move)
 
     return jsonify(
         moves=[get_move_dict(m) for m in moves_applied],

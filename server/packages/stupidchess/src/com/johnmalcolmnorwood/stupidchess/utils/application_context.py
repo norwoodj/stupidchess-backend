@@ -15,7 +15,7 @@ from ..blueprints.record_blueprint import record_blueprint
 from ..blueprints.template_blueprint import template_blueprint
 from ..exceptions import InvalidMoveException, InvalidGameParameterException, ForbiddenMoveException
 from ..services.ambiguous_move_service import AmbiguousMoveService
-from ..services.move_application_service import MoveApplicationService
+from ..services.move_service import MoveService
 from ..services.move_move_update_service import MoveMoveUpdateService
 from ..services.place_move_update_service import PlaceMoveUpdateService
 from ..services.replace_move_update_service import ReplaceMoveUpdateService
@@ -85,8 +85,8 @@ class ApplicationContext:
             ReplaceMoveUpdateService(),
         )
 
-        self.move_application_service = MoveApplicationService(self.move_update_services)
-        self.game_service = GameService(self.possible_move_service, self.move_application_service)
+        self.game_service = GameService(self.possible_move_service)
+        self.move_service = MoveService(self.move_update_services, self.game_service)
         self.record_service = RecordService(self.game_service)
 
     def __initialize_auth(self, app):

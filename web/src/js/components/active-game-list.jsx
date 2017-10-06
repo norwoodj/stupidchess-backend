@@ -9,11 +9,11 @@ class ActiveGameList extends GameList {
     }
 
     doRetrieveGames(gameType, offset, limit) {
-        return this.gameService.getActiveGames(this.props.userUuid, gameType, offset, limit);
+        return this.props.gameService.getActiveGames(this.props.userUuid, gameType, offset, limit);
     }
 
     doRetrieveGameCount(gameType) {
-        return this.gameService.getActiveGameCount(this.props.userUuid, gameType);
+        return this.props.gameService.getActiveGameCount(this.props.userUuid, gameType);
     }
 
     getRowPropsForGame(game) {
@@ -26,7 +26,7 @@ class ActiveGameList extends GameList {
 }
 
 ActiveGameList.propTypes = {
-    httpService: PropTypes.func.isRequired,
+    gameService: PropTypes.object.isRequired,
     userUuid: PropTypes.string
 };
 

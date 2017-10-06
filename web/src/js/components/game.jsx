@@ -19,6 +19,7 @@ import {AmbiguousMoveState} from "../models/ambiguous-move-state";
 
 import GameService from "../services/game-service";
 import {getMoveObjectForPieceMove, getMoveObjectForPlacePiece} from "../factories/move-factory";
+import {getErrorMessage} from "../util";
 
 
 class Game extends React.Component {
@@ -31,31 +32,43 @@ class Game extends React.Component {
         this.ambiguousMoveState = new AmbiguousMoveState();
 
         this.state = {
+            gameService: null,
             gameState: this.gameState,
             boardSetupState: this.boardSetupState,
             displayState: this.displayState,
             squareSelectionState: this.squareSelectionState,
-            ambiguousMoveState: this.ambiguousMoveState
+            ambiguousMoveState: this.ambiguousMoveState,
+            error: null
         };
     }
 
     componentDidMount() {
-        this.gameService = new GameService(this.props.httpService);
+        if (this.props.error) {
+            this.setState({
+                error: this.props.error,
+                gameService: new GameService(this.props.httpService, this.handleError.bind(this))
+            });
+
+            return;
+        }
+
         this.gameUuid = this.props.gameUuid;
-        this.start();
+        this.setState(
+            {gameService: new GameService(this.props.httpService, this.handleError.bind(this))},
+            () => this.start()
+        );
+    }
+
+    handleError(error) {
+        this.setState({error: getErrorMessage(error)});
     }
 
     start() {
-        this.pollGameState();
-    }
-
-    pollGameState() {
         this.retrieveNewGameState();
-        setTimeout(() => this.pollGameState(), 5000);
     }
 
     retrieveNewGameState() {
-        this.gameService.getGameByUuid(this.gameUuid).then(
+        this.state.gameService.getGameByUuid(this.gameUuid).then(
             (gameResponse) => {
                 if (gameResponse.lastMove != this.gameState.lastMove) {
                     this.gameState.updateFromApiResponse(gameResponse);
@@ -74,6 +87,8 @@ class Game extends React.Component {
                         ambiguousMoveState: this.ambiguousMoveState
                     });
                 }
+
+                setTimeout(() => this.retrieveNewGameState(), 5000);
             }
         );
     }
@@ -160,7 +175,7 @@ class Game extends React.Component {
             square
         );
 
-        this.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
+        this.state.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
     }
 
     handleClickOnPossibleMoveSquare(square) {
@@ -169,7 +184,7 @@ class Game extends React.Component {
             this.setState({ambiguousMoveState: this.ambiguousMoveState});
         } else {
             let movePieceMove = getMoveObjectForPieceMove(this.squareSelectionState.getSelected(), square);
-            this.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
+            this.state.gameService.makeMove(this.gameUuid, movePieceMove).then(() => this.retrieveNewGameState());
         }
     }
 
@@ -180,7 +195,7 @@ class Game extends React.Component {
             return;
         }
 
-        this.gameService.getPossibleMoves(this.gameUuid, square).then(
+        this.state.gameService.getPossibleMoves(this.gameUuid, square).then(
             (possibleMoveResponse) => {
                 possibleMoveResponse.possibleMoves.forEach(possibleMove => {
                     this.squareSelectionState.addPossibleMove(possibleMove.destinationSquare);
@@ -211,7 +226,7 @@ class Game extends React.Component {
         }
 
         let placeMove = getMoveObjectForPlacePiece(this.squareSelectionState.getSelected(), piece);
-        this.gameService.makeMove(this.gameUuid, placeMove).then(() => this.retrieveNewGameState());
+        this.state.gameService.makeMove(this.gameUuid, placeMove).then(() => this.retrieveNewGameState());
     }
 
     handleDisplayStateChange(displayStateName) {
@@ -221,9 +236,13 @@ class Game extends React.Component {
     }
 
     render() {
+        if (this.state.gameService == null) {
+            return null;
+        }
+
         return (
             <Container className="game-panel" style={this.displayState.getGamePanelStyle()} fluid={true}>
-                <ErrorElement error={this.props.error}/>
+                <ErrorElement error={this.state.error}/>
 
                 <div className="row">
                     <Scoreboard gameState={this.state.gameState}/>

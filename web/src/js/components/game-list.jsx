@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import ReactTable from "react-table";
 import {UpdatingSelect} from "../components/updating-select";
-import GameService from "../services/game-service";
 import {Color, GameType} from "../constants";
 import {toTitleCase} from "../util";
 import timeago from "timeago.js";
@@ -25,7 +24,6 @@ class GameList extends React.Component {
     }
 
     componentDidMount() {
-        this.gameService = new GameService(this.props.httpService);
         this.retrieveGames(this.state.offset, this.state.limit);
         this.retrieveGameCount();
     }
@@ -158,7 +156,7 @@ class GameList extends React.Component {
 }
 
 GameList.propTypes = {
-    httpService: PropTypes.func.isRequired,
+    gameService: PropTypes.object.isRequired,
     userUuid: PropTypes.string.isRequired
 };
 

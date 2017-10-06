@@ -4,42 +4,61 @@ import Container from "muicss/lib/react/container";
 import Panel from "muicss/lib/react/panel";
 import Button from "muicss/lib/react/button";
 import GameService from "../services/game-service";
+import RecordService from "../services/record-service";
 
 import {ActiveGameList} from "./active-game-list";
 import {PlayerRecord} from "./player-record";
 import {CompletedGameList} from "./completed-game-list";
 import {ErrorElement} from "./error-element";
+import {getErrorMessage} from "../util";
 
 
 class Profile extends React.Component {
     constructor() {
         super();
         this.state = {
+            gameService: null,
+            recordService: null,
             playerUuid: null,
             playerName: "",
-            games: [],
+            games: []
         };
     }
 
     componentDidMount() {
-        this.gameService = new GameService(this.props.httpService);
+        if (this.props.error) {
+            this.setState({error: this.props.error});
+        }
+
+        this.setState({
+            gameService: new GameService(this.props.httpService, this.handleError.bind(this)),
+            recordService: new RecordService(this.props.httpService, this.handleError.bind(this))
+        });
+    }
+
+    handleError(error) {
+        this.setState({error: getErrorMessage(error)});
     }
 
     render() {
+        if (this.state.gameService == null || this.state.recordService == null) {
+            return null;
+        }
+
         return (
             <Container>
                 <Panel>
-                    <ErrorElement error={this.props.error}/>
+                    <ErrorElement error={this.state.error}/>
                     <h2>{this.props.profileUsername}</h2>
 
                     <div className="mui-divider"></div>
-                    <ActiveGameList httpService={this.props.httpService} userUuid={this.props.profileUserUuid}/>
+                    <ActiveGameList gameService={this.state.gameService} userUuid={this.props.profileUserUuid}/>
 
                     <div className="mui-divider"></div>
-                    <CompletedGameList httpService={this.props.httpService} userUuid={this.props.profileUserUuid}/>
+                    <CompletedGameList gameService={this.state.gameService} userUuid={this.props.profileUserUuid}/>
 
                     <div className="mui-divider"></div>
-                    <PlayerRecord httpService={this.props.httpService} userUuid={this.props.profileUserUuid}/>
+                    <PlayerRecord recordService={this.state.recordService} userUuid={this.props.profileUserUuid}/>
 
                     <a href="/create-game">
                         <Button className="button" variant="fab">+</Button>

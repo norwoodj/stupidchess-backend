@@ -107,8 +107,7 @@ class ApplicationContext:
         @app.errorhandler(InvalidMoveException)
         def handle_invalid_move_error(error):
             return jsonify(
-                message=f"Failed to apply invalid move",
-                reason=error.reason,
+                message=f"Failed to apply invalid move ({error.move}), reason: {error.reason}",
                 move=error.move.to_dict("startSquare", "destinationSquare", "type"),
             ), 400
 
@@ -119,7 +118,7 @@ class ApplicationContext:
         @app.errorhandler(ForbiddenMoveException)
         def handle_forbidden_move_error(error):
             return jsonify(
-                message=f"User '{current_user.username}' is not authorized to perform this move",
+                message=f"User '{current_user.username}' is not authorized to perform move ({error.move})",
                 move=error.move.to_dict("startSquare", "destinationSquare", "type"),
             ), 403
 

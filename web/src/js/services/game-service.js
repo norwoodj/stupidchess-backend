@@ -1,15 +1,16 @@
 export default class GameService {
-    constructor(http) {
+    constructor(http, errorHandler) {
         this.http = http;
+        this.errorHandler = errorHandler;
     }
 
     getPossibleMoves(gameUuid, square) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             this.http.ajax({
                 type: "GET",
                 url: `/api/game/${gameUuid}/move/possible?square=${square}`,
                 success: possibleMoves => resolve(possibleMoves),
-                error: error => reject(error)
+                error: this.errorHandler
             });
         });
     }
@@ -23,72 +24,70 @@ export default class GameService {
     }
 
     getActiveGames(userUuid, gameType, offset, limit) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             this.http.ajax({
                 type: "GET",
                 url: `/api/game/active${GameService.getGameListQueryString(userUuid, gameType, offset, limit)}`,
                 success: game => resolve(game),
-                error: (error) => reject(error)
+                error: this.errorHandler
             });
         });
     }
 
     getCompletedGames(userUuid, gameType, offset, limit) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             this.http.ajax({
                 type: "GET",
                 url: `/api/game/completed${GameService.getGameListQueryString(userUuid, gameType, offset, limit)}`,
                 success: game => resolve(game),
-                error: (error) => reject(error)
+                error: this.errorHandler
             });
         });
     }
 
     getActiveGameCount(userUuid, gameType) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             this.http.ajax({
                 type: "GET",
                 url: `/api/game/active/count${GameService.getGameCountQueryString(userUuid, gameType)}`,
                 success: res => resolve(res.gameCount),
-                error: (error) => reject(error)
+                error: this.errorHandler
             });
         });
     }
 
     getCompletedGameCount(userUuid, gameType) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             this.http.ajax({
                 type: "GET",
                 url: `/api/game/completed/count${GameService.getGameCountQueryString(userUuid, gameType)}`,
                 success: res => resolve(res.gameCount),
-                error: (error) => reject(error)
+                error: this.errorHandler
             });
         });
     }
 
     getGameByUuid(gameUuid) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             this.http.ajax({
                 type: "GET",
                 url: `/api/game/${gameUuid}`,
                 success: game => resolve(game),
-                error: (error) => reject(error)
+                error: this.errorHandler
             });
         });
     }
 
     makeMove(gameUuid, move) {
-        return new Promise(
-            (resolve, reject) => {
-                this.http.ajax({
-                    type: "POST",
-                    url: `/api/game/${gameUuid}/move/`,
-                    data: JSON.stringify(move),
-                    contentType: "application/json",
-                    success: (response) => resolve(response),
-                    error: (error) => reject(error)
-                });
-            }
-        );
+        return new Promise(resolve => {
+            this.http.ajax({
+                type: "POST",
+                url: `/api/game/${gameUuid}/move/`,
+                data: JSON.stringify(move),
+                contentType: "application/json",
+                success: (response) => resolve(response),
+                error: this.errorHandler
+            });
+        });
     }
 }

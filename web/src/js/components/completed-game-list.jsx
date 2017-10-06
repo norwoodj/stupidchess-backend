@@ -8,11 +8,11 @@ class CompletedGameList extends GameList {
     }
 
     doRetrieveGames(gameType, offset, limit) {
-        return this.gameService.getCompletedGames(this.props.userUuid, gameType, offset, limit);
+        return this.props.gameService.getCompletedGames(this.props.userUuid, gameType, offset, limit);
     }
 
     doRetrieveGameCount(gameType) {
-        return this.gameService.getCompletedGameCount(this.props.userUuid, gameType);
+        return this.props.gameService.getCompletedGameCount(this.props.userUuid, gameType);
     }
 
     getUuidLinkClassName() {
@@ -29,7 +29,7 @@ class CompletedGameList extends GameList {
 }
 
 CompletedGameList.propTypes = {
-    httpService: PropTypes.func.isRequired,
+    gameService: PropTypes.object.isRequired,
     userUuid: PropTypes.string.isRequired,
 };
 

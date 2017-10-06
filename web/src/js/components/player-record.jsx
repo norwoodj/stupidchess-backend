@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReactTable from "react-table";
-import RecordService from "../services/record-service";
 import {GameType} from "../constants";
 import {toTitleCase} from "../util";
 
@@ -16,14 +15,12 @@ class PlayerRecord extends React.Component {
     }
 
     componentDidMount() {
-        this.recordService = new RecordService(this.props.httpService);
-        this.recordService.getUserGameRecords(this.props.userUuid, this.state.selectedGameType).then(
-            playerRecords => {
-            this.setState({
+        this.props.recordService.getUserGameRecords(this.props.userUuid, this.state.selectedGameType).then(
+            playerRecords => this.setState({
                 playerRecords: this.convertPlayerRecordResponse(playerRecords),
                 loading: false
-            });
-        });
+            })
+        );
     }
 
     convertPlayerRecordResponse(playerRecords) {
@@ -64,7 +61,7 @@ class PlayerRecord extends React.Component {
 }
 
 PlayerRecord.propTypes = {
-    httpService: PropTypes.func.isRequired,
+    recordService: PropTypes.object.isRequired,
     userUuid: PropTypes.string.isRequired
 };
 

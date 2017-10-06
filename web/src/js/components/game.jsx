@@ -6,15 +6,16 @@ import Board from "./board";
 import CaptureGrid from "./capture-grid";
 import Scoreboard from "./scoreboard";
 import ColorSetupSelect from "./color-setup-select";
+import MoveList from "./move-list";
 import UpdatingSelect from "./updating-select";
 import PieceSelectGrid from "./piece-select-grid";
 import ErrorElement from "./error-element";
-import HelpText from "./help-text";
 
 import BoardSetupState from "../models/board-setup-state";
 import SquareSelectionState from "../models/square-selection-state";
 import GameState from "../models/game-state";
 import AmbiguousMoveState from "../models/ambiguous-move-state";
+import PagedListState from "../models/paged-list-state";
 import {DISPLAY_STATES_BY_NAME, DISPLAY_STATES_OPTIONS, DefaultDisplayState} from "../models/display-states";
 
 import GameService from "../services/game-service";
@@ -30,6 +31,7 @@ export default class Game extends React.Component {
         this.displayState = new DefaultDisplayState();
         this.squareSelectionState = new SquareSelectionState();
         this.ambiguousMoveState = new AmbiguousMoveState();
+        this.pagedListState = new PagedListState();
 
         this.state = {
             gameService: null,
@@ -38,6 +40,7 @@ export default class Game extends React.Component {
             displayState: this.displayState,
             squareSelectionState: this.squareSelectionState,
             ambiguousMoveState: this.ambiguousMoveState,
+            pagedListState: this.pagedListState,
             error: null
         };
     }
@@ -67,10 +70,41 @@ export default class Game extends React.Component {
         this.retrieveNewGameState();
     }
 
+    retrieveMoveList() {
+        this.state.gameService.getMovesForGame(
+            this.gameUuid,
+            this.state.pagedListState.pageStartOffset,
+            this.state.pagedListState.pageSizeLimit
+        ).then(moves => {
+            this.pagedListState.updateForObjects(moves);
+            this.setState(this.pagedListState);
+        });
+    }
+
+    retrieveMoveCount() {
+        this.state.gameService.getMoveCountForGame(this.gameUuid).then(moveCount => {
+            this.pagedListState.updateForObjectCount(moveCount);
+            this.setState(this.pagedListState);
+        });
+    }
+
+    handlePageChange(page) {
+        this.pagedListState.handlePageChange(page);
+        this.setState(this.pagedListState, () => this.retrieveMoveList());
+    }
+
+    handlePageSizeChange(pageSize, page) {
+        this.pagedListState.handlePageSizeChange(pageSize, page);
+        this.setState(this.pagedListState, () => this.retrieveMoveList());
+    }
+
     retrieveNewGameState() {
         this.state.gameService.getGameByUuid(this.gameUuid).then(
             (gameResponse) => {
                 if (gameResponse.lastMove != this.gameState.lastMove) {
+                    this.retrieveMoveCount();
+                    this.retrieveMoveList();
+
                     this.gameState.updateFromApiResponse(gameResponse);
                     this.squareSelectionState.clear();
                     this.ambiguousMoveState.clear();
@@ -281,7 +315,11 @@ export default class Game extends React.Component {
                                 optionChangeHandler={this.handleDisplayStateChange.bind(this)}
                             />
                         </div>
-                        <HelpText gameState={this.state.gameState} ambiguousMoveState={this.state.ambiguousMoveState}/>
+                        <MoveList
+                            pagedListState={this.state.pagedListState}
+                            handlePageChangeFn={this.handlePageChange.bind(this)}
+                            handlePageSizeChangeFn={this.handlePageSizeChange.bind(this)}
+                        />
                     </div>
                 </div>
             </Container>

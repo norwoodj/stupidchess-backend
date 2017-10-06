@@ -110,6 +110,13 @@ def get_moves_for_game(game_uuid):
     return jsonify([get_move_dict(m) for m in moves])
 
 
+@game_blueprint.route("/<game_uuid>/move/count")
+@login_required
+def count_moves_for_game(game_uuid):
+    count = current_app.context.move_service.count_moves_for_game_and_user(game_uuid, current_user.get_id())
+    return jsonify(moveCount=count)
+
+
 @game_blueprint.route("/<game_uuid>/move/", methods=["POST"])
 @login_required
 def post_move_to_game(game_uuid):

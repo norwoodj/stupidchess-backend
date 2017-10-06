@@ -82,3 +82,11 @@ table {
 .scoreboard-table .current-turn {
     border: yellow solid 3px;
 }
+
+.move-table {
+    background: white;
+}
+
+.move-list-piece {
+    max-width: 30px;
+}

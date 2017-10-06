@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReactTable from "react-table";
+import PagedListState from "../models/paged-list-state";
 import UpdatingSelect from "../components/updating-select";
 
 import {Color, GameType} from "../constants";
@@ -11,21 +12,19 @@ import timeago from "timeago.js";
 export default class GameList extends React.Component {
     constructor() {
         super();
+
+        this.pagedListState = new PagedListState();
         this.state = {
             selectedGameType: "ALL",
-            pages: -1,
-            gameCount: -1,
-            loading: true,
-            games: [],
-            offset: 0,
-            limit: 5
+            pagedListState: this.pagedListState
         };
 
         this.timeAgo = timeago();
     }
 
     componentDidMount() {
-        this.retrieveGames(this.state.offset, this.state.limit);
+        this.setState({pagedListState: this.pagedListState});
+        this.retrieveGames(this.state.pagedListState.pageStartOffset, this.state.pagedListState.pageSizeLimit);
         this.retrieveGameCount();
     }
 
@@ -72,37 +71,29 @@ export default class GameList extends React.Component {
     retrieveGameCount() {
         let gameType = (this.state.selectedGameType == "ALL") ? null : this.state.selectedGameType;
 
-        this.doRetrieveGameCount(gameType).then((gameCount) => this.setState({
-                gameCount: gameCount,
-                pages: Math.ceil(gameCount / this.state.limit)
-            })
-        );
+        this.doRetrieveGameCount(gameType).then((gameCount) => {
+            this.pagedListState.updateForObjectCount(gameCount);
+            this.setState(this.pagedListState);
+        });
     }
 
     retrieveGames() {
         let gameType = (this.state.selectedGameType == "ALL") ? null : this.state.selectedGameType;
 
-        this.doRetrieveGames(gameType, this.state.offset, this.state.limit).then((games) => this.setState({
-                games: games,
-                loading: false
-            })
-        );
+        this.doRetrieveGames(gameType, this.state.pagedListState.pageStartOffset, this.state.pagedListState.pageSizeLimit).then(games => {
+            this.pagedListState.updateForObjects(games);
+            this.setState(this.pagedListState);
+        });
     }
 
     handlePageChange(page) {
-        this.setState({
-            offset: page * this.state.limit,
-            loading: true
-        }, () => this.retrieveGames());
+        this.pagedListState.handlePageChange(page);
+        this.setState(this.pagedListState, () => this.retrieveGames());
     }
 
     handlePageSizeChange(pageSize, page) {
-        this.setState({
-            offset: page * pageSize,
-            limit: pageSize,
-            pages: Math.ceil(this.state.gameCount / pageSize),
-            loading: true
-        }, () => this.retrieveGames());
+        this.pagedListState.handlePageSizeChange(pageSize, page);
+        this.setState(this.pagedListState, () => this.retrieveGames());
     }
 
     getGamesTableColumns() {
@@ -121,8 +112,8 @@ export default class GameList extends React.Component {
         this.setState(
             {selectedGameType: gameType},
             () => {
-                this.retrieveGames(this.state.offset, this.state.limit);
-                this.retrieveGameCount(this.state.offset, this.state.limit);
+                this.retrieveGames(this.state.pagedListState.pageStartOffset, this.state.pagedListState.pageSizeLimit);
+                this.retrieveGameCount(this.state.pagedListState.pageStartOffset, this.state.pagedListState.pageSizeLimit);
             }
         );
     }
@@ -142,12 +133,12 @@ export default class GameList extends React.Component {
                     manual
                     getTrProps={(state, rowInfo) => rowInfo ? this.getRowPropsForGame(rowInfo.original) : {}}
                     columns={this.getGamesTableColumns()}
-                    defaultPageSize={this.state.limit}
-                    pageSizeOptions={[5, 10, 15, 25, 50]}
                     sortable={false}
-                    data={this.state.games}
-                    pages={this.state.pages}
-                    loading={this.state.loading}
+                    loading={this.state.pagedListState.loading}
+                    defaultPageSize={this.state.pagedListState.pageSizeLimit}
+                    pageSizeOptions={this.state.pagedListState.pageSizeOptions}
+                    pages={this.state.pagedListState.pages}
+                    data={this.state.pagedListState.objects}
                     onPageChange={this.handlePageChange.bind(this)}
                     onPageSizeChange={this.handlePageSizeChange.bind(this)}
                 />

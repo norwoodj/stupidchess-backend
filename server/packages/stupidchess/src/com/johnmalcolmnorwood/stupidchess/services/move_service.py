@@ -2,7 +2,6 @@
 from itertools import groupby
 from .. import LOGGER
 from ..exceptions import ForbiddenMoveException, InvalidMoveException
-from ..models.game import GameType
 from ..models.move import Move
 from ..models.piece import Color
 from ..utils.game_rules import is_in_board_setup_mode, is_players_turn
@@ -30,7 +29,7 @@ class MoveService:
 
     @staticmethod
     def __should_limit_moves_returned(game):
-        return game.type == GameType.STUPID_CHESS and game.lastMove < 23 and game.whitePlayerUuid != game.blackPlayerUuid
+        return is_in_board_setup_mode(game) and game.whitePlayerUuid != game.blackPlayerUuid
 
     @staticmethod
     def __apply_default_paging_and_ordering(queryset, offset, limit):
@@ -51,7 +50,7 @@ class MoveService:
 
         return Move.objects(__raw__=move_criteria)
 
-    def get_moves_for_game_and_user(self, game_uuid, user_uuid, offset=DEFAULT_OFFSET, limit=DEFAULT_LIMIT):
+    def query_moves_for_game_and_user(self, game_uuid, user_uuid):
         game = self.__game_service.get_game_for_user_and_game_uuid(
             user_uuid=user_uuid,
             game_uuid=game_uuid,
@@ -59,12 +58,18 @@ class MoveService:
         )
 
         if not MoveService.__should_limit_moves_returned(game):
-            queryset = MoveService.query_moves_for_game(game_uuid)
-            return MoveService.__apply_default_paging_and_ordering(queryset, offset, limit)
+            return MoveService.query_moves_for_game(game_uuid)
 
         color_moves_to_retrieve = Color.BLACK if game.blackPlayerUuid == user_uuid else Color.WHITE
-        queryset = MoveService.query_moves_for_game(game_uuid, extra_criteria=[{"piece.color": color_moves_to_retrieve}])
+        return MoveService.query_moves_for_game(game_uuid, extra_criteria=[{"piece.color": color_moves_to_retrieve}])
+
+    def get_moves_for_game_and_user(self, game_uuid, user_uuid, offset=DEFAULT_OFFSET, limit=DEFAULT_LIMIT):
+        queryset = self.query_moves_for_game_and_user(game_uuid, user_uuid)
         return MoveService.__apply_default_paging_and_ordering(queryset, offset, limit)
+
+    def count_moves_for_game_and_user(self, game_uuid, user_uuid):
+        queryset = self.query_moves_for_game_and_user(game_uuid, user_uuid)
+        return len(queryset)
 
     def apply_move(self, user_uuid, game_uuid, move):
         """

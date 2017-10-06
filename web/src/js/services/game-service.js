@@ -5,15 +5,8 @@ export default class GameService {
         this.errorHandler = errorHandler;
     }
 
-    getPossibleMoves(gameUuid, square) {
-        return new Promise(resolve => {
-            this.http.ajax({
-                type: "GET",
-                url: `/api/game/${gameUuid}/move/possible?square=${square}`,
-                success: possibleMoves => resolve(possibleMoves),
-                error: this.errorHandler
-            });
-        });
+    static getMoveListQueryString(offset, limit) {
+        return `?offset=${offset}&limit=${limit}`;
     }
 
     static getGameListQueryString(userUuid, gameType, offset, limit) {
@@ -74,6 +67,39 @@ export default class GameService {
                 type: "GET",
                 url: `/api/game/${gameUuid}`,
                 success: game => resolve(game),
+                error: this.errorHandler
+            });
+        });
+    }
+
+    getPossibleMoves(gameUuid, square) {
+        return new Promise(resolve => {
+            this.http.ajax({
+                type: "GET",
+                url: `/api/game/${gameUuid}/move/possible?square=${square}`,
+                success: possibleMoves => resolve(possibleMoves),
+                error: this.errorHandler
+            });
+        });
+    }
+
+    getMovesForGame(gameUuid, offset, limit) {
+        return new Promise(resolve => {
+            this.http.ajax({
+                type: "GET",
+                url: `/api/game/${gameUuid}/move${GameService.getMoveListQueryString(offset, limit)}`,
+                success: (response) => resolve(response),
+                error: this.errorHandler
+            });
+        });
+    }
+
+    getMoveCountForGame(gameUuid) {
+        return new Promise(resolve => {
+            this.http.ajax({
+                type: "GET",
+                url: `/api/game/${gameUuid}/move/count`,
+                success: (response) => resolve(response.moveCount),
                 error: this.errorHandler
             });
         });

@@ -46,5 +46,10 @@ function getErrorMessage(errorResponse) {
     }
 }
 
-
-export {toTitleCase, range, setupCsrfRequests, isGameInBoardSetupMode, getErrorMessage};
+export {
+    toTitleCase,
+    range,
+    setupCsrfRequests,
+    isGameInBoardSetupMode,
+    getErrorMessage
+};

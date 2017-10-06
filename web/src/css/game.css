@@ -49,29 +49,36 @@ table {
     height: 100%;
 }
 
-#scoreboard {
-    width: 100%;
-    margin: 0 auto;
-    font: 20px "Arial Black", Gadget, sans-serif;
-    table-layout: fixed;
-    max-width: 300px;
+.help-text {
+    background: black;
+    color: yellow;
+    padding: 10px 10px 10px 10px;
 }
 
-#scoreboard td {
+.scoreboard-table {
+    max-width: 300px;
+    width: 100%;
+    margin: 0 auto;
+    table-layout: fixed;
+    font: 20px "Arial Black", Gadget, sans-serif;
+}
+
+.scoreboard-table td {
     border: white solid 1px;
     padding-left: 10px;
 }
 
-#scoreboard .score-name-cell {
+.scoreboard-table .score-name-cell {
     background-color: black;
     color: white;
 }
 
-#scoreboard .score-score-cell {
+.scoreboard-table .score-score-cell {
     background-color: blue;
     color: yellow;
+    font: 20px "Arial Black", Gadget, sans-serif;
 }
 
-#scoreboard .current-turn {
+.scoreboard-table .current-turn {
     border: yellow solid 3px;
 }

@@ -1,8 +1,10 @@
 #!/usr/local/bin/python
+from .. import LOGGER
 from ..exceptions import InvalidMoveException
 from ..models.move import MoveType, Move
 from ..models.game import Game, GameType
 from ..models.piece import Color, FirstMove, Piece, PieceType
+from ..utils.game_rules import is_in_piece_promotion_zone
 from .abstract_move_update_service import AbstractMoveUpdateService
 
 
@@ -13,21 +15,6 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
     def get_move_type(self):
         return MoveType.MOVE
 
-    def get_game_for_move(self, user_uuid, game_uuid, move):
-        game_query = {
-            "$and": [
-                {"_id": game_uuid},
-                {
-                    "$or": [
-                        {"blackPlayerUuid": user_uuid},
-                        {"whitePlayerUuid": user_uuid},
-                    ],
-                },
-            ],
-        }
-
-        return Game.objects.exclude("createTimestamp", "updateTimestamp").get_or_404(__raw__=game_query)
-
     @staticmethod
     def __move_matches_requested_move(requested_move, move):
         return (
@@ -35,6 +22,22 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
                 requested_move.disambiguating_capture is None or
                 requested_move.disambiguating_capture in set(map(lambda c: c.square, move.captures))
             )
+        )
+
+    @staticmethod
+    def __is_checker_kinged(move, game):
+        return all([
+            move.piece.type == PieceType.CHECKER,
+            is_in_piece_promotion_zone(move.destinationSquare, game.type, move.piece.color),
+        ])
+
+    @staticmethod
+    def __get_checker_king_replace_move(move, game):
+        return Move(
+            type=MoveType.REPLACE,
+            destinationSquare=move.destinationSquare,
+            piece=Piece(type=PieceType.CHECKER_KING, color=move.piece.color),
+            gameUuid=game.get_id(),
         )
 
     def get_moves_to_apply(self, move, game):
@@ -45,9 +48,13 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
         for m in possible_moves:
             if MoveMoveUpdateService.__move_matches_requested_move(move, m):
-                m.gameUuid = game.get_id()
+                if MoveMoveUpdateService.__is_checker_kinged(m, game):
+                    LOGGER.debug(f"Move {m} on game {game.get_id()} results in a kinged checker")
+                    return [m, MoveMoveUpdateService.__get_checker_king_replace_move(m, game)]
+
                 return [m]
 
+        LOGGER.error(f"Attempted to apply invalid move {m} on game {game.get_id()}")
         raise InvalidMoveException(move, "No such move is possible!")
 
     @staticmethod
@@ -97,6 +104,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
         score_updates = MoveMoveUpdateService.__get_score_update_increment(game.type, move.captures)
         if len(score_updates) != 0:
+            LOGGER.debug(f"Move {move} on game {game.get_id()} results in a score update to {', '.join(score_updates.keys())}")
             update_one["$inc"] = score_updates
 
         Game.objects(_id=game.get_id()).update(__raw__=update_one)
@@ -132,10 +140,9 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         Game.objects(_id=game.get_id()).update(__raw__=update_two)
 
     def apply_game_updates_for_moves(self, moves, game):
-        move = moves[0]
-        MoveMoveUpdateService.__remove_captures_and_moved_piece_update_score(game, move)
-        MoveMoveUpdateService.__add_moved_piece_update_turn_increment_move_count(game, move)
-
+        for m in moves:
+            MoveMoveUpdateService.__remove_captures_and_moved_piece_update_score(game, m)
+            MoveMoveUpdateService.__add_moved_piece_update_turn_increment_move_count(game, m)
 
     def get_move_for_insert(self, move):
         move_captures = (

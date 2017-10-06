@@ -4,25 +4,25 @@ from .dictable import Dictable
 
 
 class Color:
-    BLACK = 'BLACK'
-    WHITE = 'WHITE'
+    BLACK = "BLACK"
+    WHITE = "WHITE"
 
 
-COLOR_REGEX = '|'.join([Color.BLACK, Color.WHITE])
+COLOR_REGEX = "|".join([Color.BLACK, Color.WHITE])
 
 
 class PieceType:
-    KING = 'KING'
-    QUEEN = 'QUEEN'
-    BISHOP = 'BISHOP'
-    CASTLE = 'CASTLE'
-    PONY = 'PONY'
-    CHECKER = 'CHECKER'
-    CHECKER_KING = 'CHECKER_KING'
-    PAWN = 'PAWN'
+    KING = "KING"
+    QUEEN = "QUEEN"
+    BISHOP = "BISHOP"
+    CASTLE = "CASTLE"
+    PONY = "PONY"
+    CHECKER = "CHECKER"
+    CHECKER_KING = "CHECKER_KING"
+    PAWN = "PAWN"
 
 
-PIECE_TYPE_REGEX = '|'.join([
+PIECE_TYPE_REGEX = "|".join([
     PieceType.KING,
     PieceType.QUEEN,
     PieceType.BISHOP,
@@ -55,14 +55,17 @@ class Piece(EmbeddedDocument, Dictable):
             self.index == other.index,
         ])
 
+    def __str__(self):
+        return f"{self.color} {self.type} at {self.square}"
+
     @staticmethod
     def from_json(json, **kwargs):
         if json is None:
             return None
 
         return Piece(
-            type=json.get('type'),
-            color=json.get('color'),
-            square=json.get('destinationSquare'),
-            index=json.get('index'),
+            type=json.get("type"),
+            color=json.get("color"),
+            square=json.get("destinationSquare"),
+            index=json.get("index"),
         )

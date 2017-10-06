@@ -1,15 +1,14 @@
 #!/usr/local/bin/python
 from datetime import timedelta
 from flask import jsonify
-from flask_login import current_user
 from flask_mongoengine import MongoEngine
 from flask_wtf import CSRFProtect
 from healthcheck import HealthCheck
 from jconfigure import configure
 from mongoengine.connection import get_db
+from mongoengine.errors import NotUniqueError
 
 from ...auth.initialize_authentication import initialize_authentication
-
 from .. import LOGGER
 from ..blueprints.game_blueprint import game_blueprint, post_move_to_game
 from ..blueprints.record_blueprint import record_blueprint
@@ -19,11 +18,11 @@ from ..services.ambiguous_move_service import AmbiguousMoveService
 from ..services.move_application_service import MoveApplicationService
 from ..services.move_move_update_service import MoveMoveUpdateService
 from ..services.place_move_update_service import PlaceMoveUpdateService
+from ..services.replace_move_update_service import ReplaceMoveUpdateService
 from ..services.possible_move_service import PossibleMoveService
 from ..services.sc_user_service import ScUserService
 from ..services.game_service import GameService
 from ..services.record_service import RecordService
-
 from .game_rules import SETUP_SQUARES_FOR_COLOR, BOARD_SQUARES_FOR_GAME_TYPE
 from .game_rules import BOARD_MIDDLE_SECTION_FOR_GAME_TYPE
 
@@ -83,12 +82,12 @@ class ApplicationContext:
         self.move_update_services = (
             PlaceMoveUpdateService(SETUP_SQUARES_FOR_COLOR),
             MoveMoveUpdateService(self.possible_move_service),
+            ReplaceMoveUpdateService(),
         )
 
         self.move_application_service = MoveApplicationService(self.move_update_services)
         self.game_service = GameService(self.possible_move_service, self.move_application_service)
         self.record_service = RecordService(self.game_service)
-
 
     def __initialize_auth(self, app):
         initialize_authentication(
@@ -123,3 +122,9 @@ class ApplicationContext:
                 message=f"User '{current_user.username}' is not authorized to perform this move",
                 move=error.move.to_dict("startSquare", "destinationSquare", "type"),
             ), 403
+
+        @app.errorhandler(NotUniqueError)
+        def handle_forbidden_move_error(_):
+            return jsonify(
+                message=f"Duplicate Key error persisting move object, move for this game state has already been made",
+            ), 400

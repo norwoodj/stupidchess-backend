@@ -67,3 +67,16 @@ def get_game_result(
             GameResult.WIN if game.whitePlayerScore == 0 and game.blackPlayerUuid == user_uuid else
             GameResult.LOSS
         )
+
+
+def is_in_piece_promotion_zone(square, game_type, color):
+    if color == Color.WHITE and square < 10:
+        return True
+
+    if color == Color.BLACK:
+        if game_type == GameType.STUPID_CHESS and square > 110:
+            return True
+        if game_type in (GameType.CHESS, GameType.CHECKERS) and square > 70:
+            return True
+
+    return False

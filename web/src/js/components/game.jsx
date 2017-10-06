@@ -9,6 +9,7 @@ import {ColorSetupSelect} from "./color-setup-select";
 import {UpdatingSelect} from "./updating-select";
 import {PieceSelectGrid} from "./piece-select-grid";
 import {ErrorElement} from "./error-element";
+import {HelpText} from "./help-text";
 
 import {DISPLAY_STATES_BY_NAME, DISPLAY_STATES_OPTIONS, DefaultDisplayState} from "../models/display-states";
 import {BoardSetupState} from "../models/board-setup-state";
@@ -261,6 +262,7 @@ class Game extends React.Component {
                                 optionChangeHandler={this.handleDisplayStateChange.bind(this)}
                             />
                         </div>
+                        <HelpText gameState={this.state.gameState} ambiguousMoveState={this.state.ambiguousMoveState}/>
                     </div>
                 </div>
             </Container>

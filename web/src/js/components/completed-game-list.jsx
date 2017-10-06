@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import {GameList} from "./game-list";
+import GameList from "./game-list";
 
 
-class CompletedGameList extends GameList {
+export default class CompletedGameList extends GameList {
     getGameListHeader() {
         return "Completed Games";
     }
@@ -32,5 +32,3 @@ CompletedGameList.propTypes = {
     gameService: PropTypes.object.isRequired,
     userUuid: PropTypes.string.isRequired,
 };
-
-export {CompletedGameList};

@@ -61,12 +61,17 @@ def get_game_result(
     game,
     user_uuid
 ):
-    if 0 in (game.blackPlayerScore, game.whitePlayerScore):
-        return (
-            GameResult.WIN if game.blackPlayerScore == 0 and game.whitePlayerUuid == user_uuid else
-            GameResult.WIN if game.whitePlayerScore == 0 and game.blackPlayerUuid == user_uuid else
-            GameResult.LOSS
-        )
+    if 0 not in (game.blackPlayerScore, game.whitePlayerScore):
+        return None
+
+    if game.blackPlayerUuid == game.whitePlayerUuid:
+        return GameResult.LOSS if game.blackPlayerScore == 0 else GameResult.WIN
+
+    return (
+        GameResult.WIN if game.blackPlayerScore == 0 and game.whitePlayerUuid == user_uuid else
+        GameResult.WIN if game.whitePlayerScore == 0 and game.blackPlayerUuid == user_uuid else
+        GameResult.LOSS
+    )
 
 
 def is_in_piece_promotion_zone(square, game_type, color):

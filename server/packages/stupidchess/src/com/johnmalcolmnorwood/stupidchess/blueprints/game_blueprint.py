@@ -29,7 +29,7 @@ def _retrieve_game_list(one_player_retrieval_method, two_player_retrieval_method
             limit=limit,
         )
 
-    return jsonify([get_game_dict(g, current_user.get_id(), LIST_GAME_DICT_FIELDS) for g in games])
+    return jsonify([get_game_dict(g, user_uuid, LIST_GAME_DICT_FIELDS) for g in games])
 
 
 def _retrieve_game_count(one_player_retrieval_method, two_player_retrieval_method):

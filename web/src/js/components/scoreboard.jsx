@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {Color} from "../constants";
 
 
-class Scoreboard extends React.Component {
+export default class Scoreboard extends React.Component {
 
     getScoreCellClass(color, defaultClass) {
         return `${defaultClass} ${color == this.props.gameState.currentTurn ? "current-turn" : ""}`;
@@ -42,5 +42,3 @@ class Scoreboard extends React.Component {
 Scoreboard.propTypes = {
     gameState: PropTypes.object.isRequired
 };
-
-export {Scoreboard};

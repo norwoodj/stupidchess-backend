@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
-import {PieceGrid} from "./piece-grid";
+import PieceGrid from "./piece-grid";
 import {getPieceSelectShapeForSetupMode} from "../factories/board-shapes-factory";
 
 
-class PieceSelectGrid extends PieceGrid {
+export default class PieceSelectGrid extends PieceGrid {
     getPieceForIndex(index) {
         if (this.props.gameState.inBoardSetupMode()) {
             let pieces = this.props.gameState.possiblePiecesToBePlaced
@@ -40,5 +40,3 @@ PieceSelectGrid.propTypes = {
     boardSetupState: PropTypes.object.isRequired,
     pieceSelectionCallback: PropTypes.func.isRequired
 };
-
-export {PieceSelectGrid};

@@ -26,7 +26,7 @@ let COLORS_TURN_TO_MOVE_MESSAGE_FN = (color) => [
 ].join(" ");
 
 
-class HelpText extends React.Component {
+export default class HelpText extends React.Component {
 
     getHelpText() {
         if (isGameInBoardSetupMode(this.props.gameState)) {
@@ -49,5 +49,3 @@ HelpText.propTypes = {
     gameState: PropTypes.object.isRequired,
     ambiguousMoveState: PropTypes.object.isRequired
 };
-
-export {HelpText};

@@ -7,7 +7,7 @@ import Panel from "muicss/lib/react/panel";
 import Container from "muicss/lib/react/container";
 
 
-class BaseForm extends React.Component {
+export default class BaseForm extends React.Component {
     render() {
         return (
             <Container className="form-container">
@@ -28,5 +28,3 @@ BaseForm.propTypes = {
     legend: PropTypes.string.isRequired,
     formInnerHtml: PropTypes.string.isRequired
 };
-
-export {BaseForm};

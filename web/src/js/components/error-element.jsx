@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 
-class ErrorElement extends React.Component {
+export default class ErrorElement extends React.Component {
     render() {
         if (!this.props.error) {
             return null;
@@ -15,5 +15,3 @@ class ErrorElement extends React.Component {
 ErrorElement.propTypes = {
     error: PropTypes.string
 };
-
-export {ErrorElement};

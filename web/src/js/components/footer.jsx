@@ -1,7 +1,7 @@
 import React from "react";
 
 
-class Footer extends React.Component {
+export default class Footer extends React.Component {
     render() {
         return (
             <footer id="footer" className="skin-element">
@@ -13,5 +13,3 @@ class Footer extends React.Component {
         );
     }
 }
-
-export {Footer};

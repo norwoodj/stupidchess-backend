@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {toTitleCase} from "../util";
 
 
-class UpdatingSelect extends React.Component {
+export default class UpdatingSelect extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -43,5 +43,3 @@ UpdatingSelect.propTypes = {
     options: PropTypes.array.isRequired,
     allOption: PropTypes.bool
 };
-
-export {UpdatingSelect};

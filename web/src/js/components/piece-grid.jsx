@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import getPieceImage from "../factories/piece-factory";
+import {getPieceImage} from "../factories/piece-factory";
 import {range} from "../util";
 
 
@@ -30,7 +30,7 @@ PieceGridSquare.propTypes = {
 };
 
 
-class PieceGrid extends React.Component {
+export default class PieceGrid extends React.Component {
     getPieceGridSquareForIndices(rowIndex, cellIndex, gridShape) {
         let index = rowIndex * gridShape.columns + cellIndex;
         let piece = this.getPieceForIndex(index);
@@ -71,5 +71,3 @@ class PieceGrid extends React.Component {
 PieceGrid.propTypes = {
     color: PropTypes.string.isRequired
 };
-
-export {PieceGrid};

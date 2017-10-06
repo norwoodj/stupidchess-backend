@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import getPieceImage from "../factories/piece-factory";
+import {getPieceImage} from "../factories/piece-factory";
 import {getHalfBoardShapeForColor, getBoardShapeForGameType} from "../factories/board-shapes-factory";
 
 
-class Board extends React.Component {
+export default class Board extends React.Component {
     getBackgroundForSquare(square) {
         if (this.props.squareSelectionState.isSquareSelected(square)) {
             return this.props.displayState.getSelectedBackground();
@@ -87,5 +87,3 @@ Board.propTypes = {
     ambiguousMoveState: PropTypes.object.isRequired,
     clickHandler: PropTypes.func.isRequired
 };
-
-export {Board};

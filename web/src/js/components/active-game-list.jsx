@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
-import {GameList} from "./game-list";
+import GameList from "./game-list";
 import {isGameInBoardSetupMode} from "../util";
 
 
-class ActiveGameList extends GameList {
+export default class ActiveGameList extends GameList {
     getGameListHeader() {
         return "Active Games";
     }
@@ -29,5 +29,3 @@ ActiveGameList.propTypes = {
     gameService: PropTypes.object.isRequired,
     userUuid: PropTypes.string
 };
-
-export {ActiveGameList};

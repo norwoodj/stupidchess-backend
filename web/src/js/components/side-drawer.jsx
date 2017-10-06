@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {MenuCategory} from "./menu-category";
+import MenuCategory from "./menu-category";
 
-class SideDrawer extends React.Component {
+
+export default class SideDrawer extends React.Component {
     render() {
         return (
             <div id="sidedrawer">
@@ -22,5 +23,3 @@ SideDrawer.propTypes = {
     pageName: PropTypes.string.isRequired,
     menuCategories: PropTypes.array.isRequired
 };
-
-export {SideDrawer};

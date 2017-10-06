@@ -1,13 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReactTable from "react-table";
-import {UpdatingSelect} from "../components/updating-select";
+import UpdatingSelect from "../components/updating-select";
+
 import {Color, GameType} from "../constants";
 import {toTitleCase} from "../util";
 import timeago from "timeago.js";
 
 
-class GameList extends React.Component {
+export default class GameList extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -159,5 +160,3 @@ GameList.propTypes = {
     gameService: PropTypes.object.isRequired,
     userUuid: PropTypes.string.isRequired
 };
-
-export {GameList};

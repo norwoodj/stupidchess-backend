@@ -1,3 +1,4 @@
+
 function getMoveObjectForPieceMove(startSquare, destinationSquare, disambiguatingCapture = null) {
     var move = {
         type: "MOVE",

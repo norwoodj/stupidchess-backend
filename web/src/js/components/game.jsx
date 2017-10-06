@@ -2,27 +2,27 @@ import React from "react";
 import PropTypes from "prop-types";
 import Container from "muicss/lib/react/container";
 
-import {Board} from "./board";
-import {CaptureGrid} from "./capture-grid";
-import {Scoreboard} from "./scoreboard";
-import {ColorSetupSelect} from "./color-setup-select";
-import {UpdatingSelect} from "./updating-select";
-import {PieceSelectGrid} from "./piece-select-grid";
-import {ErrorElement} from "./error-element";
-import {HelpText} from "./help-text";
+import Board from "./board";
+import CaptureGrid from "./capture-grid";
+import Scoreboard from "./scoreboard";
+import ColorSetupSelect from "./color-setup-select";
+import UpdatingSelect from "./updating-select";
+import PieceSelectGrid from "./piece-select-grid";
+import ErrorElement from "./error-element";
+import HelpText from "./help-text";
 
+import BoardSetupState from "../models/board-setup-state";
+import SquareSelectionState from "../models/square-selection-state";
+import GameState from "../models/game-state";
+import AmbiguousMoveState from "../models/ambiguous-move-state";
 import {DISPLAY_STATES_BY_NAME, DISPLAY_STATES_OPTIONS, DefaultDisplayState} from "../models/display-states";
-import {BoardSetupState} from "../models/board-setup-state";
-import {SquareSelectionState} from "../models/square-selection-state";
-import {GameState} from "../models/game-state";
-import {AmbiguousMoveState} from "../models/ambiguous-move-state";
 
 import GameService from "../services/game-service";
 import {getMoveObjectForPieceMove, getMoveObjectForPlacePiece} from "../factories/move-factory";
 import {getErrorMessage} from "../util";
 
 
-class Game extends React.Component {
+export default class Game extends React.Component {
     constructor() {
         super();
         this.gameState = new GameState();
@@ -294,5 +294,3 @@ Game.propTypes = {
     gameUuid: PropTypes.string.isRequired,
     error: PropTypes.string
 };
-
-export {Game};

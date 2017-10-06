@@ -5,7 +5,7 @@ import {GameType} from "../constants";
 import {toTitleCase} from "../util";
 
 
-class PlayerRecord extends React.Component {
+export default class PlayerRecord extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -64,5 +64,3 @@ PlayerRecord.propTypes = {
     recordService: PropTypes.object.isRequired,
     userUuid: PropTypes.string.isRequired
 };
-
-export {PlayerRecord};

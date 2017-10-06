@@ -1,4 +1,5 @@
-class AmbiguousMoveState {
+
+export default class AmbiguousMoveState {
     constructor() {
         this.disambiguatingCapturesBySquare = new Map();
         this.selectedAmbiguousDestination = null;
@@ -34,5 +35,3 @@ class AmbiguousMoveState {
         this.selectedAmbiguousDestination = null;
     }
 }
-
-export {AmbiguousMoveState};

@@ -2,7 +2,7 @@ import {Color} from "../constants";
 import {isGameInBoardSetupMode} from "../util";
 
 
-class GameState {
+export default class GameState {
     constructor() {
         this.pieces = new Map();
         this.type = "NONE";
@@ -67,5 +67,3 @@ class GameState {
         apiResponse.squaresToBePlaced.forEach(square => this.squaresToBePlaced.add(square));
     }
 }
-
-export {GameState};

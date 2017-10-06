@@ -4,7 +4,7 @@ import Appbar from "muicss/lib/react/appbar";
 import Container from "muicss/lib/react/container";
 
 
-class ScAppBar extends React.Component {
+export default class ScAppBar extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -41,5 +41,3 @@ ScAppBar.propTypes = {
     httpService: PropTypes.func.isRequired,
     currentUsername: PropTypes.string
 };
-
-export {ScAppBar};

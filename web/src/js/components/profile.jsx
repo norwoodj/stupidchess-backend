@@ -3,17 +3,18 @@ import PropTypes from "prop-types";
 import Container from "muicss/lib/react/container";
 import Panel from "muicss/lib/react/panel";
 import Button from "muicss/lib/react/button";
+
+import ActiveGameList from "./active-game-list";
+import PlayerRecord from "./player-record";
+import CompletedGameList from "./completed-game-list";
+import ErrorElement from "./error-element";
+
 import GameService from "../services/game-service";
 import RecordService from "../services/record-service";
-
-import {ActiveGameList} from "./active-game-list";
-import {PlayerRecord} from "./player-record";
-import {CompletedGameList} from "./completed-game-list";
-import {ErrorElement} from "./error-element";
 import {getErrorMessage} from "../util";
 
 
-class Profile extends React.Component {
+export default class Profile extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -75,5 +76,3 @@ Profile.propTypes = {
     profileUserUuid: PropTypes.string.isRequired,
     error: PropTypes.string
 };
-
-export {Profile};

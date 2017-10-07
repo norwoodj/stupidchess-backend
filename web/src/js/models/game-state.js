@@ -29,8 +29,26 @@ export default class GameState {
         return this.pieces.get(square);
     }
 
+    isMyTurn(userUuid) {
+        if (this.inBoardSetupMode()) {
+            return true;
+        }
+
+        if (this.blackPlayerUuid == this.whitePlayerUuid) {
+            return true;
+        }
+
+        return this.currentTurn == Color.BLACK
+            ? userUuid == this.blackPlayerUuid
+            : userUuid == this.whitePlayerUuid;
+    }
+
     mustPlacePiece() {
         return this.squaresToBePlaced.size > 0;
+    }
+
+    singleSquareToBePlaced() {
+        return this.squaresToBePlaced.size == 1;
     }
 
     inBoardSetupMode() {

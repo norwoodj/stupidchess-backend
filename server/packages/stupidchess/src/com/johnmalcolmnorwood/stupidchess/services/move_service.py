@@ -11,9 +11,9 @@ DEFAULT_LIMIT = 10
 
 
 class MoveService:
-    def __init__(self, move_update_services, game_service):
-        self.__move_update_service_by_type = {ms.get_move_type(): ms for ms in move_update_services}
+    def __init__(self, game_service, move_update_services):
         self.__game_service = game_service
+        self.__move_update_service_by_type = {ms.get_move_type(): ms for ms in move_update_services}
 
     @staticmethod
     def __color_for_move_move(game, move):
@@ -93,7 +93,7 @@ class MoveService:
 
         LOGGER.debug(f"Applying move to game {game.get_id()} at lastMove {game.lastMove}: {move}")
         move_update_service = self.__move_update_service_by_type[move.type]
-        moves_to_apply = move_update_service.get_moves_to_apply(move, game)
+        moves_to_apply = move_update_service.get_moves_to_apply(move, game, user_uuid)
 
         if len(moves_to_apply) > 1:
             LOGGER.debug(f"Will apply additional move(s) to game {game.get_id()}: {', '.join(str(m) for m in moves_to_apply[1:])}")

@@ -14,8 +14,8 @@ COLOR_REGEX = "|".join([Color.BLACK, Color.WHITE])
 class PieceType:
     KING = "KING"
     QUEEN = "QUEEN"
-    BISHOP = "BISHOP"
     CASTLE = "CASTLE"
+    BISHOP = "BISHOP"
     PONY = "PONY"
     CHECKER = "CHECKER"
     CHECKER_KING = "CHECKER_KING"

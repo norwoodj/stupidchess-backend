@@ -47,18 +47,18 @@ STUPID_CHESS_INTIAL_SQUARES_TO_BE_PLACED = [
 ]
 
 STUPID_CHESS_INTIAL_PIECES_FOR_SIDE = [
-    PieceType.PAWN,
-    PieceType.PAWN,
-    PieceType.PAWN,
-    PieceType.PAWN,
+    PieceType.KING,
+    PieceType.QUEEN,
+    PieceType.CASTLE,
+    PieceType.CASTLE,
+    PieceType.BISHOP,
+    PieceType.BISHOP,
     PieceType.PONY,
     PieceType.CHECKER,
-    PieceType.CASTLE,
-    PieceType.CASTLE,
-    PieceType.BISHOP,
-    PieceType.BISHOP,
-    PieceType.QUEEN,
-    PieceType.KING,
+    PieceType.PAWN,
+    PieceType.PAWN,
+    PieceType.PAWN,
+    PieceType.PAWN,
 ]
 
 STUPID_CHESS_INITIAL_PIECES_TO_BE_PLACED = [

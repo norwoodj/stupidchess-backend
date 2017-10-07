@@ -48,6 +48,13 @@ BOARD_MIDDLE_SECTION_FOR_GAME_TYPE = {
     GameType.CHECKERS: set(),
 }
 
+_POSSIBLE_CHESS_PAWN_REPLACEMENTS = [
+    PieceType.QUEEN,
+    PieceType.CASTLE,
+    PieceType.BISHOP,
+    PieceType.PONY,
+]
+
 
 def is_king(piece):
     return piece.type in {PieceType.KING, PieceType.CHECKER_KING}
@@ -67,6 +74,21 @@ def is_players_turn(game, user_uuid):
         game.currentTurn == Color.BLACK and game.blackPlayerUuid == user_uuid,
         game.currentTurn == Color.WHITE and game.whitePlayerUuid == user_uuid,
     ])
+
+
+def get_pawn_replacement_pieces_for_game_type_and_color(game_type, color):
+    chess_replacements = [
+        {"color": color, "index": i, "type": t} for i, t in enumerate(_POSSIBLE_CHESS_PAWN_REPLACEMENTS)
+    ]
+
+    if game_type == GameType.CHESS:
+        return chess_replacements
+
+    if game_type == GameType.STUPID_CHESS:
+        return [
+            *chess_replacements,
+            {"color": color, "index": len(_POSSIBLE_CHESS_PAWN_REPLACEMENTS), "type": PieceType.CHECKER_KING},
+        ]
 
 
 def get_game_result(

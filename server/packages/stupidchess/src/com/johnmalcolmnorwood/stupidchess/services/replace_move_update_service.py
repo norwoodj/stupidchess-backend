@@ -11,14 +11,17 @@ class ReplaceMoveUpdateService(AbstractMoveUpdateService):
     def get_move_type(self):
         return MoveType.REPLACE
 
-    def get_moves_to_apply(self, move, game):
-        if not any(p.color == move.piece.color and p.square == move.destinationSquare for p in game.pieces):
-            LOGGER.error(f"Attempted to apply invalid move {m} on game {game.get_id()}, no piece for color at square being replaced")
-            raise InvalidMoveException(move, "No piece to be replaced at that square!")
+    def get_moves_to_apply(self, move, game, user_uuid):
+        if move.destinationSquare not in game.squaresToBePlaced:
+            raise InvalidMoveException(move, f"Square {move.destinationSquare} is not available to be placed!")
 
-        if not any(p.color == move.piece.color and p.type == move.piece.type for p in game.possiblePiecesToBePlaced):
-            LOGGER.error(f"Attempted to apply invalid move {m} on game {game.get_id()}, no matching piece in possiblePiecesToBePlaced")
+        if not any(p == move.piece for p in game.possiblePiecesToBePlaced):
+            LOGGER.error(f"Attempted to apply invalid REPLACE move {m} on game {game.get_id()}, no matching piece in possiblePiecesToBePlaced")
             raise InvalidMoveException(move, "No such piece available to replace!")
+
+        if not any(p.color == move.piece.color and p.square == move.destinationSquare for p in game.pieces):
+            LOGGER.error(f"Attempted to apply invalid REPLACE move {m} on game {game.get_id()}, no piece for color at square being replaced")
+            raise InvalidMoveException(move, "No piece to be replaced at that square!")
 
         return [move]
 
@@ -44,6 +47,9 @@ class ReplaceMoveUpdateService(AbstractMoveUpdateService):
             "$set": {
                 "possiblePiecesToBePlaced": [],
                 "currentTurn": new_current_turn,
+            },
+            "$pull": {
+                "squaresToBePlaced": move.destinationSquare,
             },
             "$push": {
                 "pieces": {"square": move.destinationSquare, **move.piece.to_dict("color", "type")},

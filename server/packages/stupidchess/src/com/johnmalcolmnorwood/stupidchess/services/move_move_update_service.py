@@ -4,7 +4,7 @@ from ..exceptions import InvalidMoveException
 from ..models.move import MoveType, Move
 from ..models.game import Game, GameType
 from ..models.piece import Color, FirstMove, Piece, PieceType
-from ..utils.game_rules import is_in_piece_promotion_zone
+from ..utils.game_rules import is_in_piece_promotion_zone, get_pawn_replacement_pieces_for_game_type_and_color
 from .abstract_move_update_service import AbstractMoveUpdateService
 
 
@@ -32,6 +32,13 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         ])
 
     @staticmethod
+    def __is_pawn_to_be_promoted(move, game):
+        return all([
+            move.piece.type == PieceType.PAWN,
+            is_in_piece_promotion_zone(move.destinationSquare, game.type, move.piece.color),
+        ])
+
+    @staticmethod
     def __get_checker_king_replace_move(move, game):
         return Move(
             type=MoveType.REPLACE,
@@ -40,10 +47,11 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
             gameUuid=game.get_id(),
         )
 
-    def get_moves_to_apply(self, move, game):
+    def get_moves_to_apply(self, move, game, user_uuid):
         possible_moves = self.__possible_move_service.get_possible_moves_from_square(
-            move.startSquare,
-            game,
+            square=move.startSquare,
+            game=game,
+            user_uuid=user_uuid,
         )
 
         for m in possible_moves:
@@ -54,7 +62,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
                 return [m]
 
-        LOGGER.error(f"Attempted to apply invalid move {m} on game {game.get_id()}")
+        LOGGER.error(f"Attempted to apply invalid move {move} on game {game.get_id()}")
         raise InvalidMoveException(move, "No such move is possible!")
 
     @staticmethod
@@ -80,6 +88,42 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         return {
             score_field: increment for score_field, increment in score_update.items() if increment != 0
         }
+
+    @staticmethod
+    def __get_pieces_and_squares_to_be_placed_push(move, game):
+        if MoveMoveUpdateService.__is_checker_kinged(move, game):
+            LOGGER.debug(f"A checker is going to be kinged, adding a checker king to the possiblePiecesToBePlaced array")
+            return {
+                "squaresToBePlaced": move.destinationSquare,
+                "possiblePiecesToBePlaced": {
+                    "color": move.piece.color,
+                    "type": PieceType.CHECKER_KING,
+                    "index": 0,
+                }
+            }
+
+        if MoveMoveUpdateService.__is_pawn_to_be_promoted(move, game):
+            LOGGER.debug(f"A pawn is going to be promoted, adding pieces possiblePiecesToBePlaced array")
+            return {
+                "squaresToBePlaced": move.destinationSquare,
+                "possiblePiecesToBePlaced": {
+                    "$each": get_pawn_replacement_pieces_for_game_type_and_color(game.type, move.piece.color),
+                },
+            }
+
+        return {}
+
+    @staticmethod
+    def __get_current_turn_update(move, game):
+        if any([
+            MoveMoveUpdateService.__is_pawn_to_be_promoted(move, game),
+            MoveMoveUpdateService.__is_checker_kinged(move, game),
+        ]):
+            LOGGER.debug(f"A checker is going to be kinged or a pawn promoted. Still {game.currentTurn}'s turn")
+            return {}
+
+        new_current_turn = Color.BLACK if game.currentTurn == Color.WHITE else Color.WHITE
+        return {"$set": {"currentTurn": new_current_turn}}
 
     @staticmethod
     def __remove_captures_and_moved_piece_update_score(game, move):
@@ -111,8 +155,6 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
 
     @staticmethod
     def __add_moved_piece_update_turn_increment_move_count(game, move):
-        new_current_turn = Color.BLACK if game.currentTurn == Color.WHITE else Color.WHITE
-
         piece_addition = Piece(
             type=move.piece.type,
             color=move.piece.color,
@@ -129,12 +171,14 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         first_move_fields = ("firstMove.gameMoveIndex", "firstMove.startSquare", "firstMove.destinationSquare")
         piece_addition_dict = piece_addition.to_dict("type", "color", "square", *first_move_fields)
 
-        # Second update sets the turn to the other player, adds the piece at it"s new square, and increments the last
-        # move index of the game
         update_two = {
-            "$push": {"pieces": piece_addition_dict},
-            "$set": {"currentTurn": new_current_turn},
+            **MoveMoveUpdateService.__get_current_turn_update(move, game),
+            "$push": {
+                "pieces": piece_addition_dict,
+                **MoveMoveUpdateService.__get_pieces_and_squares_to_be_placed_push(move, game),
+            },
             "$inc": {"lastMove": 1},
+            "$currentDate": {"lastUpdateTimestamp": True},
         }
 
         Game.objects(_id=game.get_id()).update(__raw__=update_two)

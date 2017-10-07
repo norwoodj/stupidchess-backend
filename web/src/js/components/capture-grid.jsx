@@ -18,7 +18,7 @@ export default class CaptureGrid extends PieceGrid {
     }
 
     shouldDisplay() {
-        return !this.props.gameState.inBoardSetupMode();
+        return !this.props.gameState.mustPlacePiece();
     }
 
     getGridShape() {

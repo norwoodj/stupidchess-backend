@@ -3,16 +3,13 @@ from ..factories.game_factory import create_new_game
 from ..utils.game_utils import LIST_GAME_DICT_FIELDS
 from ..models.game import Game
 from ..models.piece import Color
-from ..utils.game_rules import is_in_board_setup_mode, is_players_turn
+from ..utils.game_rules import is_in_board_setup_mode
 
 DEFAULT_OFFSET = 0
 DEFAULT_LIMIT = 10
 
 
 class GameService:
-    def __init__(self, possible_move_service):
-        self.__possible_move_service = possible_move_service
-
     @staticmethod
     def __remove_unprivileged_game_info(game, user_uuid):
         if is_in_board_setup_mode(game) and game.whitePlayerUuid != game.blackPlayerUuid:
@@ -215,11 +212,3 @@ class GameService:
         queryset = Game.objects.only(*only_fields) if only_fields is not None else Game.objects
         game = queryset.get_or_404(__raw__=GameService.__get_game_for_user_and_game_uuid_criteria(user_uuid, game_uuid))
         return GameService.__remove_unprivileged_game_info(game, user_uuid)
-
-    def get_possible_moves(self, user_uuid, game_uuid, square):
-        game = GameService.get_game_for_user_and_game_uuid(user_uuid, game_uuid)
-
-        if not is_players_turn(game, user_uuid):
-            return []
-
-        return self.__possible_move_service.get_possible_moves_from_square(square, game)

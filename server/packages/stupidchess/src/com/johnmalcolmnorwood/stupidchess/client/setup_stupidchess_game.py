@@ -20,25 +20,25 @@ def make_move(piece_type, color, square):
 
 STUPID_CHESS_URL = "http://localhost/api/{endpoint}"
 BLACK_SETUP_MOVES = [
-    *[make_move(PieceType.PAWN, Color.BLACK, i) for i in range(20, 24)],
-    make_move(PieceType.PONY, Color.BLACK, 12),
-    make_move(PieceType.CHECKER, Color.BLACK, 11),
+    make_move(PieceType.KING, Color.BLACK, 2),
+    make_move(PieceType.QUEEN, Color.BLACK, 1),
     make_move(PieceType.CASTLE, Color.BLACK, 10),
     make_move(PieceType.CASTLE, Color.BLACK, 13),
     make_move(PieceType.BISHOP, Color.BLACK, 0),
     make_move(PieceType.BISHOP, Color.BLACK, 3),
-    make_move(PieceType.QUEEN, Color.BLACK, 1),
+    make_move(PieceType.PONY, Color.BLACK, 12),
+    make_move(PieceType.CHECKER, Color.BLACK, 11),
 ]
 
 WHITE_SETUP_MOVES = [
-    *[make_move(PieceType.PAWN, Color.WHITE, i) for i in range(94, 98)],
-    make_move(PieceType.PONY, Color.WHITE, 106),
-    make_move(PieceType.CHECKER, Color.WHITE, 105),
+    make_move(PieceType.KING, Color.WHITE, 116),
+    make_move(PieceType.QUEEN, Color.WHITE, 115),
     make_move(PieceType.CASTLE, Color.WHITE, 104),
     make_move(PieceType.CASTLE, Color.WHITE, 107),
     make_move(PieceType.BISHOP, Color.WHITE, 114),
     make_move(PieceType.BISHOP, Color.WHITE, 117),
-    make_move(PieceType.QUEEN, Color.WHITE, 115),
+    make_move(PieceType.PONY, Color.WHITE, 106),
+    make_move(PieceType.CHECKER, Color.WHITE, 105),
 ]
 
 

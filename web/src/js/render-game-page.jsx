@@ -15,6 +15,7 @@ import {setupCsrfRequests} from "./util";
 $(() => {
     let gameUuid = $("#game-data").data("uuid");
     let currentUsername = $("#current-user").data("name");
+    let currentUserUuid = $("#current-user").data("uuid");
     let error = $("#error-data").data("error");
     setupCsrfRequests();
 
@@ -24,7 +25,12 @@ $(() => {
             <ScAppBar appName={APP_NAME} httpService={$} currentUsername={currentUsername}/>
             <div id="content-wrapper">
                 <div className="mui--appbar-height"></div>
-                <Game httpService={$} gameUuid={gameUuid} error={error}/>
+                <Game
+                    httpService={$}
+                    userUuid={currentUserUuid}
+                    gameUuid={gameUuid}
+                    error={error}
+                />
             </div>
             <Footer/>
         </div>,

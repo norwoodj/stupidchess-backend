@@ -137,7 +137,12 @@ def get_possible_moves(game_uuid):
         return jsonify(message="Must supply 'square' query parameter to get possible moves from that square"), 400
 
     square = int(request.args.get("square"))
-    possible_moves = current_app.context.game_service.get_possible_moves(current_user.get_id(), game_uuid, square)
+    possible_moves = current_app.context.possible_move_service.get_possible_moves_from_square(
+        square=square,
+        game_uuid=game_uuid,
+        user_uuid=current_user.get_id(),
+    )
+
     ambiguous_moves = current_app.context.ambiguous_move_service.get_ambiguous_moves(possible_moves)
 
     response_body = {

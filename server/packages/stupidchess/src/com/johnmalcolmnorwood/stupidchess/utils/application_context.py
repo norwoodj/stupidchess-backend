@@ -1,6 +1,7 @@
 #!/usr/local/bin/python
 from datetime import timedelta
 from flask import jsonify
+from flask_login import current_user
 from flask_mongoengine import MongoEngine
 from flask_wtf import CSRFProtect
 from healthcheck import HealthCheck
@@ -71,10 +72,11 @@ class ApplicationContext:
         MongoEngine(app)
 
     def __initialize_services(self):
-        self.ambiguous_move_service = AmbiguousMoveService()
         self.user_service = ScUserService()
-
+        self.game_service = GameService()
+        self.record_service = RecordService(self.game_service)
         self.possible_move_service = PossibleMoveService(
+            self.game_service,
             BOARD_SQUARES_FOR_GAME_TYPE,
             BOARD_MIDDLE_SECTION_FOR_GAME_TYPE,
         )
@@ -85,9 +87,8 @@ class ApplicationContext:
             ReplaceMoveUpdateService(),
         )
 
-        self.game_service = GameService(self.possible_move_service)
-        self.move_service = MoveService(self.move_update_services, self.game_service)
-        self.record_service = RecordService(self.game_service)
+        self.move_service = MoveService(self.game_service, self.move_update_services)
+        self.ambiguous_move_service = AmbiguousMoveService()
 
     def __initialize_auth(self, app):
         initialize_authentication(

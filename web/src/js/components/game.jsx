@@ -19,7 +19,7 @@ import PagedListState from "../models/paged-list-state";
 import {DISPLAY_STATES_BY_NAME, DISPLAY_STATES_OPTIONS, DefaultDisplayState} from "../models/display-states";
 
 import GameService from "../services/game-service";
-import {getMoveObjectForPieceMove, getMoveObjectForPlacePiece} from "../factories/move-factory";
+import {getMoveObjectForPieceMove, getMoveObjectForPlacePiece, getMoveObjectForReplacePiece} from "../factories/move-factory";
 import {getErrorMessage} from "../util";
 
 
@@ -109,6 +109,12 @@ export default class Game extends React.Component {
                     this.squareSelectionState.clear();
                     this.ambiguousMoveState.clear();
 
+                    if (this.gameState.singleSquareToBePlaced()) {
+                        for (let square of this.gameState.squaresToBePlaced) {
+                            this.squareSelectionState.setSelected(square);
+                        }
+                    }
+
                     if (this.gameState.inBoardSetupMode()) {
                         this.boardSetupState.updateFromColorsSettingUp(this.gameState.getColorsSettingUp());
                     }
@@ -138,6 +144,10 @@ export default class Game extends React.Component {
 
     handleBoardClick(square) {
         if (square == null) {
+            return;
+        }
+
+        if (this.gameState.singleSquareToBePlaced()) {
             return;
         }
 
@@ -257,10 +267,15 @@ export default class Game extends React.Component {
     handlePlacePieceSelection(piece) {
         if (!this.squareSelectionState.anySquareSelected()) {
             return;
+        } else if (!this.gameState.isMyTurn(this.props.userUuid)) {
+            return;
         }
 
-        let placeMove = getMoveObjectForPlacePiece(this.squareSelectionState.getSelected(), piece);
-        this.state.gameService.makeMove(this.gameUuid, placeMove).then(() => this.retrieveNewGameState());
+        let move = this.gameState.hasPieceOnSquare(this.squareSelectionState.getSelected())
+            ? getMoveObjectForReplacePiece(this.squareSelectionState.getSelected(), piece)
+            : getMoveObjectForPlacePiece(this.squareSelectionState.getSelected(), piece);
+
+        this.state.gameService.makeMove(this.gameUuid, move).then(() => this.retrieveNewGameState());
     }
 
     handleDisplayStateChange(displayStateName) {
@@ -330,5 +345,6 @@ export default class Game extends React.Component {
 Game.propTypes = {
     httpService: PropTypes.func.isRequired,
     gameUuid: PropTypes.string.isRequired,
+    userUuid: PropTypes.string.isRequired,
     error: PropTypes.string
 };

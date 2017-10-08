@@ -83,21 +83,31 @@ buttons {
     transition: transform 0.2s;
 }
 
+#content-root {
+    height: 100%;
+    position: relative;
+}
+
 #content-wrapper {
     height: 100%;
     overflow-x: hidden;
     margin-left: 0;
     transition: margin-left 0.2s;
-
-    /* sticky bottom */
     margin-bottom: -120px;
-    padding-bottom: 120px;
 }
 
 #footer {
     height: 120px;
-    margin-left: 0px;
+    margin-left: 0;
     transition: margin-left 0.2s;
+}
+
+.main-container {
+    padding-top: 15px;
+}
+
+.footer-height {
+    height: 120px;
 }
 
 @media (min-width: 768px) {

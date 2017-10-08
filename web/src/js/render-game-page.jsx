@@ -31,10 +31,11 @@ $(() => {
                     gameUuid={gameUuid}
                     error={error}
                 />
+                <div className="footer-height"></div>
             </div>
             <Footer/>
         </div>,
-        document.getElementById("game-page")
+        document.getElementById("content-root")
     );
 
     setupSideDrawerTransition();

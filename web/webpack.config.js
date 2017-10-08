@@ -6,11 +6,12 @@ const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
     entry: {
-        game: "./src/js/render-game-page.jsx",
-        createGame: "./src/js/render-game-form.jsx",
-        login: "./src/js/render-login-form.jsx",
-        createAccount: "./src/js/render-create-account-form.jsx",
         changePassword: "./src/js/render-change-password-form.jsx",
+        createAccount: "./src/js/render-create-account-form.jsx",
+        createGame: "./src/js/render-game-form.jsx",
+        index: "./src/js/render-index-page.jsx",
+        game: "./src/js/render-game-page.jsx",
+        login: "./src/js/render-login-form.jsx",
         profile: "./src/js/render-profile-page.jsx"
     },
     resolve: {
@@ -21,17 +22,15 @@ module.exports = {
         filename: "js/[name].bundle.js"
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({minimize: true}),
         new webpack.optimize.ModuleConcatenationPlugin(),
+        new webpack.optimize.UglifyJsPlugin({minimize: true}),
         new CopyWebpackPlugin([
-            { from: "src/_version.json" },
-            { from: "src/css", to: "css/" },
-            { from: "src/img", to: "img/" },
-            { from: "node_modules/react-table/react-table.css", to: "css/" }
+            {from: "src/_version.json"},
+            {from: "src/css", to: "css/"},
+            {from: "src/img", to: "img/"},
+            {from: "node_modules/react-table/react-table.css", to: "css/"}
         ]),
-        new CompressionPlugin({
-            deleteOriginalAssets: true
-        })
+        new CompressionPlugin({deleteOriginalAssets: true})
     ],
     module: {
         rules: [

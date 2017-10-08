@@ -2,6 +2,7 @@ import $ from "jquery";
 import React from "react";
 import ReactDOM from "react-dom";
 
+import Container from "muicss/lib/react/container";
 import ScAppBar from "./components/app-bar";
 import SideDrawer from "./components/side-drawer";
 import Footer from "./components/footer";
@@ -23,11 +24,13 @@ function renderFormPage(legend) {
             <ScAppBar appName={APP_NAME} httpService={$} currentUsername={currentUsername}/>
             <div id="content-wrapper">
                 <div className="mui--appbar-height"></div>
-                <BaseForm formInnerHtml={formInnerHtml} legend={legend}/>
+                <Container className="main-container">
+                    <BaseForm formInnerHtml={formInnerHtml} legend={legend}/>
+                </Container>
             </div>
             <Footer/>
         </div>,
-        document.getElementById("form-root")
+        document.getElementById("content-root")
     );
 
     setupSideDrawerTransition();

@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Container from "muicss/lib/react/container";
 import Panel from "muicss/lib/react/panel";
 import Button from "muicss/lib/react/button";
 
@@ -47,25 +46,23 @@ export default class Profile extends React.Component {
         }
 
         return (
-            <Container>
-                <Panel>
-                    <ErrorElement error={this.state.error}/>
-                    <h2>{this.props.profileUsername}</h2>
+            <Panel>
+                <ErrorElement error={this.state.error}/>
+                <h2>{this.props.profileUsername}</h2>
 
-                    <div className="mui-divider"></div>
-                    <ActiveGameList gameService={this.state.gameService} userUuid={this.props.profileUserUuid}/>
+                <div className="mui-divider"></div>
+                <ActiveGameList gameService={this.state.gameService} userUuid={this.props.profileUserUuid}/>
 
-                    <div className="mui-divider"></div>
-                    <CompletedGameList gameService={this.state.gameService} userUuid={this.props.profileUserUuid}/>
+                <div className="mui-divider"></div>
+                <CompletedGameList gameService={this.state.gameService} userUuid={this.props.profileUserUuid}/>
 
-                    <div className="mui-divider"></div>
-                    <PlayerRecord recordService={this.state.recordService} userUuid={this.props.profileUserUuid}/>
+                <div className="mui-divider"></div>
+                <PlayerRecord recordService={this.state.recordService} userUuid={this.props.profileUserUuid}/>
 
-                    <a href="/create-game">
-                        <Button className="button" variant="fab">+</Button>
-                    </a>
-                </Panel>
-            </Container>
+                <a href="/create-game">
+                    <Button className="button" variant="fab">+</Button>
+                </a>
+            </Panel>
         );
     }
 }

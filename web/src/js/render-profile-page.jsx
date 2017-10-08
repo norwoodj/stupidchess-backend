@@ -2,6 +2,7 @@ import $ from "jquery";
 import React from "react";
 import ReactDOM from "react-dom";
 
+import Container from "muicss/lib/react/container";
 import ScAppBar from "./components/app-bar";
 import SideDrawer from "./components/side-drawer";
 import Footer from "./components/footer";
@@ -30,16 +31,19 @@ $(() => {
             />
             <div id="content-wrapper">
                 <div className="mui--appbar-height"></div>
-                <Profile
-                    httpService={$}
-                    profileUserUuid={profileUserUuid}
-                    profileUsername={profileUsername}
-                    error={error}
-                />
+                <Container className="main-container">
+                    <Profile
+                        httpService={$}
+                        profileUserUuid={profileUserUuid}
+                        profileUsername={profileUsername}
+                        error={error}
+                    />
+                </Container>
             </div>
+            <div className="footer-height"></div>
             <Footer/>
         </div>,
-        document.getElementById("profile")
+        document.getElementById("content-root")
     );
 
     setupSideDrawerTransition();

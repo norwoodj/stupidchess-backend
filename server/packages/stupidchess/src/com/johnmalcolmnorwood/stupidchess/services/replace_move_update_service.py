@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 from .. import LOGGER
 from ..exceptions import InvalidMoveException
-from ..models.game import Game
+from ..models.game import Game, GameType
 from ..models.move import Move, MoveType
 from ..models.piece import Piece, PieceType, Color
 from .abstract_move_update_service import AbstractMoveUpdateService
@@ -26,8 +26,11 @@ class ReplaceMoveUpdateService(AbstractMoveUpdateService):
         return [move]
 
     @staticmethod
-    def __piece_affects_score(piece):
-        return piece.type in (PieceType.CHECKER_KING, PieceType.KING)
+    def __piece_affects_score(piece, game_type):
+        return all([
+            game_type in (GameType.CHESS, GameType.STUPID_CHESS),
+            piece.type in (PieceType.CHECKER_KING, PieceType.KING),
+        ])
 
     @staticmethod
     def __apply_remove_piece_update(move, game):
@@ -58,7 +61,7 @@ class ReplaceMoveUpdateService(AbstractMoveUpdateService):
             "$currentDate": {"lastUpdateTimestamp": True},
         }
 
-        if ReplaceMoveUpdateService.__piece_affects_score(move.piece):
+        if ReplaceMoveUpdateService.__piece_affects_score(move.piece, game.type):
             replace_piece_updates["$inc"][f"{move.piece.color.lower()}PlayerScore"] = 1
 
         Game.objects(_id=game.get_id()).update(__raw__=replace_piece_updates)

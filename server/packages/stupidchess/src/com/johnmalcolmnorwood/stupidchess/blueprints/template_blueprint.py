@@ -8,7 +8,12 @@ from ..utils.forms import CreateGameForm
 template_blueprint = Blueprint("template", __name__)
 
 
-@template_blueprint.route("/profile", methods=["GET"])
+@template_blueprint.route("/")
+def index():
+    return render_template("index.html", current_user=current_user)
+
+
+@template_blueprint.route("/profile")
 @login_required
 def profile():
     if "userUuid" not in request.args:
@@ -39,7 +44,7 @@ def profile():
     )
 
 
-@template_blueprint.route("/game", methods=["GET"])
+@template_blueprint.route("/game")
 @login_required
 def game():
     if "gameUuid" not in request.args:

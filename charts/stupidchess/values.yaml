@@ -4,11 +4,10 @@
 ##
 mongo:
   nfs_volume:
+    persistentVolumeClaimStorageRequest: 2Gi
     persistentVolumeStorageCapacity: 2Gi
     persistentVolumeNfsServer: rp3-smi-kbw-nfs-000
     persistentVolumeNfsPath: /nfs/stupidchess
-
-    persistentVolumeClaimStorageRequest: 2Gi
 
 ##
 # Web Service settings
@@ -26,5 +25,6 @@ stupidchessUwsgiImageName: jnorwood/stupidchess-rpi_uwsgi
 stupidchessWebDeploymentReplicas: 2
 stupidchessHealthCheckEndpoint: /health
 stupidchessSecretName: stupidchess-secrets
+stupidchessSecretsVolumePath: /tmp/secrets
 jconfigActiveProfiles: RPI
 jconfigConfigDirectores: /var/lib/johnmalcolmnorwood/stupidchess/server/config

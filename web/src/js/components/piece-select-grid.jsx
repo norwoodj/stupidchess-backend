@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import PieceGrid from "./piece-grid";
-import {getPieceSelectShapeForSetupMode} from "../factories/board-shapes-factory";
+import {getPieceSelectShapeForGameTypeAndSetupMode} from "../factories/board-shapes-factory";
 
 
 export default class PieceSelectGrid extends PieceGrid {
@@ -27,7 +27,10 @@ export default class PieceSelectGrid extends PieceGrid {
     }
 
     getGridShape() {
-        return getPieceSelectShapeForSetupMode(this.props.gameState.inBoardSetupMode());
+        return getPieceSelectShapeForGameTypeAndSetupMode(
+            this.props.gameState.type,
+            this.props.gameState.inBoardSetupMode()
+        );
     }
 
     getClickHandler() {

@@ -54,8 +54,9 @@ let STUPID_CHESS_WHITE_HALF_BOARD = [
 let STUPID_CHESS_CAPTURES = {rows: 3, columns: 4};
 let NORMAL_CHESS_CAPTURES = {rows: 3, columns: 6};
 
-let STUPID_CHESS_PIECE_SETUP_SELECTION_SHAPE = {rows: 3, columns: 4};
-let CHESS_REPLACE_PIECE_SELECTION_SHAPE = {rows: 1, columns: 6};
+let STUPID_CHESS_PIECE_SETUP_SELECTION_SHAPE = STUPID_CHESS_CAPTURES;
+let STUPID_CHESS_REPLACE_PIECE_SELECTION_SHAPE = STUPID_CHESS_CAPTURES;
+let CHESS_REPLACE_PIECE_SELECTION_SHAPE = NORMAL_CHESS_CAPTURES;
 
 let BOARD_SHAPE_FOR_GAME_TYPE = new Map([
     [GameType.STUPID_CHESS, STUPID_CHESS_BOARD],
@@ -90,15 +91,19 @@ function getCaptureShapeForGameType(gameType) {
     return CAPTURE_SHAPE_FOR_GAME_TYPE.get(gameType);
 }
 
-function getPieceSelectShapeForSetupMode(inSetupMode) {
+function getPieceSelectShapeForGameTypeAndSetupMode(gameType, inSetupMode) {
+    if (gameType == GameType.CHESS) {
+        return CHESS_REPLACE_PIECE_SELECTION_SHAPE;
+    }
+
     return inSetupMode
         ? STUPID_CHESS_PIECE_SETUP_SELECTION_SHAPE
-        : CHESS_REPLACE_PIECE_SELECTION_SHAPE;
+        : STUPID_CHESS_REPLACE_PIECE_SELECTION_SHAPE;
 }
 
 export {
     getBoardShapeForGameType,
     getHalfBoardShapeForColor,
     getCaptureShapeForGameType,
-    getPieceSelectShapeForSetupMode
+    getPieceSelectShapeForGameTypeAndSetupMode
 };

@@ -65,7 +65,7 @@ def add_moves(stupidchess_url, game_uuid, moves, username, password):
 
 
 @click.command()
-@click.option("--stupidchess", "-s", default="http://localhost")
+@click.option("--stupidchess", "-s", default="http://stupidchess.johnmalcolmnorwood.com")
 @click.option("--black_username", "-b", default="veintitres")
 @click.option("--black_password", "-c", default="password")
 @click.option("--white_username", "-w")

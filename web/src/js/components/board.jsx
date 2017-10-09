@@ -47,9 +47,15 @@ export default class Board extends React.Component {
             return {};
         }
 
-        return {
+        let baseStyle = {
             background: this.getBackgroundForSquare(square)
         };
+
+        if (this.props.gameState.squareNeedsPiecePlaced(square)) {
+            baseStyle.border = "2px solid yellow";
+        }
+
+        return baseStyle;
     }
 
     render() {

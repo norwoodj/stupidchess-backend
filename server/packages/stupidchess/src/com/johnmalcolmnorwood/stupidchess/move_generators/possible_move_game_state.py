@@ -33,10 +33,13 @@ class PossibleMoveGameState:
         return self.__game.currentTurn == self.__piece_being_moved.color
 
     def can_piece_move_twice(self):
-        return not self.has_piece_moved() and (
-            self.__piece_being_moved.type == PieceType.PAWN or
-            (self.__piece_being_moved.type == PieceType.CHECKER and self.__can_checkers_move_twice_on_first_move)
-        )
+        return all([
+            not self.has_piece_moved(),
+            any([
+                self.__piece_being_moved.type == PieceType.PAWN,
+                self.__piece_being_moved.type in (PieceType.CHECKER, PieceType.CHECKER_KING) and self.__can_checkers_move_twice_on_first_move,
+            ]),
+        ])
 
     def has_piece_moved(self):
         return self.__piece_being_moved.firstMove is not None

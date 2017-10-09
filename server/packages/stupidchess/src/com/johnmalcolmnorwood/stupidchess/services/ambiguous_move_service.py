@@ -1,11 +1,9 @@
 #!/usr/local/bin/python
 from collections import defaultdict
-from .. import LOGGER
 
 
 class AmbiguousMoveService:
     def get_ambiguous_moves(self, possible_moves):
-        LOGGER.debug([m.to_dict("destinationSquare", "captures") for m in possible_moves])
         moves_by_destination = defaultdict(list)
 
         for m in possible_moves:

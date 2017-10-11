@@ -2,13 +2,13 @@
 from .. import LOGGER
 from ..exceptions import InvalidMoveException
 from ..models.move import Move, MoveType
-from ..models.game import Game
 from ..models.piece import Piece
 from .abstract_move_update_service import AbstractMoveUpdateService
 
 
 class PlaceMoveUpdateService(AbstractMoveUpdateService):
-    def __init__(self, setup_squares_for_color):
+    def __init__(self, game_service, setup_squares_for_color):
+        self.__game_service = game_service
         self.__setup_squares_for_color = setup_squares_for_color
 
     def get_move_type(self):
@@ -45,7 +45,7 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
             "$currentDate": {"lastUpdateTimestamp": True},
         }
 
-        Game.objects(_id=game.get_id()).update(__raw__=updates)
+        self.__game_service.update_game(game.get_id(), updates)
 
     def get_move_for_insert(self, move):
         move_piece = Piece(

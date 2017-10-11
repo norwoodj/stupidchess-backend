@@ -10,6 +10,11 @@ export default class Board extends React.Component {
             return this.props.displayState.getSelectedBackground();
         }
 
+        if (this.props.gameState.squareNeedsPiecePlaced(square)) {
+            return this.props.displayState.getSquareNeedsPlacedBackground();
+        }
+
+
         if (this.props.ambiguousMoveState.isAmbiguousDestinationSelected()) {
             if (this.props.ambiguousMoveState.getSelectedAmbiguousDestination() == square) {
                 return this.props.displayState.getPossibleMoveBackground();
@@ -47,15 +52,9 @@ export default class Board extends React.Component {
             return {};
         }
 
-        let baseStyle = {
+        return {
             background: this.getBackgroundForSquare(square)
         };
-
-        if (this.props.gameState.squareNeedsPiecePlaced(square)) {
-            baseStyle.border = "2px solid yellow";
-        }
-
-        return baseStyle;
     }
 
     render() {

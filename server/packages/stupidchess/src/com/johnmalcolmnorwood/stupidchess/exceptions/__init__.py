@@ -7,6 +7,11 @@ class InvalidMoveException(Exception):
         self.reason = reason
 
 
+class DuplicateMoveException(Exception):
+    def __init__(self, moves):
+        self.moves = moves
+
+
 class ForbiddenMoveException(Exception):
     def __init__(self, move):
         self.move = move

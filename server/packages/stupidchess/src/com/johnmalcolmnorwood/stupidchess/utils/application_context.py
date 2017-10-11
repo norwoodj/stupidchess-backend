@@ -7,21 +7,25 @@ from flask_wtf import CSRFProtect
 from healthcheck import HealthCheck
 from jconfigure import configure
 from mongoengine.connection import get_db
-from mongoengine.errors import NotUniqueError
 
 from ...auth.initialize_authentication import initialize_authentication
 from .. import LOGGER
-from ..blueprints.game_blueprint import game_blueprint, post_move_to_game
+from ..blueprints.game_blueprint import game_blueprint, apply_move_to_game
 from ..blueprints.record_blueprint import record_blueprint
 from ..blueprints.template_blueprint import template_blueprint
-from ..exceptions import InvalidMoveException, InvalidGameParameterException, ForbiddenMoveException
+from ..daos.mongo_dao import MongoDao
+from ..exceptions import InvalidMoveException, InvalidGameParameterException, ForbiddenMoveException, DuplicateMoveException
+from ..models.game import Game
+from ..models.move import Move
+from ..models.user import User
 from ..services.ambiguous_move_service import AmbiguousMoveService
 from ..services.move_service import MoveService
+from ..services.move_application_service import MoveApplicationService
 from ..services.move_move_update_service import MoveMoveUpdateService
 from ..services.place_move_update_service import PlaceMoveUpdateService
 from ..services.replace_move_update_service import ReplaceMoveUpdateService
 from ..services.possible_move_service import PossibleMoveService
-from ..services.sc_user_service import ScUserService
+from ..services.user_service import UserService
 from ..services.game_service import GameService
 from ..services.record_service import RecordService
 from .game_rules import SETUP_SQUARES_FOR_COLOR, BOARD_SQUARES_FOR_GAME_TYPE
@@ -43,6 +47,7 @@ class ApplicationContext:
         self.__initialize_csrf(app)
         self.__initialize_healthcheck(app)
         self.__initialize_mongo(app)
+        self.__initialize_daos()
         self.__initialize_services()
         self.__initialize_auth(app)
         self.__register_blueprints(app)
@@ -66,15 +71,24 @@ class ApplicationContext:
 
     def __initialize_csrf(self, app):
         self.csrf = CSRFProtect(app)
-        self.csrf.exempt(post_move_to_game)
+        self.csrf.exempt(apply_move_to_game)
 
     def __initialize_mongo(self, app):
         MongoEngine(app)
 
+    def __initialize_daos(self):
+        self.move_dao = MongoDao(Move)
+        self.game_dao = MongoDao(Game)
+        self.user_dao = MongoDao(User)
+
     def __initialize_services(self):
-        self.user_service = ScUserService()
-        self.game_service = GameService()
+        self.user_service = UserService(self.user_dao)
+        self.game_service = GameService(self.game_dao)
+        self.move_service = MoveService(self.move_dao, self.game_service)
+
         self.record_service = RecordService(self.game_service)
+
+        self.ambiguous_move_service = AmbiguousMoveService()
         self.possible_move_service = PossibleMoveService(
             self.game_service,
             BOARD_SQUARES_FOR_GAME_TYPE,
@@ -82,13 +96,16 @@ class ApplicationContext:
         )
 
         self.move_update_services = (
-            PlaceMoveUpdateService(SETUP_SQUARES_FOR_COLOR),
-            MoveMoveUpdateService(self.possible_move_service),
-            ReplaceMoveUpdateService(),
+            PlaceMoveUpdateService(self.game_service, SETUP_SQUARES_FOR_COLOR),
+            MoveMoveUpdateService(self.game_service, self.possible_move_service),
+            ReplaceMoveUpdateService(self.game_service),
         )
 
-        self.move_service = MoveService(self.game_service, self.move_update_services)
-        self.ambiguous_move_service = AmbiguousMoveService()
+        self.move_application_service = MoveApplicationService(
+            self.game_service,
+            self.move_service,
+            self.move_update_services,
+        )
 
     def __initialize_auth(self, app):
         initialize_authentication(
@@ -123,8 +140,6 @@ class ApplicationContext:
                 move=error.move.to_dict("startSquare", "destinationSquare", "type"),
             ), 403
 
-        @app.errorhandler(NotUniqueError)
-        def handle_forbidden_move_error(_):
-            return jsonify(
-                message=f"Duplicate Key error persisting move object, move for this game state has already been made",
-            ), 400
+        @app.errorhandler(DuplicateMoveException)
+        def handle_duplicate_move_exception(_):
+            return jsonify(message=f"Failed to persist move to game state that has already had a move applied"), 400

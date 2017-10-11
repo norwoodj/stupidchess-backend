@@ -55,7 +55,8 @@ def game():
         ), 400
 
     game_uuid = request.args["gameUuid"]
-    if len(current_app.context.game_service.query_game_for_user_and_game_uuid(current_user.get_id(), game_uuid)) == 0:
+
+    if not current_app.context.game_service.game_with_uuid_for_user_exists(game_uuid, current_user.get_id()):
         return render_template(
             "game.html",
             current_user=current_user,

@@ -97,7 +97,7 @@ def count_completed_games():
 @game_blueprint.route("/<game_uuid>")
 @login_required
 def get_game_by_uuid(game_uuid):
-    game = current_app.context.game_service.get_game_for_user_and_game_uuid(current_user.get_id(), game_uuid)
+    game = current_app.context.game_service.get_game_for_game_uuid_and_user(game_uuid, current_user.get_id())
     game_dict = get_game_dict(game, current_user.get_id(), SINGLE_GAME_DICT_FIELDS)
     return jsonify(game_dict)
 
@@ -117,12 +117,12 @@ def count_moves_for_game(game_uuid):
     return jsonify(moveCount=count)
 
 
-@game_blueprint.route("/<game_uuid>/move/", methods=["POST"])
+@game_blueprint.route("/<game_uuid>/move", methods=["POST"])
 @login_required
-def post_move_to_game(game_uuid):
+def apply_move_to_game(game_uuid):
     move = Move.from_json(request.json)
     move.disambiguating_capture = request.json.get("disambiguatingCapture")
-    moves_applied = current_app.context.move_service.apply_move(current_user.get_id(), game_uuid, move)
+    moves_applied = current_app.context.move_application_service.apply_move(game_uuid, current_user.get_id(), move)
 
     return jsonify(
         moves=[get_move_dict(m) for m in moves_applied],
@@ -130,7 +130,7 @@ def post_move_to_game(game_uuid):
     ), 201
 
 
-@game_blueprint.route("/<game_uuid>/move/possible")
+@game_blueprint.route("/<game_uuid>/possible-move")
 @login_required
 def get_possible_moves(game_uuid):
     if "square" not in request.args:

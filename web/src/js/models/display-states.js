@@ -22,6 +22,10 @@ class AbstractDisplayState {
         return "yellow";
     }
 
+    getSquareNeedsPlacedBackground() {
+        return "yellow";
+    }
+
     getPossibleCaptureBackground() {
         return "red";
     }
@@ -66,6 +70,10 @@ class MichiganDisplayState extends AbstractDisplayState {
     }
 
     getPossibleMoveBackground() {
+        return "gray";
+    }
+
+    getSquareNeedsPlacedBackground() {
         return "gray";
     }
 }

@@ -18,7 +18,7 @@ class PossibleMoveService:
         game_uuid=None,
         user_uuid=None,
     ):
-        game = game or self.__game_service.get_game_for_user_and_game_uuid(user_uuid, game_uuid)
+        game = game or self.__game_service.get_game_for_game_uuid_and_user(game_uuid, user_uuid)
 
         if not is_players_turn(game, user_uuid) or is_in_board_setup_mode(game):
             return []

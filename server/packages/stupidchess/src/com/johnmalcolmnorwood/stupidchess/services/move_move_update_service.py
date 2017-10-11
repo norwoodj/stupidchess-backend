@@ -2,14 +2,15 @@
 from .. import LOGGER
 from ..exceptions import InvalidMoveException
 from ..models.move import MoveType, Move
-from ..models.game import Game, GameType
+from ..models.game import GameType
 from ..models.piece import Color, FirstMove, Piece, PieceType
 from ..utils.game_rules import is_in_piece_promotion_zone, get_pawn_replacement_pieces_for_game_type_and_color
 from .abstract_move_update_service import AbstractMoveUpdateService
 
 
 class MoveMoveUpdateService(AbstractMoveUpdateService):
-    def __init__(self, possible_move_service):
+    def __init__(self, game_service, possible_move_service):
+        self.__game_service = game_service
         self.__possible_move_service = possible_move_service
 
     def get_move_type(self):
@@ -125,8 +126,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         new_current_turn = Color.BLACK if game.currentTurn == Color.WHITE else Color.WHITE
         return {"$set": {"currentTurn": new_current_turn}}
 
-    @staticmethod
-    def __remove_captures_and_moved_piece_update_score(game, move):
+    def __remove_captures_and_moved_piece_update_score(self, game, move):
         captures = [capture.to_dict("color", "type", "square") for capture in move.captures] \
             if move.captures is not None \
             else None
@@ -136,25 +136,24 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         # Need to apply two updates because we can"t add to and remove from the pieces array twice in one update
         # This one adds all of the new captures, removes the pieces that were captured and removes the piece that was
         # just moved, and also updates the score
-        update_one = {
+        updates = {
             "$pull": {"pieces": piece_removals},
             "$currentDate": {"lastUpdateTimestamp": True},
         }
 
         if captures is not None:
-            update_one["$push"] = {
+            updates["$push"] = {
                 "captures": {"$each": captures}
             }
 
         score_updates = MoveMoveUpdateService.__get_score_update_increment(game.type, move.captures)
         if len(score_updates) != 0:
             LOGGER.debug(f"Move {move} on game {game.get_id()} results in a score update to {', '.join(score_updates.keys())}")
-            update_one["$inc"] = score_updates
+            updates["$inc"] = score_updates
 
-        Game.objects(_id=game.get_id()).update(__raw__=update_one)
+        self.__game_service.update_game(game.get_id(), updates)
 
-    @staticmethod
-    def __add_moved_piece_update_turn_increment_move_count(game, move):
+    def __add_moved_piece_update_turn_increment_move_count(self, game, move):
         piece_addition = Piece(
             type=move.piece.type,
             color=move.piece.color,
@@ -171,7 +170,7 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
         first_move_fields = ("firstMove.gameMoveIndex", "firstMove.startSquare", "firstMove.destinationSquare")
         piece_addition_dict = piece_addition.to_dict("type", "color", "square", *first_move_fields)
 
-        update_two = {
+        updates = {
             **MoveMoveUpdateService.__get_current_turn_update(move, game),
             "$push": {
                 "pieces": piece_addition_dict,
@@ -181,12 +180,12 @@ class MoveMoveUpdateService(AbstractMoveUpdateService):
             "$currentDate": {"lastUpdateTimestamp": True},
         }
 
-        Game.objects(_id=game.get_id()).update(__raw__=update_two)
+        self.__game_service.update_game(game.get_id(), updates)
 
     def apply_game_updates_for_moves(self, moves, game):
         for m in moves:
-            MoveMoveUpdateService.__remove_captures_and_moved_piece_update_score(game, m)
-            MoveMoveUpdateService.__add_moved_piece_update_turn_increment_move_count(game, m)
+            self.__remove_captures_and_moved_piece_update_score(game, m)
+            self.__add_moved_piece_update_turn_increment_move_count(game, m)
 
     def get_move_for_insert(self, move):
         move_captures = (

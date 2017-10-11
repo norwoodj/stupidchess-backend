@@ -47,7 +47,7 @@ def add_moves(stupidchess_url, game_uuid, moves, username, password):
         move["piece"]["index"] = idx
 
         response = requests.post(
-            url=f"{stupidchess_url}/api/game/{game_uuid}/move/",
+            url=f"{stupidchess_url}/api/game/{game_uuid}/move",
             json=move,
             auth=(username, password),
         )

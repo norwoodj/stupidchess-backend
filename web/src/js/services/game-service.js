@@ -76,7 +76,7 @@ export default class GameService {
         return new Promise(resolve => {
             this.http.ajax({
                 type: "GET",
-                url: `/api/game/${gameUuid}/move/possible?square=${square}`,
+                url: `/api/game/${gameUuid}/possible-move?square=${square}`,
                 success: possibleMoves => resolve(possibleMoves),
                 error: this.errorHandler
             });
@@ -109,7 +109,7 @@ export default class GameService {
         return new Promise(resolve => {
             this.http.ajax({
                 type: "POST",
-                url: `/api/game/${gameUuid}/move/`,
+                url: `/api/game/${gameUuid}/move`,
                 data: JSON.stringify(move),
                 contentType: "application/json",
                 success: (response) => resolve(response),

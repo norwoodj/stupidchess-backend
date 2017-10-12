@@ -40,7 +40,6 @@ class ApplicationContext:
 
     def __init__(self, app):
         self.config = configure()
-        LOGGER.debug(self.config)
 
         self.__initialize_app(app)
         self.__initialize_csrf(app)

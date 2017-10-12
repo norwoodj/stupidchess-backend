@@ -5,3 +5,10 @@ app_secret_key: !IncludeText
   filename: !JoinFilePaths
     - !EnvVar SECRETS_VOLUME_PATH
     - flask-app-secret-key
+
+MONGODB_SETTINGS:
+  username: stupidchess_mongo_rw
+  password: !IncludeText
+    filename: !JoinFilePaths
+      - !EnvVar SECRETS_VOLUME_PATH
+      - mongo-password

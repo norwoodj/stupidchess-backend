@@ -1,0 +1,2 @@
+Stupid Chess Frontend
+===================

@@ -50,11 +50,17 @@ def add_moves(stupidchess_url, game_uuid, moves, username, password):
             url=f"{stupidchess_url}/api/game/{game_uuid}/move",
             json=move,
             auth=(username, password),
+            allow_redirects=False,
         )
 
         if response.status_code != 201:
-            LOGGER.error(f"Request failed with response: {response.json()}")
+            LOGGER.error(f"Request failed with status: {response.status_code}")
+
+            if response.headers.get("Content-Type") == "application/json":
+                LOGGER.error(f"Response body: {response.json()}")
+
             response.raise_for_status()
+            return
 
         move_texts = (
             f"{m['id']} ({m['type']} {m['piece']['color']} {m['piece']['type']} at {m['destinationSquare']})"

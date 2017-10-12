@@ -29,9 +29,10 @@ function setupCsrfRequests() {
     });
 }
 
-let SETUP_SQUARES_FOR_COLOR = new Map();
-SETUP_SQUARES_FOR_COLOR.set(Color.BLACK, new Set([0, 1, 2, 3, 10, 11, 12, 13, 20, 21, 22, 23]));
-SETUP_SQUARES_FOR_COLOR.set(Color.WHITE, new Set([94, 95, 96, 97, 104, 105, 106, 107, 114, 115, 116, 117]));
+let SETUP_SQUARES_FOR_COLOR = new Map([
+    [Color.BLACK, new Set([0, 1, 2, 3, 10, 11, 12, 13, 20, 21, 22, 23])],
+    [Color.WHITE, new Set([94, 95, 96, 97, 104, 105, 106, 107, 114, 115, 116, 117])]
+]);
 
 function isSquareInSetupZoneForColor(color, square) {
     return SETUP_SQUARES_FOR_COLOR.get(color).has(square);

@@ -49,12 +49,6 @@ table {
     height: 100%;
 }
 
-.help-text {
-    background: black;
-    color: yellow;
-    padding: 10px 10px 10px 10px;
-}
-
 .scoreboard-table {
     max-width: 300px;
     width: 100%;

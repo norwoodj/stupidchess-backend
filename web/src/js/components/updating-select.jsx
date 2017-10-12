@@ -4,17 +4,6 @@ import {toTitleCase} from "../util";
 
 
 export default class UpdatingSelect extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            options: null
-        };
-    }
-
-    componentDidMount() {
-        this.setState({options: this.props.allOption ? ["ALL", ...this.props.options] : this.props.options});
-    }
-
     handleChangeEvent(e) {
         let value = e.nativeEvent.srcElement.value;
 
@@ -26,14 +15,15 @@ export default class UpdatingSelect extends React.Component {
     }
 
     render() {
-        return this.state.options != null ? (
+        return (
             <div className="mui-select">
                 <label>{this.props.label}</label>
                 <select onChange={this.handleChangeEvent.bind(this)}>
-                    {this.state.options.map(option => <option value={option} key={option}>{toTitleCase(option)}</option>)}
+                    {this.props.allOption ? <option value="ALL" key="ALL">All</option> : ""}
+                    {this.props.options.map(option => <option value={option} key={option}>{toTitleCase(option)}</option>)}
                 </select>
             </div>
-        ) : null;
+        );
     }
 }
 

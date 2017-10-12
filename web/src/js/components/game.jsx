@@ -322,6 +322,7 @@ export default class Game extends React.Component {
                             gameState={this.state.gameState}
                             boardSetupState={this.state.boardSetupState}
                             colorChangeHandler={this.handleColorSetupSelect.bind(this)}
+                            colorsSettingUp={this.state.gameState.getColorsSettingUp()}
                         />
                         <div className="content-block game-page-select">
                             <UpdatingSelect

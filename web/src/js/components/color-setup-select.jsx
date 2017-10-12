@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import UpdatingSelect from "../components/updating-select";
-import {Color} from "../constants";
 
 
 export default class ColorSetupSelect extends React.Component {
@@ -15,7 +14,7 @@ export default class ColorSetupSelect extends React.Component {
                 <UpdatingSelect
                     label="Select Color to set up"
                     optionChangeHandler={this.props.colorChangeHandler}
-                    options={Color.all()}
+                    options={this.props.colorsSettingUp}
                 />
             </div>
         );
@@ -24,6 +23,7 @@ export default class ColorSetupSelect extends React.Component {
 
 ColorSetupSelect.propTypes = {
     gameState: PropTypes.object.isRequired,
+    colorsSettingUp: PropTypes.array.isRequired,
     boardSetupState: PropTypes.object.isRequired,
     colorChangeHandler: PropTypes.func.isRequired
 };

@@ -10,6 +10,7 @@ module.exports = {
         createAccount: "./src/js/render-create-account-form.jsx",
         createGame: "./src/js/render-game-form.jsx",
         index: "./src/js/render-index-page.jsx",
+        howToPlay: "./src/js/render-how-to-play.jsx",
         game: "./src/js/render-game-page.jsx",
         login: "./src/js/render-login-form.jsx",
         profile: "./src/js/render-profile-page.jsx"

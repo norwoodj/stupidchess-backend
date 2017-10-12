@@ -14,10 +14,14 @@
 <body>
 
 <div id="csrf-token" data-token="{{ csrf_token() }}"></div>
+
 {% if current_user.is_authenticated %}
     <div id="current-user" data-uuid="{{ current_user.id }}" data-name="{{ current_user.username }}"></div>
 {% endif %}
 
-{% block body %}{% endblock %}
+{% block body %}
+    <div id="content-root"></div>
+{% endblock %}
+
 </body>
 </html>

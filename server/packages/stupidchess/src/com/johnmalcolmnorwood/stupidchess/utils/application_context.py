@@ -28,8 +28,7 @@ from ..services.possible_move_service import PossibleMoveService
 from ..services.user_service import UserService
 from ..services.game_service import GameService
 from ..services.record_service import RecordService
-from .game_rules import SETUP_SQUARES_FOR_COLOR, BOARD_SQUARES_FOR_GAME_TYPE
-from .game_rules import BOARD_MIDDLE_SECTION_FOR_GAME_TYPE
+from .game_rules import BOARD_SQUARES_FOR_GAME_TYPE, BOARD_MIDDLE_SECTION_FOR_GAME_TYPE
 
 
 class ApplicationContext:
@@ -96,7 +95,7 @@ class ApplicationContext:
         )
 
         self.move_update_services = (
-            PlaceMoveUpdateService(self.game_service, SETUP_SQUARES_FOR_COLOR),
+            PlaceMoveUpdateService(self.game_service),
             MoveMoveUpdateService(self.game_service, self.possible_move_service),
             ReplaceMoveUpdateService(self.game_service),
         )

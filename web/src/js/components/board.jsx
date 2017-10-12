@@ -8,14 +8,9 @@ export default class Board extends React.Component {
     getBackgroundForSquare(square) {
         if (this.props.squareSelectionState.isSquareSelected(square)) {
             return this.props.displayState.getSelectedBackground();
-        }
-
-        if (this.props.gameState.squareNeedsPiecePlaced(square)) {
+        } else if (this.props.gameState.squareNeedsPiecePlaced(square)) {
             return this.props.displayState.getSquareNeedsPlacedBackground();
-        }
-
-
-        if (this.props.ambiguousMoveState.isAmbiguousDestinationSelected()) {
+        } else if (this.props.ambiguousMoveState.isAmbiguousDestinationSelected()) {
             if (this.props.ambiguousMoveState.getSelectedAmbiguousDestination() == square) {
                 return this.props.displayState.getPossibleMoveBackground();
             } else if (this.props.ambiguousMoveState.isDisambiguatingCaptureForSelectedSquare(square)) {

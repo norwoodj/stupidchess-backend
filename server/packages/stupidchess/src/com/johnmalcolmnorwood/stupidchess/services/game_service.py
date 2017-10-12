@@ -2,7 +2,7 @@
 from ..factories.game_factory import create_new_game
 from ..utils.game_utils import LIST_GAME_DICT_FIELDS
 from ..models.piece import Color
-from ..utils.game_rules import is_in_board_setup_mode
+from ..utils.game_rules import is_in_board_setup_mode, is_square_in_setup_zone_for_color
 
 DEFAULT_OFFSET = 0
 DEFAULT_LIMIT = 10
@@ -18,6 +18,7 @@ class GameService:
             user_color = Color.BLACK if game.blackPlayerUuid == user_uuid else Color.WHITE
             game.possiblePiecesToBePlaced = [p for p in game.possiblePiecesToBePlaced if p.color == user_color]
             game.pieces = [p for p in game.pieces if p.color == user_color]
+            game.squaresToBePlaced = [s for s in game.squaresToBePlaced if is_square_in_setup_zone_for_color(user_color, s)]
 
         return game
 

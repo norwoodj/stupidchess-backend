@@ -12,7 +12,7 @@ auth:
   createAccountTemplate: create-account.html
   changePasswordTemplate: change-password.html
   postLoginRedirect: template.profile
-  postLogoutRedirect: auth.login
+  postLogoutRedirect: template.index
 
 MONGODB_SETTINGS:
   db: stupidchess

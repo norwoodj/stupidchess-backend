@@ -1,5 +1,5 @@
 import {Color} from "../constants";
-import {isGameInBoardSetupMode} from "../util";
+import {isGameInBoardSetupMode, isSquareInSetupZoneForColor} from "../util";
 
 
 export default class GameState {
@@ -56,7 +56,18 @@ export default class GameState {
     }
 
     getColorsSettingUp() {
-        return [Color.BLACK, Color.WHITE];
+        let colors = [];
+
+        for (let c of [Color.BLACK, Color.WHITE]) {
+            for (let s of this.squaresToBePlaced) {
+                if (isSquareInSetupZoneForColor(c, s)) {
+                    colors[colors.length] = c;
+                    break;
+                }
+            }
+        }
+
+        return colors;
     }
 
     squareNeedsPiecePlaced(square) {

@@ -5,7 +5,8 @@ let MENU_CATEGORIES = [
         options: [
             {text: "Home", link: "/"},
             {text: "Create Game", link: "/create-game"},
-            {text: "Change Password", link: "/change-password"}
+            {text: "Change Password", link: "/change-password"},
+            {text: "How to play Stupid Chess", link: "/how-to-play"}
         ]
     }
 ];

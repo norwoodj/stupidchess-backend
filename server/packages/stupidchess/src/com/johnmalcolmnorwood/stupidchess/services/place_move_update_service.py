@@ -4,12 +4,12 @@ from ..exceptions import InvalidMoveException
 from ..models.move import Move, MoveType
 from ..models.piece import Piece
 from .abstract_move_update_service import AbstractMoveUpdateService
+from ..utils.game_rules import is_square_in_setup_zone_for_color
 
 
 class PlaceMoveUpdateService(AbstractMoveUpdateService):
-    def __init__(self, game_service, setup_squares_for_color):
+    def __init__(self, game_service):
         self.__game_service = game_service
-        self.__setup_squares_for_color = setup_squares_for_color
 
     def get_move_type(self):
         return MoveType.PLACE
@@ -22,7 +22,7 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
             LOGGER.error(f"Attempted to apply invalid PLACE move {m} on game {game.get_id()}, no matching piece in possiblePiecesToBePlaced")
             raise InvalidMoveException(move, "No such piece available to replace!")
 
-        if not self.__is_square_in_setup_zone_for_color(move.piece.color, move.destinationSquare):
+        if not is_square_in_setup_zone_for_color(move.piece.color, move.destinationSquare):
             raise InvalidMoveException(move, f"{move.piece.color} pieces cannot be placed at {move.destinationSquare}!")
 
         additional_necessary_placements = self.__get_additional_necessary_placements(move, game)
@@ -97,7 +97,7 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
 
         players_other_squares = [
             s for s in game.squaresToBePlaced if (
-                s != last_move.destinationSquare and self.__is_square_in_setup_zone_for_color(piece_color, s)
+                s != last_move.destinationSquare and is_square_in_setup_zone_for_color(piece_color, s)
             )
         ]
 
@@ -123,5 +123,3 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
             build_move(idx, piece) for idx, piece in enumerate(placers_other_pieces)
         ]
 
-    def __is_square_in_setup_zone_for_color(self, color, square):
-        return square in self.__setup_squares_for_color[color]

@@ -3,7 +3,7 @@ from ..models.piece import Color, PieceType
 from ..models.game import GameType, GameResult
 
 
-SETUP_SQUARES_FOR_COLOR = {
+_SETUP_SQUARES_FOR_COLOR = {
     Color.BLACK: {0, 1, 2, 3, 10, 11, 12, 13, 20, 21, 22, 23},
     Color.WHITE: {94, 95, 96, 97, 104, 105, 106, 107, 114, 115, 116, 117},
 }
@@ -119,3 +119,7 @@ def is_in_piece_promotion_zone(square, game_type, color):
             return True
 
     return False
+
+
+def is_square_in_setup_zone_for_color(color, square):
+    return square in _SETUP_SQUARES_FOR_COLOR[color]

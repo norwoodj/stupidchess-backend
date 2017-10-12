@@ -48,7 +48,7 @@ class DefaultDisplayState extends AbstractDisplayState {
     }
 
     getGamePanelBackgroundImage() {
-        return "/img/wood.jpg";
+        return "/img/themes/wood.jpg";
     }
 }
 
@@ -66,7 +66,7 @@ class MichiganDisplayState extends AbstractDisplayState {
     }
 
     getGamePanelBackgroundImage() {
-        return "/img/michigan.jpg";
+        return "/img/themes/michigan.jpg";
     }
 
     getPossibleMoveBackground() {
@@ -92,7 +92,7 @@ class ChristmasDisplayState extends AbstractDisplayState {
     }
 
     getGamePanelBackgroundImage() {
-        return "/img/snow.jpg";
+        return "/img/themes/snow.jpg";
     }
 
     getSelectedBackground() {

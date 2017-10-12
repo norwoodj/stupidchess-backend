@@ -4,13 +4,17 @@ from flask_login import current_user
 from flask.ext.login import login_required
 from ..utils.forms import CreateGameForm
 
-
 template_blueprint = Blueprint("template", __name__)
 
 
 @template_blueprint.route("/")
 def index():
     return render_template("index.html", current_user=current_user)
+
+
+@template_blueprint.route("/how-to-play")
+def how_to_play():
+    return render_template("how-to-play.html", current_user=current_user)
 
 
 @template_blueprint.route("/profile")

@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="com.johnmalcolmnorwood.auth",
-    version="17.0920.0-dev",
+    version="17.1015.0",
     package_dir={"": "src"},
     packages=find_packages("src"),
     zip_safe=False,

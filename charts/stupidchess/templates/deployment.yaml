@@ -48,6 +48,7 @@ spec:
               mountPath: /tmp/sockets
             - name: secrets-volume
               mountPath: {{ .Values.stupidchessSecretsVolumePath }}
+              readOnly: true
 
       volumes:
         - name: socket-volume

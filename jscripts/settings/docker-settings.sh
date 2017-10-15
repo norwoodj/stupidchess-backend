@@ -11,7 +11,7 @@ source ${SCRIPT_DIR}/utilities/version-file-utilities.sh
 ##
 : ${LOCAL_IMAGE_VERSION_TAG:="current"}
 : ${DOCKER_REGISTRY_URL:=""}
-: ${DOCKER_REGISTRY_ORG:=""}
+: ${DOCKER_REGISTRY_ORG:="jnorwood"}
 : ${ADDITIONAL_DOCKER_BUILD_ARGS:=""}
 : ${ADDITIONAL_DOCKER_PUSH_ARGS:=""}
 : ${DOCKER_PUSH_KEEP_TAGGED:="false"}

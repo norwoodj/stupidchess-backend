@@ -40,7 +40,7 @@ $(() => {
                         <p>
                             You might also visit my other project <a href="https://hashbash.johnmalcolmnorwood.com">hashbash</a>.
                         </p>
-                        <img src="/img/screenshots/after-setup.jpg"/>
+                        <img src="/img/screenshots/after-board-setup.jpg"/>
                         <p>
                             Stupid Chess is a variant on the popular Chess and checkers board games that John Norwood (that's me)
                             and some of his college friends invented when we stumbled across a chess board that had been ripped

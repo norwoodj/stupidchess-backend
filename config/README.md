@@ -1,2 +1,0 @@
-Stupid Chess Configuration
-==========================

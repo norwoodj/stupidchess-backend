@@ -10,8 +10,22 @@ function usage {
     echo
     echo "This script is used to bootstrap the jscripts, as well as updating its version, etc"
     echo
+    echo "Options:"
+    echo "  --help, -h               Print this usage and exit"
+    echo "  --jscripts, -j <path>    The path to the jscripts installation on disk (Default: '~/.jscripts')"
+    echo
     echo "Commands:"
     echo "  install - Install the jscripts to the provided project"
+    echo "  version - Print the version of the currently configured jscripts"
+}
+
+function jsc_version {
+    if [[ ! -f "${JSCRIPTS_PATH}/version.txt" ]]; then
+        echo "No version.txt file found at configured jscripts path '${JSCRIPTS_PATH}'"
+        return 1
+    fi
+
+    cat "${JSCRIPTS_PATH}/version.txt"
 }
 
 function jsc_install {
@@ -49,6 +63,9 @@ function jsc_install {
             echo "${pattern}" >> .gitignore
         fi
     done
+
+    echo "Copying README over"
+    cp "${JSCRIPTS_PATH}/README.md" "${JSCRIPTS_LOCAL_PATH}"
 }
 
 function main {
@@ -62,4 +79,18 @@ function main {
     "jsc_${command}"
 }
 
-main ${@}
+function handle_options_and_pass_arguments_to_main {
+    while [[ "${1}" == -* ]]; do
+        case "${1}" in
+            --help | -h)     usage; exit ;;
+            --jscripts | -j) JSCRIPTS_PATH=${2}; shift ;;
+            -*)              echo "Invalid Option '${1}'"; exit 1;;
+        esac
+
+        shift
+    done
+
+    main ${@}
+}
+
+handle_options_and_pass_arguments_to_main ${@}

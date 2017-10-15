@@ -14,7 +14,7 @@ def _get_render_kw(**kwargs):
     return default
 
 
-def _check_user_exists(form, field):
+def _check_user_exists(_, field):
     username = field.data
     if current_app.context.user_service.get_user_with_username(username) is not None:
         raise ValidationError(f"User with name {username} already exists!")
@@ -38,8 +38,12 @@ _CREATE_USERNAME_VALIDATORS = [
     _check_user_exists,
 ]
 
-_PASSWORD_VALIDATORS = [
+_LOGIN_PASSWORD_VALIDATORS = [
     validators.DataRequired(),
+]
+
+_CREATE_PASSWORD_VALIDATORS = [
+    *_LOGIN_PASSWORD_VALIDATORS,
     validators.Length(min=8, max=32),
     validators.Regexp(_PASSWORD_REGEX),
 ]
@@ -47,16 +51,16 @@ _PASSWORD_VALIDATORS = [
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=_LOGIN_USERNAME_VALIDATORS, render_kw=_get_render_kw(placeholder="username"))
-    password = PasswordField("Password", validators=_PASSWORD_VALIDATORS, render_kw=_get_render_kw(placeholder="password"))
+    password = PasswordField("Password", validators=_LOGIN_PASSWORD_VALIDATORS, render_kw=_get_render_kw(placeholder="password"))
 
 
 class CreateAccountForm(FlaskForm):
     username = StringField("Username", validators=_CREATE_USERNAME_VALIDATORS, render_kw=_get_render_kw(placeholder="username"))
-    password = PasswordField("Password", validators=_PASSWORD_VALIDATORS, render_kw=_get_render_kw(placeholder="password"))
+    password = PasswordField("Password", validators=_CREATE_PASSWORD_VALIDATORS, render_kw=_get_render_kw(placeholder="password"))
     confirm_password = PasswordField("Confirm Password", validators=[validators.EqualTo("password")], render_kw=_get_render_kw(placeholder="confirm password"))
 
 
 class ChangePasswordForm(FlaskForm):
-    password = PasswordField("Password", validators=_PASSWORD_VALIDATORS, render_kw=_get_render_kw(placeholder="password"))
-    new_password = PasswordField("New Password", validators=_PASSWORD_VALIDATORS, render_kw=_get_render_kw(placeholder="new password"))
+    password = PasswordField("Password", validators=_LOGIN_PASSWORD_VALIDATORS, render_kw=_get_render_kw(placeholder="password"))
+    new_password = PasswordField("New Password", validators=_LOGIN_PASSWORD_VALIDATORS, render_kw=_get_render_kw(placeholder="new password"))
     confirm_new_password = PasswordField("Confirm New Password", validators=[validators.EqualTo("new_password")], render_kw=_get_render_kw(placeholder="confirm new password"))

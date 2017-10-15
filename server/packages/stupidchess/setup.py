@@ -8,6 +8,9 @@ setup(
     packages=find_packages("src"),
     zip_safe=False,
     namespace_packages=["com", "com.johnmalcolmnorwood"],
+    package_data={
+        "com.johnmalcolmnorwood.stupidchess": ["templates/*.html"],
+    },
     entry_points={
         "console_scripts": [
             "setup_stupidchess_game=com.johnmalcolmnorwood.stupidchess.client.setup_stupidchess_game:main",

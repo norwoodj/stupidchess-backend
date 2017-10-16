@@ -1,5 +1,5 @@
 import $ from "jquery";
-import overlay from "muicss/lib/js/overlay"
+import overlay from "muicss/lib/js/overlay";
 
 
 function setupSideDrawerTransition() {

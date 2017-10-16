@@ -1,12 +1,12 @@
-import React from "react";
-import {PieceGrid} from "./piece-grid";
-import {getPieceSelectShapeForSetupMode} from "../factories/board-shapes-factory";
+import PropTypes from "prop-types";
+import PieceGrid from "./piece-grid";
+import {getPieceSelectShapeForGameTypeAndSetupMode} from "../factories/board-shapes-factory";
 
 
-class PieceSelectGrid extends PieceGrid {
+export default class PieceSelectGrid extends PieceGrid {
     getPieceForIndex(index) {
         if (this.props.gameState.inBoardSetupMode()) {
-            var pieces = this.props.gameState.possiblePiecesToBePlaced
+            let pieces = this.props.gameState.possiblePiecesToBePlaced
                 .filter(piece => (piece.color == this.props.boardSetupState.getCurrentBoardBeingSetUp() && piece.index == index));
             return (pieces.length > 0) ? pieces[0] : null;
         } else{
@@ -14,8 +14,12 @@ class PieceSelectGrid extends PieceGrid {
         }
     }
 
-    getDefaultClassName() {
+    getSquareClassName() {
         return "piece-selection";
+    }
+
+    getGridClassName() {
+        return "content-block";
     }
 
     shouldDisplay() {
@@ -23,22 +27,19 @@ class PieceSelectGrid extends PieceGrid {
     }
 
     getGridShape() {
-        return getPieceSelectShapeForSetupMode(this.props.gameState.inBoardSetupMode());
+        return getPieceSelectShapeForGameTypeAndSetupMode(
+            this.props.gameState.type,
+            this.props.gameState.inBoardSetupMode()
+        );
     }
 
     getClickHandler() {
-        return piece => {
-            if (piece != null) {
-                this.props.pieceSelectionCallback(piece);
-            }
-        }
+        return piece => (piece != null) ? this.props.pieceSelectionCallback(piece) : null;
     }
 }
 
 PieceSelectGrid.propTypes = {
-    gameState: React.PropTypes.object.isRequired,
-    boardSetupState: React.PropTypes.object.isRequired,
-    pieceSelectionCallback: React.PropTypes.func.isRequired
+    gameState: PropTypes.object.isRequired,
+    boardSetupState: PropTypes.object.isRequired,
+    pieceSelectionCallback: PropTypes.func.isRequired
 };
-
-export {PieceSelectGrid};

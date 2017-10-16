@@ -2,9 +2,9 @@
 from flask import current_app
 from flask_login import current_user
 
-from com.johnmalcolmnorwood.stupidchess.exceptions import InvalidGameParameterException
-from com.johnmalcolmnorwood.stupidchess.models.game import Game, GameType, GameAuthType
-from com.johnmalcolmnorwood.stupidchess.models.piece import Piece, Color, PieceType
+from ..exceptions import InvalidGameParameterException
+from ..models.game import Game, GameType, GameAuthType
+from ..models.piece import Piece, Color, PieceType
 
 
 def create_new_game(game_type, game_auth_type, other_player):
@@ -47,18 +47,18 @@ STUPID_CHESS_INTIAL_SQUARES_TO_BE_PLACED = [
 ]
 
 STUPID_CHESS_INTIAL_PIECES_FOR_SIDE = [
-    PieceType.PAWN,
-    PieceType.PAWN,
-    PieceType.PAWN,
-    PieceType.PAWN,
+    PieceType.KING,
+    PieceType.QUEEN,
+    PieceType.CASTLE,
+    PieceType.CASTLE,
+    PieceType.BISHOP,
+    PieceType.BISHOP,
     PieceType.PONY,
     PieceType.CHECKER,
-    PieceType.CASTLE,
-    PieceType.CASTLE,
-    PieceType.BISHOP,
-    PieceType.BISHOP,
-    PieceType.QUEEN,
-    PieceType.KING,
+    PieceType.PAWN,
+    PieceType.PAWN,
+    PieceType.PAWN,
+    PieceType.PAWN,
 ]
 
 STUPID_CHESS_INITIAL_PIECES_TO_BE_PLACED = [
@@ -77,6 +77,8 @@ def get_new_stupid_chess_game(black_player_uuid, white_player_uuid, black_player
         whitePlayerUuid=white_player_uuid,
         blackPlayerName=black_player_name,
         whitePlayerName=white_player_name,
+        blackPlayerScore=1,
+        whitePlayerScore=1,
     )
 
 CHESS_INITIAL_PIECES = [
@@ -111,6 +113,8 @@ def get_new_chess_game(black_player_uuid, white_player_uuid, black_player_name, 
         whitePlayerUuid=white_player_uuid,
         blackPlayerName=black_player_name,
         whitePlayerName=white_player_name,
+        blackPlayerScore=1,
+        whitePlayerScore=1,
     )
 
 CHECKERS_INITIAL_PIECES = [
@@ -133,6 +137,8 @@ def get_new_checkers_game(black_player_uuid, white_player_uuid, black_player_nam
         whitePlayerUuid=white_player_uuid,
         blackPlayerName=black_player_name,
         whitePlayerName=white_player_name,
+        blackPlayerScore=12,
+        whitePlayerScore=12,
     )
 
 

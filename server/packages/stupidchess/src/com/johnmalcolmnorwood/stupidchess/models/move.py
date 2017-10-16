@@ -8,11 +8,20 @@ from ..utils import UUID_REGEX
 
 
 class MoveType:
-    PLACE = 'PLACE'
-    MOVE = 'MOVE'
+    PLACE = "PLACE"
+    REPLACE = "REPLACE"
+    MOVE = "MOVE"
+
+    @staticmethod
+    def all():
+        return [
+            MoveType.PLACE,
+            MoveType.REPLACE,
+            MoveType.MOVE,
+        ]
 
 
-MOVE_TYPE_REGEX = '|'.join([MoveType.PLACE, MoveType.MOVE])
+MOVE_TYPE_REGEX = "|".join(MoveType.all())
 
 
 class Move(BaseDocument, Dictable):
@@ -37,14 +46,25 @@ class Move(BaseDocument, Dictable):
     captures = ListField(EmbeddedDocumentField(Piece), default=None)
     gameUuid = StringField(required=True, regex=UUID_REGEX)
 
+    def __str__(self):
+        prefix = "<" + (f"[{self.index}]" if self.index is not None else "")
+        piece_component = f"{self.piece.color} {self.piece.type}" if self.piece is not None else ""
+
+        if self.type == MoveType.PLACE:
+            return f"{prefix} {self.type} {piece_component} at {self.destinationSquare}>"
+        if self.type == MoveType.MOVE:
+            return f"{prefix} {self.type} {piece_component} to {self.destinationSquare} capturing [{', '.join(str(c) for c in self.captures or [])}]>"
+        if self.type == MoveType.REPLACE:
+            return f"{prefix} {self.type} piece at {self.destinationSquare} with {piece_component}>"
+
     @staticmethod
     def from_json(json, **kwargs):
         if json is None:
             return None
 
         return Move(
-            type=json.get('type'),
-            startSquare=json.get('startSquare'),
-            destinationSquare=json.get('destinationSquare'),
-            piece=Piece.from_json(json.get('piece'))
+            type=json.get("type"),
+            startSquare=json.get("startSquare"),
+            destinationSquare=json.get("destinationSquare"),
+            piece=Piece.from_json(json.get("piece"))
         )

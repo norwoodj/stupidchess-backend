@@ -12,7 +12,7 @@ class AmbiguousMoveService:
         return [
             AmbiguousMoveService.__generate_ambiguous_move(destination_square, move_list)
             for destination_square, move_list in moves_by_destination.items()
-            if len(move_list) > 1
+            if len(move_list) > 1 and all(m.captures is not None for m in move_list)
         ]
 
     @staticmethod

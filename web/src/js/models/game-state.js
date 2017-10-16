@@ -1,7 +1,8 @@
 import {Color} from "../constants";
+import {isGameInBoardSetupMode, isSquareInSetupZoneForColor} from "../util";
 
 
-class GameState {
+export default class GameState {
     constructor() {
         this.pieces = new Map();
         this.type = "NONE";
@@ -28,16 +29,45 @@ class GameState {
         return this.pieces.get(square);
     }
 
+    isMyTurn(userUuid) {
+        if (this.inBoardSetupMode()) {
+            return true;
+        }
+
+        if (this.blackPlayerUuid == this.whitePlayerUuid) {
+            return true;
+        }
+
+        return this.currentTurn == Color.BLACK
+            ? userUuid == this.blackPlayerUuid
+            : userUuid == this.whitePlayerUuid;
+    }
+
     mustPlacePiece() {
         return this.squaresToBePlaced.size > 0;
     }
 
+    singleSquareToBePlaced() {
+        return this.squaresToBePlaced.size == 1;
+    }
+
     inBoardSetupMode() {
-        return this.type == "STUPID_CHESS" && this.lastMove < 23;
+        return isGameInBoardSetupMode(this);
     }
 
     getColorsSettingUp() {
-        return [Color.BLACK, Color.WHITE];
+        let colors = [];
+
+        for (let c of [Color.BLACK, Color.WHITE]) {
+            for (let s of this.squaresToBePlaced) {
+                if (isSquareInSetupZoneForColor(c, s)) {
+                    colors[colors.length] = c;
+                    break;
+                }
+            }
+        }
+
+        return colors;
     }
 
     squareNeedsPiecePlaced(square) {
@@ -66,5 +96,3 @@ class GameState {
         apiResponse.squaresToBePlaced.forEach(square => this.squaresToBePlaced.add(square));
     }
 }
-
-export {GameState};

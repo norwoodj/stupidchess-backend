@@ -1,32 +1,30 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.move import Move, MoveType
-from com.johnmalcolmnorwood.stupidchess.models.game import Game
-from com.johnmalcolmnorwood.stupidchess.models.piece import Piece
-from com.johnmalcolmnorwood.stupidchess.services.abstract_move_update_service import AbstractMoveUpdateService
+from .. import LOGGER
+from ..exceptions import InvalidMoveException
+from ..models.move import Move, MoveType
+from ..models.piece import Piece
+from .abstract_move_update_service import AbstractMoveUpdateService
+from ..utils.game_rules import is_square_in_setup_zone_for_color
 
 
 class PlaceMoveUpdateService(AbstractMoveUpdateService):
-    def __init__(self, setup_squares_for_color):
-        self.__setup_squares_for_color = setup_squares_for_color
+    def __init__(self, game_service):
+        self.__game_service = game_service
 
     def get_move_type(self):
         return MoveType.PLACE
 
-    def get_game_for_move(self, move, game_uuid):
-        # In the case of a PLACE move, we do the verification of the legality of the move in the query to retrieve the
-        # game, if we can find a game with the matching game_uuid, and a square to be placed and piece that match with
-        # the input place move, then the move is legal
-        piece_to_be_placed_match = move.piece.to_dict('color', 'type', 'index')
+    def get_moves_to_apply(self, move, game, user_uuid):
+        if move.destinationSquare not in game.squaresToBePlaced:
+            raise InvalidMoveException(move, f"Square {move.destinationSquare} is not available to be placed!")
 
-        game_query = {
-            '_id': game_uuid,
-            'squaresToBePlaced': move.destinationSquare,
-            'possiblePiecesToBePlaced': {'$elemMatch': piece_to_be_placed_match},
-        }
+        if not any(p == move.piece for p in game.possiblePiecesToBePlaced):
+            LOGGER.error(f"Attempted to apply invalid PLACE move {m} on game {game.get_id()}, no matching piece in possiblePiecesToBePlaced")
+            raise InvalidMoveException(move, "No such piece available to replace!")
 
-        return Game.objects.only('lastMove', 'squaresToBePlaced', 'possiblePiecesToBePlaced').get(__raw__=game_query)
+        if not is_square_in_setup_zone_for_color(move.piece.color, move.destinationSquare):
+            raise InvalidMoveException(move, f"{move.piece.color} pieces cannot be placed at {move.destinationSquare}!")
 
-    def get_moves_to_apply(self, move, game):
         additional_necessary_placements = self.__get_additional_necessary_placements(move, game)
         return [move, *additional_necessary_placements]
 
@@ -36,18 +34,18 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
         piece_additions = [PlaceMoveUpdateService.__get_piece_addition_for_move(move) for move in moves]
 
         updates = {
-            '$pull': {
-                'squaresToBePlaced': {'$in': square_removals},
-                'possiblePiecesToBePlaced': piece_removals,
+            "$pull": {
+                "squaresToBePlaced": {"$in": square_removals},
+                "possiblePiecesToBePlaced": piece_removals,
             },
-            '$push': {
-                'pieces': {'$each': piece_additions},
+            "$push": {
+                "pieces": {"$each": piece_additions},
             },
-            '$inc': {'lastMove': len(moves)},
-            '$currentDate': {'lastUpdateTimestamp': True},
+            "$inc": {"lastMove": len(moves)},
+            "$currentDate": {"lastUpdateTimestamp": True},
         }
 
-        Game.objects(_id=game.get_id()).update(__raw__=updates)
+        self.__game_service.update_game(game.get_id(), updates)
 
     def get_move_for_insert(self, move):
         move_piece = Piece(
@@ -57,8 +55,8 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
 
         return Move(
             type=MoveType.PLACE,
-            destinationSquare=move.destinationSquare,
             gameUuid=move.gameUuid,
+            destinationSquare=move.destinationSquare,
             index=move.index,
             piece=move_piece,
         )
@@ -66,10 +64,10 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
     @staticmethod
     def __get_piece_removal_for_place_moves(moves, color):
         return {
-            '$and': [
-                {'color': color},
-                {'$or': [
-                    move.piece.to_dict('type', 'index') for move in moves
+            "$and": [
+                {"color": color},
+                {"$or": [
+                    move.piece.to_dict("type", "index") for move in moves
                 ]},
             ],
         }
@@ -80,7 +78,7 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
             color=move.piece.color,
             type=move.piece.type,
             square=move.destinationSquare,
-        ).to_dict('color', 'type', 'square')
+        ).to_dict("color", "type", "square")
 
     def __get_additional_necessary_placements(self, last_move, game):
         """
@@ -93,32 +91,27 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
         """
         piece_color = last_move.piece.color
 
-        def piece_filter(piece):
-            return piece.color == piece_color and piece.index != last_move.piece.index
+        players_other_pieces = [
+            p for p in game.possiblePiecesToBePlaced if p.color == piece_color and p.index != last_move.piece.index
+        ]
 
-        def square_filter(square):
-            return square != last_move.destinationSquare and self.__is_square_in_setup_zone_for_color(
-                piece_color,
-                square,
+        players_other_squares = [
+            s for s in game.squaresToBePlaced if (
+                s != last_move.destinationSquare and is_square_in_setup_zone_for_color(piece_color, s)
             )
+        ]
 
-        players_other_pieces = list(filter(piece_filter, game.possiblePiecesToBePlaced))
-        players_other_squares = list(filter(square_filter, game.squaresToBePlaced))
-
-        if len(players_other_pieces) == 0:
-            return []
-
-        # Otherwise, see if the only remaining pieces for that color are of the same type, then they can all be
+        # See if the only remaining pieces for that color are of the same type, then they can all be
         # placed in remaining spots for the user
         piece_type = players_other_pieces[0].type
-        for piece in players_other_pieces:
-            if piece.type != piece_type:
-                return []
 
-        return PlaceMoveUpdateService.__build_place_moves_for_pieces(players_other_pieces, players_other_squares, game)
+        if not all(p.type == piece_type for p in players_other_pieces):
+            return []
+
+        return PlaceMoveUpdateService.__build_place_moves_for_pieces(players_other_pieces, players_other_squares)
 
     @staticmethod
-    def __build_place_moves_for_pieces(placers_other_pieces, players_other_squares, game):
+    def __build_place_moves_for_pieces(placers_other_pieces, players_other_squares):
         def build_move(idx, piece):
             return Move(
                 type=MoveType.PLACE,
@@ -130,5 +123,3 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
             build_move(idx, piece) for idx, piece in enumerate(placers_other_pieces)
         ]
 
-    def __is_square_in_setup_zone_for_color(self, color, square):
-        return square in self.__setup_squares_for_color[color]

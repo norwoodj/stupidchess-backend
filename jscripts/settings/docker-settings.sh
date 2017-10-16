@@ -9,57 +9,54 @@ source ${SCRIPT_DIR}/utilities/version-file-utilities.sh
 ##
 # Environment variables that control how images are named/deployed/built etc.
 ##
-: ${LOCAL_IMAGE_VERSION_TAG:='current'}
-: ${DOCKER_REGISTRY_URL:=''}
-: ${DOCKER_REGISTRY_ORG:='jnorwood'}
-: ${ADDITIONAL_DOCKER_BUILD_ARGS:=''}
-: ${ADDITIONAL_DOCKER_PUSH_ARGS:=''}
-: ${DOCKER_PUSH_KEEP_TAGGED:='false'}
+: ${LOCAL_IMAGE_VERSION_TAG:="current"}
+: ${DOCKER_REGISTRY_URL:=""}
+: ${DOCKER_REGISTRY_ORG:="jnorwood"}
+: ${ADDITIONAL_DOCKER_BUILD_ARGS:=""}
+: ${ADDITIONAL_DOCKER_PUSH_ARGS:=""}
+: ${DOCKER_PUSH_KEEP_TAGGED:="false"}
 
 
 ##
 # List here all of the images built/deployed/used by the project
 ##
-readonly _RPI_SERVER_CODE_IMAGE_NAME='rpi_server_code'
-readonly _RPI_NGINX_IMAGE_NAME='rpi_nginx'
-readonly _RPI_UWSGI_IMAGE_NAME='rpi_uwsgi'
+readonly _RPI_NGINX_IMAGE="rpi_nginx"
+readonly _RPI_UWSGI_IMAGE="rpi_uwsgi"
 
-readonly _X86_SERVER_CODE_IMAGE_NAME='server_code'
-readonly _X86_NGINX_IMAGE_NAME='nginx'
-readonly _X86_UWSGI_IMAGE_NAME='uwsgi'
+readonly _X86_NGINX_IMAGE="nginx"
+readonly _X86_UWSGI_IMAGE="uwsgi"
 
-readonly SERVER_CODE_IMAGE_NAME=$(is_running_on_raspberry_pi && echo "${_RPI_SERVER_CODE_IMAGE_NAME}" || echo "${_X86_SERVER_CODE_IMAGE_NAME}")
-readonly NGINX_IMAGE_NAME=$(is_running_on_raspberry_pi && echo "${_RPI_NGINX_IMAGE_NAME}" || echo "${_X86_NGINX_IMAGE_NAME}")
-readonly UWSGI_IMAGE_NAME=$(is_running_on_raspberry_pi && echo "${_RPI_UWSGI_IMAGE_NAME}" || echo "${_X86_UWSGI_IMAGE_NAME}")
-readonly WEBPACK_BUILDER_IMAGE_NAME='webpack_builder'
+readonly NGINX_IMAGE=$(is_running_on_raspberry_pi && echo "${_RPI_NGINX_IMAGE}" || echo "${_X86_NGINX_IMAGE}")
+readonly UWSGI_IMAGE=$(is_running_on_raspberry_pi && echo "${_RPI_UWSGI_IMAGE}" || echo "${_X86_UWSGI_IMAGE}")
+readonly WEBPACK_BUILDER_IMAGE="webpack_builder"
 
 readonly _DOCKER_CONFIG=$(cat <<EOF
 {
     "buildImages": [
-        "${NGINX_IMAGE_NAME}",
-        "${UWSGI_IMAGE_NAME}"
-        $(is_running_on_raspberry_pi || echo ", \"${WEBPACK_BUILDER_IMAGE_NAME}\"")
+        "${NGINX_IMAGE}",
+        "${UWSGI_IMAGE}"
+        $(is_running_on_raspberry_pi || echo ", \"${WEBPACK_BUILDER_IMAGE}\"")
     ],
     "deployImages": [
-        "${NGINX_IMAGE_NAME}",
-        "${UWSGI_IMAGE_NAME}"
+        "${UWSGI_IMAGE}",
+        "${NGINX_IMAGE}"
     ],
     "imageDependencies": {}
 }
 EOF
 )
 
-function print_build_images_usage_list {
-    echo "  $(join "\n  " $(get_images_to_build))"
-}
-
-function print_deploy_images_usage_list {
-    echo "  $(join "\n  " $(get_images_to_deploy))"
-}
-
 ##
 # Settings for which images should be built/deployed by these scripts, as well as how to build and deploy them
 ##
+function print_build_images_usage_list {
+    bulleted_list <(get_images_to_build)
+}
+
+function print_deploy_images_usage_list {
+    bulleted_list <(get_images_to_deploy)
+}
+
 function get_images_to_build {
     jq -r ".buildImages[]" <<< "${_DOCKER_CONFIG}"
 }
@@ -111,24 +108,24 @@ function get_docker_registry_name {
 ##
 function pre_build_image_hook {
     local image=${1}
-    log_debug "Pre Build Image Hook for image '${image}'"
+    log_debug "Pre Build Image Hook for image ${image}"
 
-    if [[ "${image}" == "${NGINX_IMAGE_NAME}" ]]; then
+    if [[ "${image}" == "${NGINX_IMAGE}" ]]; then
         generate_version_info_json > "web/src/_version.json"
     fi
 }
 
 function post_build_image_hook {
     local image=${1}
-    log_debug "Post Build Image Hook for image '${image}'"
+    log_debug "Post Build Image Hook for image ${image}"
 }
 
 function pre_deploy_image_hook {
     local image=${1}
-    log_debug "Pre Deploy Image Hook for image '${image}'"
+    log_debug "Pre Deploy Image Hook for image ${image}"
 }
 
 function post_deploy_image_hook {
     local image=${1}
-    log_debug "Post Deploy Image Hook for image '${image}'"
+    log_debug "Post Deploy Image Hook for image ${image}"
 }

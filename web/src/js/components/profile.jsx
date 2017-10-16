@@ -1,102 +1,75 @@
 import React from "react";
-import Container from "muicss/lib/react/container";
+import PropTypes from "prop-types";
 import Panel from "muicss/lib/react/panel";
-import UserService from "../services/user-service";
+import Button from "muicss/lib/react/button";
+
+import ActiveGameList from "./active-game-list";
+import PlayerRecord from "./player-record";
+import CompletedGameList from "./completed-game-list";
+import ErrorElement from "./error-element";
+
 import GameService from "../services/game-service";
-import {ActiveGameList} from "./active-game-list";
-import {PlayerRecord} from "./player-record";
-import {CompletedGameList} from "./completed-game-list";
-import {handleUnauthorized} from "../util";
+import RecordService from "../services/record-service";
+import {getErrorMessage} from "../util";
 
 
-class Profile extends React.Component {
+export default class Profile extends React.Component {
     constructor() {
         super();
         this.state = {
+            gameService: null,
+            recordService: null,
             playerUuid: null,
             playerName: "",
-            games: [],
-        }
+            games: []
+        };
     }
 
     componentDidMount() {
-        this.gameService = new GameService(this.props.httpService);
-        this.userService = new UserService(this.props.httpService);
-
-        if (this.props.playerUuid != null) {
-            this.setState({playerUuid: this.props.playerUuid});
+        if (this.props.error) {
+            this.setState({error: this.props.error});
         }
 
-        this.getCurrentUserAndRecords();
+        this.setState({
+            gameService: new GameService(this.props.httpService, this.handleError.bind(this)),
+            recordService: new RecordService(this.props.httpService, this.handleError.bind(this))
+        });
     }
 
-    getCurrentUserAndRecords() {
-        this.userService.getCurrentUser().then(
-            user => {
-                this.setState({userUuid: user.id});
-
-                if (this.state.playerUuid == null || user.id == this.state.playerUuid) {
-                    this.setState({
-                        playerName: user.username,
-                        playerUuid: user.id
-                    });
-                } else if (this.state.playerUuid != null) {
-                    this.getOtherPlayerInfo();
-                }
-            },
-            handleUnauthorized
-        );
-    }
-
-    getOtherPlayerInfo() {
-        this.userService.getUserForUuid(this.state.playerUuid).then(
-            user => this.setState({playerName: user.username}),
-            handleUnauthorized
-        )
-    }
-
-    getActiveGameListElements() {
-        if (this.state.playerUuid == null || this.state.userUuid == this.state.playerUuid) {
-            return (
-                <div>
-                    <div className="mui-divider"></div>
-                    <ActiveGameList httpService={this.props.httpService} userUuid={this.state.userUuid}/>
-                </div>
-            );
-        } else {
-            return null;
-        }
+    handleError(error) {
+        this.setState({error: getErrorMessage(error)});
     }
 
     render() {
+        if (this.state.gameService == null || this.state.recordService == null) {
+            return null;
+        }
+
         return (
-            <Container>
-                <Panel>
-                    <h2>{this.state.playerName}</h2>
+            <Panel>
+                <ErrorElement error={this.state.error}/>
+                <h2>{this.props.profileUsername}</h2>
 
-                    {this.getActiveGameListElements()}
+                <div className="mui-divider"></div>
+                <ActiveGameList gameService={this.state.gameService} userUuid={this.props.profileUserUuid}/>
 
-                    <div className="mui-divider"></div>
-                    {this.state.playerUuid != null ?
-                        <div>
-                            <CompletedGameList
-                                httpService={this.props.httpService}
-                                userUuid={this.state.playerUuid}
-                                gameType={this.state.selectedGameType}
-                            />
-                            <PlayerRecord httpService={this.props.httpService} playerUuid={this.state.playerUuid}/>
-                        </div>
-                        : null
-                    }
-                </Panel>
-            </Container>
+                <div className="mui-divider"></div>
+                <CompletedGameList gameService={this.state.gameService} userUuid={this.props.profileUserUuid}/>
+
+                <div className="mui-divider"></div>
+                <PlayerRecord recordService={this.state.recordService} userUuid={this.props.profileUserUuid}/>
+
+                <a href="/create-game">
+                    <Button className="button" variant="fab">+</Button>
+                </a>
+            </Panel>
         );
     }
 }
 
 Profile.propTypes = {
-    httpService: React.PropTypes.func.isRequired,
-    playerUuid: React.PropTypes.string
+    httpService: PropTypes.func.isRequired,
+    profileUsername: PropTypes.string.isRequired,
+    profileUserUuid: PropTypes.string.isRequired,
+    error: PropTypes.string
 };
-
-export {Profile};

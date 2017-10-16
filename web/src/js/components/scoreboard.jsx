@@ -1,7 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
+import {Color} from "../constants";
 
 
-class Scoreboard extends React.Component {
+export default class Scoreboard extends React.Component {
 
     getScoreCellClass(color, defaultClass) {
         return `${defaultClass} ${color == this.props.gameState.currentTurn ? "current-turn" : ""}`;
@@ -9,26 +11,26 @@ class Scoreboard extends React.Component {
 
     render() {
         return (
-            <table id="scoreboard">
+            <table id="scoreboard" className="scoreboard-table">
                 <thead>
-                    <tr>
-                        <td className={this.getScoreCellClass("BLACK", "score-name-cell")}>
-                            {this.props.gameState.blackPlayerName}
-                        </td>
-                        <td className={this.getScoreCellClass("WHITE", "score-name-cell")}>
-                            {this.props.gameState.whitePlayerName}
-                        </td>
-                    </tr>
+                <tr>
+                    <td className={this.getScoreCellClass(Color.BLACK, "score-name-cell")}>
+                        {this.props.gameState.blackPlayerName}
+                    </td>
+                    <td className={this.getScoreCellClass(Color.WHITE, "score-name-cell")}>
+                        {this.props.gameState.whitePlayerName}
+                    </td>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td className={this.getScoreCellClass("BLACK", "score-score-cell")}>
-                            {this.props.gameState.blackPlayerScore}
-                        </td>
-                        <td className={this.getScoreCellClass("WHITE", "score-score-cell")}>
-                            {this.props.gameState.whitePlayerScore}
-                        </td>
-                    </tr>
+                <tr>
+                    <td className={this.getScoreCellClass(Color.BLACK, "score-score-cell")}>
+                        {this.props.gameState.blackPlayerScore}
+                    </td>
+                    <td className={this.getScoreCellClass(Color.WHITE, "score-score-cell")}>
+                        {this.props.gameState.whitePlayerScore}
+                    </td>
+                </tr>
                 </tbody>
             </table>
         );
@@ -36,7 +38,5 @@ class Scoreboard extends React.Component {
 }
 
 Scoreboard.propTypes = {
-    gameState: React.PropTypes.object.isRequired
+    gameState: PropTypes.object.isRequired
 };
-
-export {Scoreboard};

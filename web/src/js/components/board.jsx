@@ -1,15 +1,16 @@
 import React from "react";
-import getPieceImage from "../factories/piece-factory"
-import {getHalfBoardShapeForColor, getBoardShapeForGameType} from "../factories/board-shapes-factory"
+import PropTypes from "prop-types";
+import {getPieceImage} from "../factories/piece-factory";
+import {getHalfBoardShapeForColor, getBoardShapeForGameType} from "../factories/board-shapes-factory";
 
 
-class Board extends React.Component {
+export default class Board extends React.Component {
     getBackgroundForSquare(square) {
         if (this.props.squareSelectionState.isSquareSelected(square)) {
             return this.props.displayState.getSelectedBackground();
-        }
-
-        if (this.props.ambiguousMoveState.isAmbiguousDestinationSelected()) {
+        } else if (this.props.gameState.squareNeedsPiecePlaced(square)) {
+            return this.props.displayState.getSquareNeedsPlacedBackground();
+        } else if (this.props.ambiguousMoveState.isAmbiguousDestinationSelected()) {
             if (this.props.ambiguousMoveState.getSelectedAmbiguousDestination() == square) {
                 return this.props.displayState.getPossibleMoveBackground();
             } else if (this.props.ambiguousMoveState.isDisambiguatingCaptureForSelectedSquare(square)) {
@@ -29,7 +30,7 @@ class Board extends React.Component {
             return "";
         }
 
-        return `square ${this.props.gameState.hasPieceOnSquare(square) ? "piece-square" : ""}`
+        return `square ${this.props.gameState.hasPieceOnSquare(square) ? "piece-square" : ""}`;
     }
 
     getPieceImageElementForSquare(square) {
@@ -38,7 +39,7 @@ class Board extends React.Component {
         }
 
         let piece = this.props.gameState.getPieceOnSquare(square);
-        return <img className="piece" src={getPieceImage(piece)}/>
+        return <img className="piece" src={getPieceImage(piece)}/>;
     }
 
     getStyleForSquare(square) {
@@ -48,7 +49,7 @@ class Board extends React.Component {
 
         return {
             background: this.getBackgroundForSquare(square)
-        }
+        };
     }
 
     render() {
@@ -79,12 +80,10 @@ class Board extends React.Component {
 }
 
 Board.propTypes = {
-    boardSetupState: React.PropTypes.object.isRequired,
-    gameState: React.PropTypes.object.isRequired,
-    displayState: React.PropTypes.object.isRequired,
-    squareSelectionState: React.PropTypes.object.isRequired,
-    ambiguousMoveState: React.PropTypes.object.isRequired,
-    clickHandler: React.PropTypes.func.isRequired
+    boardSetupState: PropTypes.object.isRequired,
+    gameState: PropTypes.object.isRequired,
+    displayState: PropTypes.object.isRequired,
+    squareSelectionState: PropTypes.object.isRequired,
+    ambiguousMoveState: PropTypes.object.isRequired,
+    clickHandler: PropTypes.func.isRequired
 };
-
-export {Board};

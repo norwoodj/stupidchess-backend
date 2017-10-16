@@ -1,0 +1,9 @@
+{% extends "_form.html" %}
+{% from "_form-helpers.html" import render_field %}
+
+{% block bundle %}<script src="/js/login.bundle.js"></script>{% endblock %}
+
+{% block form_fields %}
+    {{ render_field(form.username) }}
+    {{ render_field(form.password) }}
+{% endblock %}

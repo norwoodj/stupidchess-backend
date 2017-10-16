@@ -1,3 +1,6 @@
+import {GameType, Color} from "../constants";
+
+
 let STUPID_CHESS_BOARD = [
     [   0,    1,    2,    3, null, null, null, null],
     [  10,   11,   12,   13, null, null, null, null],
@@ -51,26 +54,27 @@ let STUPID_CHESS_WHITE_HALF_BOARD = [
 let STUPID_CHESS_CAPTURES = {rows: 3, columns: 4};
 let NORMAL_CHESS_CAPTURES = {rows: 3, columns: 6};
 
-let STUPID_CHESS_PIECE_SETUP_SELECTION_SHAPE = {rows: 3, columns: 4};
-let CHESS_REPLACE_PIECE_SELECTION_SHAPE = {rows: 1, columns: 6};
+let STUPID_CHESS_PIECE_SETUP_SELECTION_SHAPE = STUPID_CHESS_CAPTURES;
+let STUPID_CHESS_REPLACE_PIECE_SELECTION_SHAPE = STUPID_CHESS_CAPTURES;
+let CHESS_REPLACE_PIECE_SELECTION_SHAPE = NORMAL_CHESS_CAPTURES;
 
 let BOARD_SHAPE_FOR_GAME_TYPE = new Map([
-    ["STUPID_CHESS", STUPID_CHESS_BOARD],
-    ["CHESS", NORMAL_CHESS_BOARD],
-    ["CHECKERS", NORMAL_CHESS_BOARD],
+    [GameType.STUPID_CHESS, STUPID_CHESS_BOARD],
+    [GameType.CHESS, NORMAL_CHESS_BOARD],
+    [GameType.CHECKERS, NORMAL_CHESS_BOARD],
     ["NONE", []]
 ]);
 
 let CAPTURE_SHAPE_FOR_GAME_TYPE = new Map([
-    ["STUPID_CHESS", STUPID_CHESS_CAPTURES],
-    ["CHESS", NORMAL_CHESS_CAPTURES],
-    ["CHECKERS", NORMAL_CHESS_CAPTURES],
+    [GameType.STUPID_CHESS, STUPID_CHESS_CAPTURES],
+    [GameType.CHESS, NORMAL_CHESS_CAPTURES],
+    [GameType.CHECKERS, NORMAL_CHESS_CAPTURES],
     ["NONE", {rows: 0, columns: 0}]
 ]);
 
 let HALF_BOARD_SHAPE_FOR_COLOR = new Map([
-    ["BLACK", STUPID_CHESS_BLACK_HALF_BOARD],
-    ["WHITE", STUPID_CHESS_WHITE_HALF_BOARD],
+    [Color.BLACK, STUPID_CHESS_BLACK_HALF_BOARD],
+    [Color.WHITE, STUPID_CHESS_WHITE_HALF_BOARD],
     ["NONE", []]
 ]);
 
@@ -87,15 +91,19 @@ function getCaptureShapeForGameType(gameType) {
     return CAPTURE_SHAPE_FOR_GAME_TYPE.get(gameType);
 }
 
-function getPieceSelectShapeForSetupMode(inSetupMode) {
+function getPieceSelectShapeForGameTypeAndSetupMode(gameType, inSetupMode) {
+    if (gameType == GameType.CHESS) {
+        return CHESS_REPLACE_PIECE_SELECTION_SHAPE;
+    }
+
     return inSetupMode
         ? STUPID_CHESS_PIECE_SETUP_SELECTION_SHAPE
-        : CHESS_REPLACE_PIECE_SELECTION_SHAPE;
+        : STUPID_CHESS_REPLACE_PIECE_SELECTION_SHAPE;
 }
 
 export {
     getBoardShapeForGameType,
     getHalfBoardShapeForColor,
     getCaptureShapeForGameType,
-    getPieceSelectShapeForSetupMode
+    getPieceSelectShapeForGameTypeAndSetupMode
 };

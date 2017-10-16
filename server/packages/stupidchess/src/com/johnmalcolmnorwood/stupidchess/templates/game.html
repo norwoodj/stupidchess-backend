@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+
+{% block extra_style %}
+    <link href="/css/game.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/react-table.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block bundle %}<script src="/js/game.bundle.js"></script>{% endblock %}
+
+{% block body %}
+    <div id="error-data" data-error="{{ error }}"></div>
+    <div id="game-data" data-uuid="{{ game_uuid }}"></div>
+    <div id="content-root"></div>
+{% endblock %}

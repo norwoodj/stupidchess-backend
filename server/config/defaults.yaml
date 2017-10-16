@@ -1,0 +1,22 @@
+environment: !EnvVar {name: "JCONFIGURE_ACTIVE_PROFILES", default: "none"}
+
+endpoint_prefixes:
+  healthcheck: /health
+  auth: ""
+  game: /api/game
+  record: /api/record
+  template: ""
+
+auth:
+  loginTemplate: login.html
+  createAccountTemplate: create-account.html
+  changePasswordTemplate: change-password.html
+  postLoginRedirect: template.profile
+  postLogoutRedirect: template.index
+
+MONGODB_SETTINGS:
+  db: stupidchess
+  host: mongo
+
+SESSION_PROTECTION: strong
+REMEMBER_COOKIE_HTTPONLY: true

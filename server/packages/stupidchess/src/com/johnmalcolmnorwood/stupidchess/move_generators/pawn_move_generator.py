@@ -1,9 +1,7 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.piece import PieceType
-from com.johnmalcolmnorwood.stupidchess.move_generators.offsets import Offsets
-from com.johnmalcolmnorwood.stupidchess.move_generators.forward_non_capturing_move_generator import (
-    ForwardNonCapturingMoveGenerator,
-)
+from ..models.piece import PieceType
+from .offsets import Offsets
+from .forward_non_capturing_move_generator import ForwardNonCapturingMoveGenerator
 
 
 class PawnMoveGenerator:

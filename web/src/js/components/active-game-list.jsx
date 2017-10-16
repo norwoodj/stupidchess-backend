@@ -1,44 +1,31 @@
-import React from "react";
-import {GameList} from "./game-list";
+import PropTypes from "prop-types";
+import GameList from "./game-list";
+import {isGameInBoardSetupMode} from "../util";
 
 
-class ActiveGameList extends GameList {
-    getGamesTableHeaders() {
-        return [
-            "ID",
-            "Game Type",
-            "User Color",
-            "Opponent",
-            "Black Score",
-            "White Score",
-            "Last Move"
-        ];
-    }
-
-    getGamesTableData(game) {
-        return [
-            <a href={`/game.html?gameuuid=${game.id}`}>{game.id}</a>,
-            game.type,
-            this.getUserColor(game),
-            this.getOpponentNameElement(game, ""),
-            game.blackPlayerScore,
-            game.whitePlayerScore,
-            game.lastUpdateTimestamp
-        ];
-    }
-
+export default class ActiveGameList extends GameList {
     getGameListHeader() {
         return "Active Games";
     }
 
-    doRetrieveGames(gameType) {
-        return this.gameService.getActiveGames(gameType);
+    doRetrieveGames(gameType, offset, limit) {
+        return this.props.gameService.getActiveGames(this.props.userUuid, gameType, offset, limit);
+    }
+
+    doRetrieveGameCount(gameType) {
+        return this.props.gameService.getActiveGameCount(this.props.userUuid, gameType);
+    }
+
+    getRowPropsForGame(game) {
+        if (this.getUserColor(game) == game.currentTurn || isGameInBoardSetupMode(game)) {
+            return {className: "game-my-turn"};
+        }
+
+        return "";
     }
 }
 
 ActiveGameList.propTypes = {
-    httpService: React.PropTypes.func.isRequired,
-    userUuid: React.PropTypes.string
+    gameService: PropTypes.object.isRequired,
+    userUuid: PropTypes.string
 };
-
-export {ActiveGameList};

@@ -1,7 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-class FormErrors extends React.Component {
 
+export default class FormErrors extends React.Component {
     constructor() {
         super();
     }
@@ -14,7 +15,5 @@ class FormErrors extends React.Component {
 }
 
 FormErrors.propTypes = {
-    errors: React.PropTypes.string.isRequired
+    errors: PropTypes.string.isRequired
 };
-
-export {FormErrors};

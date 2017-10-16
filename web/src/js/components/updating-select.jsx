@@ -1,21 +1,11 @@
 import React from "react";
-import {toTitleCase, toEnum} from "../util";
+import PropTypes from "prop-types";
+import {toTitleCase} from "../util";
 
 
-class UpdatingSelect extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            options: null
-        };
-    }
-
-    componentDidMount() {
-        this.setState({options: this.props.allOption ? ["ALL", ...this.props.options] : this.props.options});
-    }
-
+export default class UpdatingSelect extends React.Component {
     handleChangeEvent(e) {
-        let value = toEnum(e.nativeEvent.srcElement.value);
+        let value = e.nativeEvent.srcElement.value;
 
         if (value == "ALL") {
             this.props.optionChangeHandler(null);
@@ -25,21 +15,21 @@ class UpdatingSelect extends React.Component {
     }
 
     render() {
-        return this.state.options != null ? (
+        return (
             <div className="mui-select">
-                <label>{this.getSelectLabel()}</label>
+                <label>{this.props.label}</label>
                 <select onChange={this.handleChangeEvent.bind(this)}>
-                    {this.state.options.map(option => <option key={option}>{toTitleCase(option)}</option>)}
+                    {this.props.allOption ? <option value="ALL" key="ALL">All</option> : ""}
+                    {this.props.options.map(option => <option value={option} key={option}>{toTitleCase(option)}</option>)}
                 </select>
             </div>
-        ) : null;
+        );
     }
 }
 
 UpdatingSelect.propTypes = {
-    optionChangeHandler: React.PropTypes.func.isRequired,
-    options: React.PropTypes.array.isRequired,
-    allOption: React.PropTypes.bool.isRequired
+    label: PropTypes.string.isRequired,
+    optionChangeHandler: PropTypes.func.isRequired,
+    options: PropTypes.array.isRequired,
+    allOption: PropTypes.bool
 };
-
-export {UpdatingSelect};

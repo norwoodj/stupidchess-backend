@@ -1,34 +1,29 @@
 import React from "react";
-import {toTitleCase} from "../util";
+import PropTypes from "prop-types";
+import UpdatingSelect from "../components/updating-select";
 
 
-class ColorSetupSelect extends React.Component {
+export default class ColorSetupSelect extends React.Component {
     render() {
         if (!this.props.gameState.inBoardSetupMode()) {
             return null;
         }
 
         return (
-            <div id="color-setup-select" className="content-block mui-col-lg-12 mui-col-md-12 mui-col-sm-6 mui-col-xs-6">
-                <form>
-                    <div className="mui-select">
-                        <label>Select Color to set up</label>
-                        <select
-                            onChange={e => this.props.colorChangeHandler(e.nativeEvent.srcElement.value.toUpperCase())}
-                            value={toTitleCase(this.props.boardSetupState.getCurrentBoardBeingSetUp())}>
-                            {this.props.gameState.getColorsSettingUp().map(color => <option key={color}>{toTitleCase(color)}</option>)}
-                        </select>
-                    </div>
-                </form>
+            <div id="color-setup-select" className="content-block game-page-select">
+                <UpdatingSelect
+                    label="Select Color to set up"
+                    optionChangeHandler={this.props.colorChangeHandler}
+                    options={this.props.colorsSettingUp}
+                />
             </div>
         );
     }
 }
 
 ColorSetupSelect.propTypes = {
-    gameState: React.PropTypes.object.isRequired,
-    boardSetupState: React.PropTypes.object.isRequired,
-    colorChangeHandler: React.PropTypes.func.isRequired
+    gameState: PropTypes.object.isRequired,
+    colorsSettingUp: PropTypes.array.isRequired,
+    boardSetupState: PropTypes.object.isRequired,
+    colorChangeHandler: PropTypes.func.isRequired
 };
-
-export {ColorSetupSelect};

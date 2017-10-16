@@ -1,0 +1,10 @@
+{% extends "_form.html" %}
+{% from "_form-helpers.html" import render_field %}
+
+{% block bundle %}<script src="/js/createAccount.bundle.js"></script>{% endblock %}
+
+{% block form_fields %}
+    {{ render_field(form.username) }}
+    {{ render_field(form.password) }}
+    {{ render_field(form.confirm_password) }}
+{% endblock %}

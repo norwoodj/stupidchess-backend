@@ -1,4 +1,5 @@
-class AmbiguousMoveState {
+
+export default class AmbiguousMoveState {
     constructor() {
         this.disambiguatingCapturesBySquare = new Map();
         this.selectedAmbiguousDestination = null;
@@ -25,7 +26,7 @@ class AmbiguousMoveState {
     }
 
     isDisambiguatingCaptureForSelectedSquare(square) {
-        var disambiguatingCaptures = this.disambiguatingCapturesBySquare.get(this.selectedAmbiguousDestination)
+        var disambiguatingCaptures = this.disambiguatingCapturesBySquare.get(this.selectedAmbiguousDestination);
         return disambiguatingCaptures.includes(square);
     }
 
@@ -34,5 +35,3 @@ class AmbiguousMoveState {
         this.selectedAmbiguousDestination = null;
     }
 }
-
-export {AmbiguousMoveState};

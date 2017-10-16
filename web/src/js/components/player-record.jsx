@@ -1,79 +1,66 @@
 import React from "react";
-import RecordService from "../services/record-service";
-import {handleUnauthorized} from "../util";
-import {GameTypeSelect} from "../components/game-type-select";
+import PropTypes from "prop-types";
+import ReactTable from "react-table";
 import {GameType} from "../constants";
+import {toTitleCase} from "../util";
 
 
-class PlayerRecord extends React.Component {
+export default class PlayerRecord extends React.Component {
     constructor() {
         super();
         this.state = {
             playerRecords: [],
+            loading: true
         };
     }
 
     componentDidMount() {
-        this.recordService = new RecordService(this.props.httpService);
-        this.recordService.getUserGameRecords(this.props.playerUuid, this.state.selectedGameType).then(
-            playerRecords => this.setState({playerRecords: playerRecords}),
-            handleUnauthorized
+        this.props.recordService.getUserGameRecords(this.props.userUuid, this.state.selectedGameType).then(
+            playerRecords => this.setState({
+                playerRecords: this.convertPlayerRecordResponse(playerRecords),
+                loading: false
+            })
         );
     }
 
-    getPlayerRecordHeaders() {
-        return [
-            "Games",
-            "Wins",
-            "Losses"
-        ]
+    convertPlayerRecordResponse(playerRecords) {
+        return GameType.all().map(gameType => Object.assign({gameType: toTitleCase(gameType)}, playerRecords[gameType]));
     }
 
-    getPlayerRecordData() {
+    getPlayerRecordColumns() {
         return [
-            this.state.playerRecords.completedGames,
-            this.state.playerRecords.wins,
-            this.state.playerRecords.losses
+            {Header: "Type", Cell: row => row.original.gameType},
+            {Header: "Games", Cell: row => row.original.wins + row.original.losses},
+            {Header: "Wins", Cell: row => row.original.wins},
+            {Header: "Losses", Cell: row => row.original.losses},
+            {Header: "Point Differential", Cell: row => row.original.pointDifferential}
         ];
     }
 
-    handleNewGameType(gameType) {
-        this.setState({
-            selectedGameType: gameType
-        });
-
-        this.recordService.getUserGameRecords(this.props.playerUuid, gameType).then(
-            playerRecords => this.setState({playerRecords: playerRecords}),
-            handleUnauthorized
-        );
-    }
-
     render() {
+        if (this.state.playerRecords == null) {
+            return null;
+        }
+
         return (
             <div>
                 <div className="mui-divider"></div>
                 <h3>Record Against Other Players</h3>
-                <GameTypeSelect
-                    optionChangeHandler={this.handleNewGameType.bind(this)}
-                    options={GameType.all()}
-                    allOption={true}
+                <ReactTable
+                    manual
+                    defaultPageSize={GameType.all().length}
+                    columns={this.getPlayerRecordColumns()}
+                    sortable={false}
+                    showPagination={false}
+                    data={this.state.playerRecords}
+                    loading={this.state.loading}
                 />
-                <table className="mui-table mui-table--bordered">
-                    <thead>
-                    <tr>{this.getPlayerRecordHeaders().map((header, index) => <th key={index}>{header}</th>)}</tr>
-                    </thead>
-                    <tbody>
-                    <tr>{this.getPlayerRecordData().map((data, index) => <td key={index}>{data}</td>)}</tr>
-                    </tbody>
-                </table>
             </div>
         );
     }
 }
 
 PlayerRecord.propTypes = {
-    httpService: React.PropTypes.func.isRequired,
-    playerUuid: React.PropTypes.string.isRequired
+    recordService: PropTypes.object.isRequired,
+    userUuid: PropTypes.string.isRequired
 };
-
-export {PlayerRecord};

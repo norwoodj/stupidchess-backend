@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stupid Chess</title>
+
+    <link href="//cdn.muicss.com/mui-0.9.27/css/mui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/main.css" rel="stylesheet" type="text/css"/>
+    {% block extra_style %}{% endblock %}
+    {% block bundle %}{% endblock %}
+</head>
+<body>
+
+<div id="csrf-token" data-token="{{ csrf_token() }}"></div>
+
+{% if current_user.is_authenticated %}
+    <div id="current-user" data-uuid="{{ current_user.id }}" data-name="{{ current_user.username }}"></div>
+{% endif %}
+
+{% block body %}
+    <div id="content-root"></div>
+{% endblock %}
+
+</body>
+</html>

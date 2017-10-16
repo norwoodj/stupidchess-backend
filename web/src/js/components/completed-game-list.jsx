@@ -1,44 +1,34 @@
-import React from "react";
-import {GameList} from "./game-list";
+import PropTypes from "prop-types";
+import GameList from "./game-list";
 
 
-class CompletedGameList extends GameList {
-    getGamesTableHeaders() {
-        return [
-            "ID",
-            "Game Type",
-            "User Color",
-            "Opponent",
-            "Black Score",
-            "White Score",
-            "Result"
-        ];
-    }
-
-    getGamesTableData(game) {
-        return [
-            <a className="link" href={`/game.html?gameuuid=${game.id}`}>{game.id}</a>,
-            game.type,
-            <div className={`color-label-${this.getUserColor(game).toLowerCase()}`}>{this.getUserColor(game)}</div>,
-            this.getOpponentNameElement(game, "link"),
-            game.blackPlayerScore,
-            game.whitePlayerScore,
-            <div className={CompletedGameList.getClassNameForGameResult(game.gameResult)}>{game.gameResult}</div>
-        ];
-    }
-
+export default class CompletedGameList extends GameList {
     getGameListHeader() {
         return "Completed Games";
     }
 
-    doRetrieveGames(gameType) {
-        return this.gameService.getCompletedGames(this.props.userUuid, gameType);
+    doRetrieveGames(gameType, offset, limit) {
+        return this.props.gameService.getCompletedGames(this.props.userUuid, gameType, offset, limit);
+    }
+
+    doRetrieveGameCount(gameType) {
+        return this.props.gameService.getCompletedGameCount(this.props.userUuid, gameType);
+    }
+
+    getUuidLinkClassName() {
+        return "uuid-link link";
+    }
+
+    getOtherPlayerLinkClassName() {
+        return "link";
+    }
+
+    getRowPropsForGame(game) {
+        return {className: `game-${game.gameResult.toLowerCase()}`};
     }
 }
 
 CompletedGameList.propTypes = {
-    httpService: React.PropTypes.func.isRequired,
-    userUuid: React.PropTypes.string.isRequired,
+    gameService: PropTypes.object.isRequired,
+    userUuid: PropTypes.string.isRequired,
 };
-
-export {CompletedGameList};

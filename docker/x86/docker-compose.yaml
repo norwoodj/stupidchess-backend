@@ -27,7 +27,10 @@ services:
 
   uwsgi:
     image: stupidchess-uwsgi:current
-    entrypoint: uwsgi --ini /etc/uwsgi/uwsgi.ini:local
+    entrypoint:
+      - uwsgi
+      - --ini
+      - /etc/uwsgi/uwsgi.ini:local
     environment:
       - JCONFIGURE_ACTIVE_PROFILES=LCL
       - JCONFIGURE_CONFIG_DIRECTORIES=/var/lib/johnmalcolmnorwood/stupidchess/server/config

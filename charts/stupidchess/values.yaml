@@ -1,3 +1,14 @@
+##
+# User Role Settings
+##
+user_roles:
+  clusterAdmins: []
+  namespaceAdmins:
+    - veintitres-admin
+  namespaceEditors:
+    - veintitres-editor
+  namespaceViewers:
+    - veintitres-viewer
 
 ##
 # Mongo DB settings

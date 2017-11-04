@@ -18,7 +18,6 @@ def make_move(piece_type, color, square):
         },
     }
 
-STUPID_CHESS_URL = "http://localhost/api/{endpoint}"
 BLACK_SETUP_MOVES = [
     make_move(PieceType.KING, Color.BLACK, 2),
     make_move(PieceType.QUEEN, Color.BLACK, 1),
@@ -71,11 +70,11 @@ def add_moves(stupidchess_url, game_uuid, moves, username, password):
 
 
 @click.command()
-@click.option("--stupidchess", "-s", default="http://stupidchess.johnmalcolmnorwood.com")
-@click.option("--black_username", "-b", default="veintitres")
-@click.option("--black_password", "-c", default="password")
-@click.option("--white_username", "-w")
-@click.option("--white_password", "-x")
+@click.option("--stupidchess", "-s", help="Stupidchess server to call (Default: stupidchess.johnmalcolmnorwood.com)", default="http://stupidchess.johnmalcolmnorwood.com")
+@click.option("--black-username", "-b", default="veintitres")
+@click.option("--black-password", "-c", default="password")
+@click.option("--white-username", "-w")
+@click.option("--white-password", "-x")
 @click.argument("game_uuid")
 def main(stupidchess, black_username, black_password, white_username, white_password, game_uuid):
     configure()

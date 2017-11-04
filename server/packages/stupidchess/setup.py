@@ -14,6 +14,7 @@ setup(
     entry_points={
         "console_scripts": [
             "setup_stupidchess_game=com.johnmalcolmnorwood.stupidchess.client.setup_stupidchess_game:main",
+            "print_stupidchess_game=com.johnmalcolmnorwood.stupidchess.client.print_stupidchess_game:main",
         ],
     },
     install_requires=[

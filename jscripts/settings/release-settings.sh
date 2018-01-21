@@ -6,8 +6,6 @@ source ${SCRIPT_DIR}/settings/application-settings.sh
 source ${SCRIPT_DIR}/utilities/command-line-utilities.sh
 source ${SCRIPT_DIR}/utilities/git-utilities.sh
 
-: ${HOTFIX_NUMBER:=0}
-
 
 function handle_release_options {
     local flag=${1}
@@ -41,7 +39,7 @@ function get_release_version {
     elif [[ -n "${HOTFIX_NUMBER:+_}" ]]; then
         echo "${release_version}.${HOTFIX_NUMBER}"
     else
-        echo "${release_version}"
+        echo "${release_version}.0"
     fi
 }
 

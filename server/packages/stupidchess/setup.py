@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="com.johnmalcolmnorwood.stupidchess",
-    version="17.1028.0",
+    version="18.0121.0",
     package_dir={"": "src"},
     packages=find_packages("src"),
     zip_safe=False,
@@ -14,6 +14,7 @@ setup(
     entry_points={
         "console_scripts": [
             "setup_stupidchess_game=com.johnmalcolmnorwood.stupidchess.client.setup_stupidchess_game:main",
+            "print_stupidchess_game=com.johnmalcolmnorwood.stupidchess.client.print_stupidchess_game:main",
         ],
     },
     install_requires=[

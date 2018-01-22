@@ -44,7 +44,7 @@ function _assert_installed {
     local command=${1}
 
     if ! hash "${command}" &> /dev/null; then
-        log_error ""${command}" is required to run these scripts, please install."
+        log_error "${command} is required to run these scripts, please install."
         exit 1
     fi
 }

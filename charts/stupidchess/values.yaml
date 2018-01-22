@@ -33,7 +33,7 @@ mongo:
 ##
 web_service:
   ingressName: stupidchess-ingress
-  ingressHostname: stupidchess.johnmalcolmnorwood.com
+  ingressHostname: stupidchess.jmn23.com
   serviceName: stupidchess-web-service
 
 ##

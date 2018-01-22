@@ -1,6 +1,6 @@
 Stupid Chess
 ============
-From the Stupid Chess [homepage](https://stupidchess.johnmalcolmnorwood.com):
+From the Stupid Chess [homepage](https://stupidchess.jmn23.com):
 
 ```
 This is a web-based board game running on a python-flask/mongo backend with a react frontend.
@@ -9,13 +9,13 @@ configuration, build tools, and custom docker images I've built to deploy this a
 on this platform.
 
 You can see this particular project at https://github.com/norwoodj/stupidchess
-You might also visit my other project https://hashbash.johnmalcolmnorwood.com
+You might also visit my other project https://hashbash.jmn23.com
 
 Stupid Chess is a variant on the popular Chess and checkers board games that John Norwood (that's me)
 and some of his college friends invented when we stumbled across a chess board that had been ripped
 in half and an incomplete set of pieces. It has a number of delightful rule changes over these earlier
 inferior games, and you can learn how to play on this page
-https://stupidchess.johnmalcolmnorwood.com/how-to-play
+https://stupidchess.jmn23.com/how-to-play
 ```
 
 ### This Codebase
@@ -29,7 +29,7 @@ This project leverages docker and docker-compose to build and run the applicatio
 installation of minimal requirements, and with great developer ease. The same docker images that are built
 to do this can be deployed to a remote docker image repository as well and there is helm configuration to
 deploy these images to a kubernetes cluster. This is how I deploy this project to
-https://stupidchess.johnmalcolmnorwood.com
+https://stupidchess.jmn23.com
 
 All of this makes heavy use of other projects that I have written:
 

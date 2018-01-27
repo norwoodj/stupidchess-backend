@@ -57,3 +57,9 @@ spec:
         - name: secrets-volume
           secret:
             secretName: {{ .Values.stupidchessSecretName }}
+
+      resources:
+        requests:
+          memory: {{ .Values.stupidchessWebMemory }}
+        limits:
+          memory: {{ .Values.stupidchessWebMemory }}

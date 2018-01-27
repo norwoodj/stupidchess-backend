@@ -1,6 +1,6 @@
 name: stupidchess
 description: The stupidchess helm chart
-version: "18.0123-dev"
+version: "18.0127.0"
 tillerVersion: >2
 maintainers:
   - email: norwood.john.m@gmail.com

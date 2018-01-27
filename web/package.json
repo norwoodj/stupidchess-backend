@@ -1,8 +1,8 @@
 {
-  "name": "stupid-chess",
+  "name": "stupidchess",
   "version": "18.0123-dev",
   "description": "Stupid Chess web game",
-  "repository": "https://github.com/norwoodj/stupid-chess",
+  "repository": "https://github.com/norwoodj/stupidchess",
   "main": "static/js/game.jsx",
   "dependencies": {
     "jquery": "^3.2.1",

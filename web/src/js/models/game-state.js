@@ -29,6 +29,12 @@ export default class GameState {
         return this.pieces.get(square);
     }
 
+    getUserColor(userUuid) {
+        return (userUuid == this.blackPlayerUuid)
+            ? Color.BLACK
+            : Color.WHITE;
+    }
+
     isMyTurn(userUuid) {
         if (this.inBoardSetupMode()) {
             return true;
@@ -38,9 +44,7 @@ export default class GameState {
             return true;
         }
 
-        return this.currentTurn == Color.BLACK
-            ? userUuid == this.blackPlayerUuid
-            : userUuid == this.whitePlayerUuid;
+        return this.getUserColor(userUuid) == this.currentTurn;
     }
 
     mustPlacePiece() {
@@ -55,8 +59,12 @@ export default class GameState {
         return isGameInBoardSetupMode(this);
     }
 
-    getColorsSettingUp() {
+    getColorsSettingUp(userUuid) {
         let colors = [];
+
+        if (isGameInBoardSetupMode(this) && this.squaresToBePlaced.size == 0) {
+            return [this.getUserColor(userUuid)];
+        }
 
         for (let c of [Color.BLACK, Color.WHITE]) {
             for (let s of this.squaresToBePlaced) {

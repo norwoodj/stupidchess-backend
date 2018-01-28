@@ -116,7 +116,7 @@ export default class Game extends React.Component {
                     }
 
                     if (this.gameState.inBoardSetupMode()) {
-                        this.boardSetupState.updateFromColorsSettingUp(this.gameState.getColorsSettingUp());
+                        this.boardSetupState.updateFromColorsSettingUp(this.gameState.getColorsSettingUp(this.props.userUuid));
                     }
 
                     this.setState({
@@ -322,7 +322,7 @@ export default class Game extends React.Component {
                             gameState={this.state.gameState}
                             boardSetupState={this.state.boardSetupState}
                             colorChangeHandler={this.handleColorSetupSelect.bind(this)}
-                            colorsSettingUp={this.state.gameState.getColorsSettingUp()}
+                            colorsSettingUp={this.state.gameState.getColorsSettingUp(this.props.userUuid)}
                         />
                         <div className="content-block game-page-select">
                             <UpdatingSelect

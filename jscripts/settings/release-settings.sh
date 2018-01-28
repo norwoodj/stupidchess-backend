@@ -45,12 +45,7 @@ function get_release_version {
 
 function get_next_dev_version {
     local release_version=$(date -u -v+1d "+%y.%m%d")
-
-    if [[ -n "${HOTFIX_NUMBER:+_}" ]]; then
-        echo "${release_version}.${HOTFIX_NUMBER}-dev"
-    else
-        echo "${release_version}-dev"
-    fi
+    echo "${release_version}.0-dev"
 }
 
 function get_versioned_files {

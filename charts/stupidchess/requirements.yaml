@@ -1,6 +1,6 @@
 dependencies:
   - name: mongo
-    version: "18.0122"
+    version: "18.0127"
     repository: https://norwoodj.github.io/jchart-repository
   - name: web_service
     version: "18.0122"

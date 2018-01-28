@@ -33,7 +33,12 @@ spec:
               path: {{ .Values.stupidchessHealthCheckEndpoint }}
               port: http
           readinessProbe: *healthProbe
-          
+          resources:
+            requests:
+              memory: {{ .Values.stupidchessNginxMemory }}
+            limits:
+              memory: {{ .Values.stupidchessNginxMemory }}
+
         - name: stupidchess-uwsgi
           image: {{ .Values.stupidchessUwsgiImageName }}:{{ .Chart.Version }}
           imagePullPolicy: Always
@@ -44,6 +49,11 @@ spec:
               value: {{ .Values.jconfigConfigDirectores }}
             - name: SECRETS_VOLUME_PATH
               value: {{ .Values.stupidchessSecretsVolumePath }}
+          resources:
+            requests:
+              memory: {{ .Values.stupidchessUwsgiMemory }}
+            limits:
+              memory: {{ .Values.stupidchessUwsgiMemory }}
           volumeMounts:
             - name: socket-volume
               mountPath: /tmp/sockets
@@ -58,8 +68,3 @@ spec:
           secret:
             secretName: {{ .Values.stupidchessSecretName }}
 
-      resources:
-        requests:
-          memory: {{ .Values.stupidchessWebMemory }}
-        limits:
-          memory: {{ .Values.stupidchessWebMemory }}

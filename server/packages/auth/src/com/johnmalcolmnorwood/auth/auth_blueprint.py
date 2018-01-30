@@ -16,7 +16,7 @@ def login():
         user = current_app.context.user_service.get_user_with_credentials(form.username.data, form.password.data)
 
         if user is not None:
-            login_user(user)
+            login_user(user, remember=True)
             return redirect_to_next(current_app.config["auth"]["postLoginRedirect"])
 
         form.password.errors.append("Invalid username or password provided in login request!")
@@ -42,7 +42,7 @@ def create_account():
 
     if request.method == "POST" and form.validate():
         user = current_app.context.user_service.create_user(form.username.data, form.password.data)
-        login_user(user)
+        login_user(user, remember=True)
         return redirect(url_for(current_app.config["auth"]["postLoginRedirect"]))
 
     return render_template(

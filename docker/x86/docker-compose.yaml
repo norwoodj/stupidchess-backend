@@ -44,7 +44,7 @@ services:
   webpack_builder:
     image: stupidchess-webpack_builder:current
     entrypoint:
-      - webpack
+      - node_modules/webpack/bin/webpack.js
       - --watch
       - --devtool
       - source-map

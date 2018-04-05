@@ -62,8 +62,12 @@ class RecordService:
 
         return records
 
-    def get_user_records(self, user_uuid):
-        results_for_game_type_and_result = self.__game_service.query_completed_two_player_games_for_user(
+    def get_user_records(self, user_uuid, include_one_player_games):
+        query_games_method = self.__game_service.query_completed_games_for_user \
+            if include_one_player_games \
+            else self.__game_service.query_completed_two_player_games_for_user
+
+        results_for_game_type_and_result = query_games_method(
             user_uuid,
         ).aggregate(
             RecordService.__get_game_result_projection(user_uuid),
@@ -71,4 +75,3 @@ class RecordService:
         )
 
         return RecordService.__convert_to_per_game_type_records(results_for_game_type_and_result)
-

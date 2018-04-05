@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReactTable from "react-table";
+import Checkbox from "muicss/lib/react/checkbox";
 import {GameType} from "../constants";
 import {toTitleCase} from "../util";
 
@@ -9,13 +10,18 @@ export default class PlayerRecord extends React.Component {
     constructor() {
         super();
         this.state = {
+            includeOnePlayerGames: false,
             playerRecords: [],
             loading: true
         };
     }
 
     componentDidMount() {
-        this.props.recordService.getUserGameRecords(this.props.userUuid, this.state.selectedGameType).then(
+        this.loadRecords();
+    }
+
+    loadRecords() {
+        this.props.recordService.getUserGameRecords(this.props.userUuid, this.state.selectedGameType, this.state.includeOnePlayerGames).then(
             playerRecords => this.setState({
                 playerRecords: this.convertPlayerRecordResponse(playerRecords),
                 loading: false
@@ -37,6 +43,13 @@ export default class PlayerRecord extends React.Component {
         ];
     }
 
+    toggleIncludeOnePlayerGames(evt) {
+        this.setState(
+            {includeOnePlayerGames: evt.target.checked},
+            () => this.loadRecords()
+        );
+    }
+
     render() {
         if (this.state.playerRecords == null) {
             return null;
@@ -46,6 +59,11 @@ export default class PlayerRecord extends React.Component {
             <div>
                 <div className="mui-divider"></div>
                 <h3>Record Against Other Players</h3>
+                <Checkbox
+                    label="Include One Player Games"
+                    checked={this.state.includeOnePlayerGames}
+                    onChange={this.toggleIncludeOnePlayerGames.bind(this)}
+                />
                 <ReactTable
                     manual
                     defaultPageSize={GameType.all().length}

@@ -256,6 +256,16 @@ class GameService:
 
         return self.__game_dao.count(query)
 
+    def query_completed_games_for_user(self, user_uuid):
+        query = {
+            "$and": [
+                GameService.__get_games_for_user_criteria(user_uuid),
+                GameService.__get_game_completed_criteria(),
+            ],
+        }
+
+        return self.__game_dao.query(query)
+
     def query_completed_two_player_games_for_user(self, user_uuid):
         query = {
             "$and": [

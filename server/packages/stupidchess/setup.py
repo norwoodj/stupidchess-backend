@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="com.johnmalcolmnorwood.stupidchess",
-    version="18.0130.0",
+    version="18.0405.0",
     package_dir={"": "src"},
     packages=find_packages("src"),
     zip_safe=False,

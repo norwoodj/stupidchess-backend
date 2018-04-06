@@ -8,6 +8,15 @@ class RecordService:
 
     @staticmethod
     def __get_game_result_projection(user_uuid):
+        not_one_player = {
+            "$not": {
+                "$and": [
+                    {"$eq": ["$blackPlayerUuid", user_uuid]},
+                    {"$eq": ["$whitePlayerUuid", user_uuid]},
+                ],
+            },
+        }
+
         return {
             "$project": {
                 "type": 1,
@@ -20,7 +29,8 @@ class RecordService:
                         "if": {
                             "$or": [
                                 {"$and": [{"$eq": ["$blackPlayerUuid", user_uuid]}, {"$eq": ["$whitePlayerScore", 0]}]},
-                                {"$and": [{"$eq": ["$whitePlayerUuid", user_uuid]}, {"$eq": ["$blackPlayerScore", 0]}]},
+                                {"$and": [not_one_player, {"$eq": ["$whitePlayerUuid", user_uuid]}, {"$eq": ["$blackPlayerScore", 0]}]},
+
                             ],
                         },
                         "then": GameResult.WIN,

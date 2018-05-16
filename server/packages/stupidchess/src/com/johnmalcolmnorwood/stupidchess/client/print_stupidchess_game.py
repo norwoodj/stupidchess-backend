@@ -8,7 +8,7 @@ from .game_print_utils import print_scoreboard, print_board, print_captures
 
 
 @click.command()
-@click.option("--stupidchess", "-s", help="Stupidchess server to call (Default: stupidchess.jmn23.com)", default="http://stupidchess.jmn23.com")
+@click.option("--stupidchess", "-s", help="Stupidchess server to call (Default: stupidchess.jmn23.com)", default="https://stupidchess.jmn23.com")
 @click.option("--username", "-u", default="veintitres")
 @click.option("--password", "-p", default="password")
 @click.argument("game_uuid")

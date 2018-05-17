@@ -3,7 +3,10 @@ MAINTAINER John Norwood <norwood.john.m@gmail.com>
 
 COPY server/requirements.txt .
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends build-essential \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        libffi-dev \
+        libssl-dev \
     && pip install -r requirements.txt
 
 ARG APP_DIR=/var/lib/johnmalcolmnorwood/stupidchess/server

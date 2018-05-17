@@ -21,12 +21,10 @@ mongo:
     persistentVolumeNfsPath: /nfs/stupidchess
 
   simple_service:
-    serviceType: NodePort
     servicePorts:
-      - portName: mongo
-        portNumber: 27017
+      - name: mongo
+        port: 27017
         targetPort: mongo
-        extraPortConfig: [{key: nodePort, value: 30017}]
 
 ##
 # Web Service settings

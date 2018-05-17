@@ -37,8 +37,8 @@ web_service:
 ##
 # Stupidchess settings
 ##
-stupidchessNginxImageName: jnorwood/stupidchess-rpi_nginx
-stupidchessUwsgiImageName: jnorwood/stupidchess-rpi_uwsgi
+stupidchessNginxImageName: jnorwood/stupidchess-nginx
+stupidchessUwsgiImageName: jnorwood/stupidchess-uwsgi
 stupidchessWebDeploymentReplicas: 2
 stupidchessNginxMemory: 24Mi
 stupidchessUwsgiMemory: 72Mi

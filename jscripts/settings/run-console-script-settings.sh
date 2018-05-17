@@ -23,7 +23,7 @@ function get_images_necessary_to_run_script {
 
 function get_docker_compose_path_for_script {
     local console_script=${1}
-    echo "docker/x86/docker-compose-console.yaml"
+    echo "docker/docker-compose-console.yaml"
 }
 
 function get_docker_compose_service_for_script {

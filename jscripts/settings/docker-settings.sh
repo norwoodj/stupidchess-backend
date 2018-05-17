@@ -21,22 +21,17 @@ source ${SCRIPT_DIR}/utilities/job-utilities.sh
 ##
 # List here all of the images built/deployed/used by the project
 ##
-readonly _RPI_NGINX_IMAGE="rpi_nginx"
-readonly _RPI_UWSGI_IMAGE="rpi_uwsgi"
 
-readonly _X86_NGINX_IMAGE="nginx"
-readonly _X86_UWSGI_IMAGE="uwsgi"
-
-readonly NGINX_IMAGE=$(is_running_on_raspberry_pi && echo "${_RPI_NGINX_IMAGE}" || echo "${_X86_NGINX_IMAGE}")
-readonly UWSGI_IMAGE=$(is_running_on_raspberry_pi && echo "${_RPI_UWSGI_IMAGE}" || echo "${_X86_UWSGI_IMAGE}")
+readonly NGINX_IMAGE="nginx"
+readonly UWSGI_IMAGE="uwsgi"
 readonly WEBPACK_BUILDER_IMAGE="webpack_builder"
 
 readonly _DOCKER_CONFIG=$(cat <<EOF
 {
     "buildImages": [
         "${NGINX_IMAGE}",
-        "${UWSGI_IMAGE}"
-        $(is_running_on_raspberry_pi || echo ", \"${WEBPACK_BUILDER_IMAGE}\"")
+        "${UWSGI_IMAGE}",
+        "${WEBPACK_BUILDER_IMAGE}"
     ],
     "deployImages": [
         "${UWSGI_IMAGE}",
@@ -79,8 +74,7 @@ function get_image_name {
 
 function get_dockerfile_path_for_image {
     local image=${1}
-    local folder_name=$(is_running_on_raspberry_pi && echo "rpi" || echo "x86")
-    echo "docker/${folder_name}/Dockerfile-${image}"
+    echo "docker/Dockerfile-${image}"
 }
 
 function get_docker_build_context_path_for_image {

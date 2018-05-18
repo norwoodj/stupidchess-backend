@@ -40,8 +40,8 @@ web_service:
 stupidchessNginxImageName: jnorwood/stupidchess-nginx
 stupidchessUwsgiImageName: jnorwood/stupidchess-uwsgi
 stupidchessWebDeploymentReplicas: 2
-stupidchessNginxMemory: 24Mi
-stupidchessUwsgiMemory: 72Mi
+stupidchessNginxMemory: 16Mi
+stupidchessUwsgiMemory: 96Mi
 stupidchessHealthCheckEndpoint: /health
 stupidchessSecretName: stupidchess-secrets
 stupidchessSecretsVolumePath: /tmp/secrets

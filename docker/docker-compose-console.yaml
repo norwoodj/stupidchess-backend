@@ -9,6 +9,6 @@ services:
       - JCONFIGURE_ACTIVE_PROFILES=LCL
       - JCONFIGURE_CONFIG_DIRECTORIES=/var/lib/johnmalcolmnorwood/stupidchess/server/config
     volumes:
-      - ../../server/packages/stupidchess/src/com/johnmalcolmnorwood/stupidchess:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/stupidchess:ro
-      - ../../server/config:/var/lib/johnmalcolmnorwood/stupidchess/server/config:ro
+      - ../server/packages/stupidchess/src/com/johnmalcolmnorwood/stupidchess:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/stupidchess:ro
+      - ../server/config:/var/lib/johnmalcolmnorwood/stupidchess/server/config:ro
 

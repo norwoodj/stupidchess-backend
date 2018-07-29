@@ -19,7 +19,7 @@ services:
       - -g
       - daemon off;
     volumes:
-      - ../../etc/nginx:/etc/nginx/local:ro
+      - ../etc/nginx:/etc/nginx/local:ro
       - socket-volume:/tmp/sockets
       - frontend-public-volume:/var/lib/johnmalcolmnorwood/stupidchess/dist:ro
     ports:
@@ -35,10 +35,10 @@ services:
       - JCONFIGURE_ACTIVE_PROFILES=LCL
       - JCONFIGURE_CONFIG_DIRECTORIES=/var/lib/johnmalcolmnorwood/stupidchess/server/config
     volumes:
-      - ../../server/packages/auth/src/com/johnmalcolmnorwood/auth:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/auth:ro
-      - ../../server/packages/stupidchess/src/com/johnmalcolmnorwood/stupidchess:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/stupidchess:ro
-      - ../../server/config:/var/lib/johnmalcolmnorwood/stupidchess/server/config:ro
-      - ../../etc/uwsgi:/etc/uwsgi:ro
+      - ../server/packages/auth/src/com/johnmalcolmnorwood/auth:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/auth:ro
+      - ../server/packages/stupidchess/src/com/johnmalcolmnorwood/stupidchess:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/stupidchess:ro
+      - ../server/config:/var/lib/johnmalcolmnorwood/stupidchess/server/config:ro
+      - ../etc/uwsgi:/etc/uwsgi:ro
       - socket-volume:/tmp/sockets
 
   webpack_builder:
@@ -49,5 +49,5 @@ services:
       - --devtool
       - source-map
     volumes:
-      - ../../web/src:/var/lib/johnmalcolmnorwood/stupidchess/src:ro
+      - ../web/src:/var/lib/johnmalcolmnorwood/stupidchess/src:ro
       - frontend-public-volume:/var/lib/johnmalcolmnorwood/stupidchess/dist

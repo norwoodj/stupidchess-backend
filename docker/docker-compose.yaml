@@ -11,7 +11,7 @@ services:
       - 27017:27017
 
   nginx:
-    image: stupidchess-nginx:current
+    image: jnorwood/stupidchess-nginx:current
     entrypoint:
       - nginx
       - -c
@@ -19,14 +19,14 @@ services:
       - -g
       - daemon off;
     volumes:
-      - ../../etc/nginx:/etc/nginx/local:ro
+      - ../etc/nginx:/etc/nginx/local:ro
       - socket-volume:/tmp/sockets
       - frontend-public-volume:/var/lib/johnmalcolmnorwood/stupidchess/dist:ro
     ports:
       - 80:80
 
   uwsgi:
-    image: stupidchess-uwsgi:current
+    image: jnorwood/stupidchess-uwsgi:current
     entrypoint:
       - uwsgi
       - --ini
@@ -35,19 +35,19 @@ services:
       - JCONFIGURE_ACTIVE_PROFILES=LCL
       - JCONFIGURE_CONFIG_DIRECTORIES=/var/lib/johnmalcolmnorwood/stupidchess/server/config
     volumes:
-      - ../../server/packages/auth/src/com/johnmalcolmnorwood/auth:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/auth:ro
-      - ../../server/packages/stupidchess/src/com/johnmalcolmnorwood/stupidchess:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/stupidchess:ro
-      - ../../server/config:/var/lib/johnmalcolmnorwood/stupidchess/server/config:ro
-      - ../../etc/uwsgi:/etc/uwsgi:ro
+      - ../server/packages/auth/src/com/johnmalcolmnorwood/auth:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/auth:ro
+      - ../server/packages/stupidchess/src/com/johnmalcolmnorwood/stupidchess:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/stupidchess:ro
+      - ../server/config:/var/lib/johnmalcolmnorwood/stupidchess/server/config:ro
+      - ../etc/uwsgi:/etc/uwsgi:ro
       - socket-volume:/tmp/sockets
 
   webpack_builder:
-    image: stupidchess-webpack_builder:current
+    image: jnorwood/stupidchess-webpack_builder:current
     entrypoint:
       - node_modules/webpack/bin/webpack.js
       - --watch
       - --devtool
       - source-map
     volumes:
-      - ../../web/src:/var/lib/johnmalcolmnorwood/stupidchess/src:ro
+      - ../web/src:/var/lib/johnmalcolmnorwood/stupidchess/src:ro
       - frontend-public-volume:/var/lib/johnmalcolmnorwood/stupidchess/dist

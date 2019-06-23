@@ -10,5 +10,6 @@ jscripts/*.sh
 jscripts/utilities/*.sh
 requirements.lock
 _version.json
+version.txt
 .idea
 .DS_Store

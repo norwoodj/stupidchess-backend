@@ -2,7 +2,7 @@
 # This stage of the build installs webpack and npm, and then builds a public dist archive out of our frontend code
 ##
 FROM node:8.11.1-slim AS artifacts
-MAINTAINER John Norwood <norwood.john.m@gmail.com>
+LABEL maintainer=norwood.john.m@gmail.com
 
 ARG APP_DIR=/var/lib/johnmalcolmnorwood/stupidchess
 WORKDIR ${APP_DIR}
@@ -23,7 +23,7 @@ RUN node_modules/webpack/bin/webpack.js -p --progress
 # nginx config file
 ##
 FROM nginx:1.13.12
-MAINTAINER John Norwood <norwood.john.m@gmail.com>
+LABEL maintainer=norwood.john.m@gmail.com
 
 ARG APP_DIR=/var/lib/johnmalcolmnorwood/stupidchess
 WORKDIR ${APP_DIR}

@@ -1,5 +1,5 @@
 FROM node:8.3-alpine
-MAINTAINER John Norwood
+LABEL maintainer=norwood.john.m@gmail.com
 
 WORKDIR /var/lib/johnmalcolmnorwood/stupidchess
 COPY web/package.json .

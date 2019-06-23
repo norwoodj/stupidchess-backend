@@ -1,13 +1,18 @@
 FROM python:3.6.5-slim
-MAINTAINER John Norwood <norwood.john.m@gmail.com>
+LABEL maintainer=norwood.john.m@gmail.com
 
-COPY server/requirements.txt .
-RUN apt-get update \
+COPY server/Pipfile server/Pipfile.lock ./
+RUN pip install --upgrade \
+        pip \
+        pipenv \
+        setuptools \
+        wheel \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         build-essential \
         libffi-dev \
         libssl-dev \
-    && pip install -r requirements.txt
+    && pipenv install --system
 
 ARG APP_DIR=/var/lib/johnmalcolmnorwood/stupidchess/server
 WORKDIR ${APP_DIR}

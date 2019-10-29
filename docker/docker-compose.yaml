@@ -20,7 +20,7 @@ services:
       - daemon off;
     volumes:
       - ../etc/nginx:/etc/nginx/local:ro
-      - socket-volume:/tmp/sockets
+      - socket-volume:/var/run
       - frontend-public-volume:/var/lib/johnmalcolmnorwood/stupidchess/dist:ro
     ports:
       - 80:80
@@ -39,7 +39,7 @@ services:
       - ../server/packages/stupidchess/src/com/johnmalcolmnorwood/stupidchess:/usr/local/lib/python3.6/site-packages/com/johnmalcolmnorwood/stupidchess:ro
       - ../server/config:/var/lib/johnmalcolmnorwood/stupidchess/server/config:ro
       - ../etc/uwsgi:/etc/uwsgi:ro
-      - socket-volume:/tmp/sockets
+      - socket-volume:/var/run
 
   webpack_builder:
     image: jnorwood/stupidchess-webpack_builder:current

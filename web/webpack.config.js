@@ -1,7 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
 
 
 module.exports = {
@@ -31,8 +30,7 @@ module.exports = {
             {from: "src/img", to: "img/"},
             {from: "src/favicons", to: "favicons/"},
             {from: "node_modules/react-table/react-table.css", to: "css/"}
-        ]),
-        new CompressionPlugin({deleteOriginalAssets: true})
+        ])
     ],
     module: {
         rules: [

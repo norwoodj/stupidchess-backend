@@ -1,4 +1,4 @@
-FROM python:3.7.3-slim
+FROM python:3.6-slim
 LABEL maintainer=norwood.john.m@gmail.com
 
 ARG APP_DIR=/opt/stupidchess

@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="stupidchess",
-    version="19.1109.0",
+    version="_VERSION",
     packages=find_packages(),
     zip_safe=False,
     package_data={

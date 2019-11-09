@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
-from com.johnmalcolmnorwood.stupidchess.models.game import Game, GameType
-from com.johnmalcolmnorwood.stupidchess.models.piece import Color
-from com.johnmalcolmnorwood.stupidchess.move_generators.possible_move_game_state import PossibleMoveGameState
+from stupidchess.models.game import Game, GameType
+from stupidchess.models.piece import Color
+from stupidchess.move_generators.possible_move_game_state import PossibleMoveGameState
 
 
 def get_board(rows=8, columns=8, **kwargs):

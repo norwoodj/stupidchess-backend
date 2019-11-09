@@ -1,7 +1,10 @@
 FROM python:3.7.3-slim
 LABEL maintainer=norwood.john.m@gmail.com
 
-COPY server/Pipfile server/Pipfile.lock ./
+ARG APP_DIR=/opt/stupidchess
+WORKDIR ${APP_DIR}
+
+COPY Pipfile Pipfile.lock ./
 RUN pip install --upgrade \
         pip \
         pipenv \
@@ -14,15 +17,11 @@ RUN pip install --upgrade \
         libssl-dev \
     && pipenv install --system
 
-ARG APP_DIR=/var/lib/johnmalcolmnorwood/stupidchess/server
-WORKDIR ${APP_DIR}
+COPY setup.py ./setup.py
+COPY stupidchess ./stupidchess
+RUN pip install .
 
-COPY server/packages .
-
-RUN cd auth && pip install .
-RUN cd stupidchess && pip install .
-
-COPY server/config ./config
+COPY config ./config
 COPY etc/uwsgi/uwsgi.ini /etc/uwsgi/uwsgi.ini
 
 ENTRYPOINT ["uwsgi", "--ini", "/etc/uwsgi/uwsgi.ini"]

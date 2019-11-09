@@ -1,10 +1,10 @@
 #!/usr/local/bin/python
 from unittest import TestCase
 
-from com.johnmalcolmnorwood.stupidchess.models.piece import Piece, PieceType, Color
-from com.johnmalcolmnorwood.stupidchess.move_generators.offsets import Offsets
-from com.johnmalcolmnorwood.stupidchess.move_generators.offset_list_move_generator import OffsetListMoveGenerator
-from com.johnmalcolmnorwood.stupidchess.test import test_utils
+from stupidchess.models.piece import Piece, PieceType, Color
+from stupidchess.move_generators.offsets import Offsets
+from stupidchess.move_generators.offset_list_move_generator import OffsetListMoveGenerator
+from stupidchess.test import test_utils
 
 
 class OffsetMoveGeneratorTest(TestCase):

@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 import bcrypt
-from ...auth import user_service
+from flask_auth_utils import user_service
 from ..models.user import User
 
 

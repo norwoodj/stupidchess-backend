@@ -1,10 +1,10 @@
 #!/usr/local/bin/python
 from unittest import TestCase
 
-from com.johnmalcolmnorwood.stupidchess.move_generators.offsets import Offsets
-from com.johnmalcolmnorwood.stupidchess.test import test_utils
-from com.johnmalcolmnorwood.stupidchess.models.piece import Piece, PieceType, Color, FirstMove
-from com.johnmalcolmnorwood.stupidchess.move_generators.forward_non_capturing_move_generator import (
+from stupidchess.move_generators.offsets import Offsets
+from stupidchess.test import test_utils
+from stupidchess.models.piece import Piece, PieceType, Color, FirstMove
+from stupidchess.move_generators.forward_non_capturing_move_generator import (
     ForwardNonCapturingMoveGenerator,
 )
 

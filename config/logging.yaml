@@ -15,12 +15,12 @@ root:
   handlers: [default]
 
 loggers:
-  com.johnmalcolmnorwood.auth:
+  flask_auth_utils:
     level: DEBUG
     handlers: [default]
     propagate: False
 
-  com.johnmalcolmnorwood.stupidchess:
+  stupidchess:
     level: DEBUG
     handlers: [default]
     propagate: False

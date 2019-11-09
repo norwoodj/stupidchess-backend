@@ -1,6 +1,7 @@
 #!/usr/local/bin/python
 from datetime import timedelta
 from flask import jsonify
+from flask_auth_utils.initialize_authentication import initialize_authentication
 from flask_login import current_user
 from flask_mongoengine import MongoEngine
 from flask_wtf import CSRFProtect
@@ -8,7 +9,6 @@ from healthcheck import HealthCheck
 from jconfigure import configure
 from mongoengine.connection import get_db
 
-from ...auth.initialize_authentication import initialize_authentication
 from .. import LOGGER
 from ..blueprints.game_blueprint import game_blueprint, apply_move_to_game
 from ..blueprints.record_blueprint import record_blueprint

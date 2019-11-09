@@ -1,8 +1,8 @@
 #!/usr/local/bin/python
 from unittest import TestCase
-from com.johnmalcolmnorwood.stupidchess.test import test_utils
-from com.johnmalcolmnorwood.stupidchess.models.piece import Piece, PieceType, Color, FirstMove
-from com.johnmalcolmnorwood.stupidchess.move_generators.pawn_move_generator import PawnMoveGenerator
+from stupidchess.test import test_utils
+from stupidchess.models.piece import Piece, PieceType, Color, FirstMove
+from stupidchess.move_generators.pawn_move_generator import PawnMoveGenerator
 
 
 class PawnMoveGeneratorTest(TestCase):

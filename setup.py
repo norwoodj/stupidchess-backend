@@ -3,17 +3,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="stupidchess",
-    version="_VERSION",
+    version="19.1109.0",
     packages=find_packages(),
     zip_safe=False,
     package_data={
         "stupidchess": ["templates/*.html"],
-    },
-    entry_points={
-        "console_scripts": [
-            "setup_stupidchess_game=com.johnmalcolmnorwood.stupidchess.client.setup_stupidchess_game:main",
-            "print_stupidchess_game=com.johnmalcolmnorwood.stupidchess.client.print_stupidchess_game:main",
-        ],
     },
     install_requires=[
         "bcrypt",

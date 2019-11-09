@@ -2,14 +2,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="com.johnmalcolmnorwood.stupidchess",
-    version="18.0521.0",
-    package_dir={"": "src"},
-    packages=find_packages("src"),
+    name="stupidchess",
+    version="_VERSION",
+    packages=find_packages(),
     zip_safe=False,
-    namespace_packages=["com", "com.johnmalcolmnorwood"],
     package_data={
-        "com.johnmalcolmnorwood.stupidchess": ["templates/*.html"],
+        "stupidchess": ["templates/*.html"],
     },
     entry_points={
         "console_scripts": [
@@ -20,10 +18,10 @@ setup(
     install_requires=[
         "bcrypt",
         "flask",
+        "flask-auth-utils",
         "flask-mongoengine",
         "healthcheck",
         "jconfigure",
         "nose",
-        "com.johnmalcolmnorwood.auth",
     ],
 )

@@ -1,4 +1,4 @@
-FROM python:3.6.5-slim
+FROM python:3.7.3-slim
 LABEL maintainer=norwood.john.m@gmail.com
 
 COPY server/Pipfile server/Pipfile.lock ./

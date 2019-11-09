@@ -1,7 +1,0 @@
-name: stupidchess
-description: The stupidchess helm chart
-version: "18.0521.0"
-tillerVersion: >2
-maintainers:
-  - email: norwood.john.m@gmail.com
-    name: John Norwood

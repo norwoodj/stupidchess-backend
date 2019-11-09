@@ -3,8 +3,6 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
-[dev-packages]
-
 [packages]
 bcrypt = "==3.1.0"
 cffi = "==1.10.0"
@@ -28,6 +26,7 @@ PyYAML = "==3.12"
 uWSGI = "==2.0.15"
 Werkzeug = "==0.12.2"
 WTForms = "==2.1"
+flask-auth-utils = "==19.1109"
 
 [requires]
 python_version = "3.7"

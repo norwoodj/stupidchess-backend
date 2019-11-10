@@ -11,6 +11,7 @@ Type=notify
 StandardError=syslog
 NotifyAccess=all
 Environment=JCONFIGURE_ACIVE_PROFILES=RPI
+Environment=SECRETS_VOLUME_PATH=/opt/stupidchess/secrets
 
 [Install]
 WantedBy=multi-user.target

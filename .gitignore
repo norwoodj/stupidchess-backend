@@ -11,3 +11,7 @@ debian/stupidchess.debhelper.log
 debian/stupidchess.postinst.debhelper
 debian/stupidchess.substvars
 debian/stupidchess/
+stupidchess-deployment/opt/stupidchess/config
+stupidchess-deployment/opt/stupidchess/uwsgi.ini
+stupidchess-deployment.deb
+version.txt

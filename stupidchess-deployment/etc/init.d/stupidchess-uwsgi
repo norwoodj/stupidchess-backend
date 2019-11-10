@@ -1,0 +1,16 @@
+[Unit]
+Description=uWSGI for stupidchess
+After=syslog.target
+
+[Service]
+ExecStart=/opt/venvs/stupidchess/bin/uwsgi --ini uwsgi.ini
+RuntimeDirectory=/opt/stupidchess
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+Environment=JCONFIGURE_ACIVE_PROFILES=RPI
+
+[Install]
+WantedBy=multi-user.target

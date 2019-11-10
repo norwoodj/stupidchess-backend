@@ -7,7 +7,8 @@ app_secret_key: !IncludeText
     - flask-app-secret-key
 
 MONGODB_SETTINGS:
-  username: stupidchess_mongo_rw
+  host: rp3-smi-mdb-000
+  username: stupidchess-rw
   password: !IncludeText
     filename: !JoinFilePaths
       - !EnvVar SECRETS_VOLUME_PATH

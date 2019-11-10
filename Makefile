@@ -1,7 +1,7 @@
 DOCKER_REPOSITORY := jnorwood
 PYTHON_IMAGE := python:3.7-slim
 VERSION_PLACEHOLDER := _VERSION
-VERSION_FILES := setup.py debian/changelog debian/control
+VERSION_FILES := setup.py debian/changelog stupidchess-deployment/DEBIAN/control
 
 
 default:
@@ -43,8 +43,19 @@ push: image
 # debian packaging
 ##
 .PHONY: deb
-deb: update-versions
+deb: sc-deb stupidchess-deployment.deb
 	dpkg-buildpackage -us -uc
+	mv ../stupidchess_$(shell cat version.txt)_armhf.deb .
+	mv stupidchess-deployment.deb stupidchess-deployment-$(shell cat version.txt).deb
+
+.PHONY: sc-deb
+sc-deb: update-versions
+	dpkg-buildpackage -us -uc
+
+stupidchess-deployment.deb: update-versions
+	mkdir -p stupidchess-deployment/opt/stupidchess
+	cp -R config etc/uwsgi/uwsgi.ini stupidchess-deployment/opt/stupidchess/
+	dpkg -b stupidchess-deployment stupidchess-deployment.deb
 
 .PHONY: clean
 clean: version.txt

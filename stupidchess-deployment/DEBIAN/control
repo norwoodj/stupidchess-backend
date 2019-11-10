@@ -1,0 +1,9 @@
+Package: stupidchess-deployment
+Version: _VERSION
+Section: base
+Priority: optional
+Architecture: armhf
+Depends: stupidchess
+Maintainer: John Norwood <norwood.john.m@gmail.com>
+Description: stupidchess-deployment
+ Config files and other setup necessary to run stupidchess, beyond the code, deployed separated

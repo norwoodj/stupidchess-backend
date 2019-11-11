@@ -3,7 +3,7 @@ Description=uWSGI for stupidchess
 After=syslog.target
 
 [Service]
-ExecStart=/opt/venvs/stupidchess/bin/uwsgi --ini uwsgi.ini
+ExecStart=/opt/venvs/stupidchess/bin/uwsgi --ini /opt/stupidchess/uwsgi.ini
 RuntimeDirectory=/opt/stupidchess
 Restart=always
 KillSignal=SIGQUIT

@@ -1,0 +1,2 @@
+config opt/stupidchess
+etc/uwsgi/uwsgi.ini opt/stupidchess

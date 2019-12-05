@@ -1,0 +1,9 @@
+/opt/stupidchess/logs/app.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    dateext
+}

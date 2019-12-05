@@ -4,9 +4,11 @@ build
 *.egg-info
 *.iml
 *.tgz
-update-versions
+debian/.*
 debian/.debhelper/
+debian/debhelper-build-stamp
 debian/files
+debian/stupidchess-uwsgi*
 debian/stupidchess.debhelper.log
 debian/stupidchess.postinst.debhelper
 debian/stupidchess.substvars
@@ -14,4 +16,6 @@ debian/stupidchess/
 stupidchess-deployment/opt/stupidchess/config
 stupidchess-deployment/opt/stupidchess/uwsgi.ini
 stupidchess-deployment.deb
+update-versions
+update-deb-version
 version.txt

@@ -1,21 +1,25 @@
-version: "3"
+version: "3.7"
 
 volumes:
-  socket-volume:
   frontend-public-volume:
+  socket-volume:
 
 services:
   mongo:
     image: mongo:2.6.4
     ports:
-      - 27017:27017
+      - target: 27017
+        published: 27017
 
   nginx:
-    image: jnorwood/stupidchess-nginx:19.1109.0
+    image: jnorwood/stupidchess-nginx:19.1205
     volumes:
-      - socket-volume:/var/run
+      - type: volume
+        source: socket-volume
+        target: /opt/stupidchess/sockets
     ports:
-      - 80:80
+      - target: 23080
+        published: 80
 
   uwsgi:
     image: jnorwood/stupidchess-uwsgi:current
@@ -23,11 +27,19 @@ services:
     entrypoint:
       - uwsgi
       - --ini
-      - /etc/uwsgi/uwsgi.ini:local
+      - /opt/stupidchess/uwsgi.ini:local
     environment:
-      - JCONFIGURE_ACTIVE_PROFILES=LCL
-      - JCONFIGURE_CONFIG_DIRECTORIES=/var/lib/johnmalcolmnorwood/stupidchess/server/config
+      JCONFIGURE_ACTIVE_PROFILES: LCL
+      JCONFIGURE_CONFIG_DIRECTORIES: /opt/stupidchess/config
     volumes:
-      - ./config:/var/lib/johnmalcolmnorwood/stupidchess/server/config:ro
-      - ./etc/uwsgi:/etc/uwsgi:ro
-      - socket-volume:/var/run
+      - type: volume
+        source: socket-volume
+        target: /opt/stupidchess/sockets
+      - type: bind
+        source: ./etc/uwsgi/uwsgi.ini
+        target: /opt/stupidchess/uwsgi.ini
+        read_only: true
+      - type: bind
+        source: ./config
+        target: /opt/stupidchess/config
+        read_only: true

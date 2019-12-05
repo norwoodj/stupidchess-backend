@@ -24,6 +24,6 @@ COPY stupidchess ./stupidchess
 RUN pip install .
 
 COPY config ./config
-COPY etc/uwsgi/uwsgi.ini ./uwsgi.ini
+COPY uwsgi.ini ./uwsgi.ini
 
 ENTRYPOINT ["uwsgi", "--ini", "/opt/stupidchess/uwsgi.ini"]

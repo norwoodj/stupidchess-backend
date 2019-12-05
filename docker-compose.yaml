@@ -12,7 +12,7 @@ services:
         published: 27017
 
   nginx:
-    image: jnorwood/stupidchess-nginx:19.1205
+    image: jnorwood/stupidchess-nginx:19.1205.0
     volumes:
       - type: volume
         source: socket-volume
@@ -36,7 +36,7 @@ services:
         source: socket-volume
         target: /opt/stupidchess/sockets
       - type: bind
-        source: ./etc/uwsgi/uwsgi.ini
+        source: ./uwsgi.ini
         target: /opt/stupidchess/uwsgi.ini
         read_only: true
       - type: bind

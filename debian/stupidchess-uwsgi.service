@@ -1,6 +1,7 @@
 [Unit]
 Description=uWSGI for stupidchess
 After=syslog.target
+Requires=stupidchess-uwsgi.socket
 
 [Service]
 ExecStart=/opt/venvs/stupidchess-uwsgi/bin/uwsgi --ini /opt/stupidchess/uwsgi.ini:deployed

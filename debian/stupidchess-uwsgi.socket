@@ -1,0 +1,10 @@
+[Unit]
+Description=stupidchess uwsgi listen socket
+PartOf=stupidchess-uwsgi.service
+
+[Socket]
+FileDescriptorName=stupidchess-uwsgi
+ListenStream=/opt/stupidchess/sockets/stupidchess.sock
+
+[Install]
+WantedBy=sockets.target

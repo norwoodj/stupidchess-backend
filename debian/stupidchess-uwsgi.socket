@@ -5,6 +5,8 @@ PartOf=stupidchess-uwsgi.service
 [Socket]
 FileDescriptorName=stupidchess-uwsgi
 ListenStream=/opt/stupidchess/sockets/stupidchess.sock
+SocketUser=stupidchess
+SocketGroup=stupidchess
 
 [Install]
 WantedBy=sockets.target

@@ -13,6 +13,7 @@ NotifyAccess=all
 Environment=JCONFIGURE_ACTIVE_PROFILES=RPI
 Environment=JCONFIGURE_CONFIG_DIRECTORIES=/opt/stupidchess/config
 Environment=SECRETS_VOLUME_PATH=/opt/stupidchess/secrets
+User=stupidchess
 
 [Install]
 WantedBy=multi-user.target

@@ -4,15 +4,15 @@ After=syslog.target
 Requires=stupidchess-uwsgi.socket
 
 [Service]
-ExecStart=/opt/venvs/stupidchess-uwsgi/bin/uwsgi --ini /opt/stupidchess/uwsgi.ini:deployed
+ExecStart=/opt/venvs/stupidchess-uwsgi/bin/uwsgi --ini /etc/stupidchess/uwsgi.ini
 Restart=always
 KillSignal=SIGQUIT
 Type=notify
 StandardError=syslog
 NotifyAccess=all
 Environment=JCONFIGURE_ACTIVE_PROFILES=RPI
-Environment=JCONFIGURE_CONFIG_DIRECTORIES=/opt/stupidchess/config
-Environment=SECRETS_VOLUME_PATH=/opt/stupidchess/secrets
+Environment=JCONFIGURE_CONFIG_DIRECTORIES=/etc/stupidchess/config
+Environment=SECRETS_VOLUME_PATH=/etc/stupidchess/secrets
 User=stupidchess
 
 [Install]

@@ -4,7 +4,7 @@ PartOf=stupidchess-uwsgi.service
 
 [Socket]
 FileDescriptorName=stupidchess-uwsgi
-ListenStream=/opt/stupidchess/sockets/stupidchess.sock
+ListenStream=/run/stupidchess/uwsgi.sock
 SocketUser=stupidchess
 SocketGroup=stupidchess
 

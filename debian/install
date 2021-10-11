@@ -1,2 +1,2 @@
-config opt/stupidchess
-uwsgi.ini opt/stupidchess
+config etc/stupidchess
+uwsgi.ini etc/stupidchess

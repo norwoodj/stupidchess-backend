@@ -63,7 +63,7 @@ push: uwsgi
 # Run application
 ##
 .PHONY: run-docker
-run-docker:
+run-docker: update-versions
 	docker-compose up
 
 .PHONY: down

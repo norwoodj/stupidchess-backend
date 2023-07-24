@@ -10,12 +10,12 @@ VERSION_FILES := setup.py
 help:
 	@echo "Available Targets:"
 	@echo
-	@echo "  clean      - Delete all build artifacts and clean up versioning"
-	@echo "  deb        - Build debian archive"
-	@echo "  down       - Tear down the local docker database"
-	@echo "  uwsgi      - Build the stupidchess-uwsgi docker image"
-	@echo "  push       - Push the uwsgi docker image"
-	@echo "  run-docker - Run the app locally in docker"
+	@echo "  clean - Delete all build artifacts and clean up versioning"
+	@echo "  deb   - Build debian archive"
+	@echo "  down  - Tear down the local docker database"
+	@echo "  uwsgi - Build the stupidchess-uwsgi docker image"
+	@echo "  push  - Push the uwsgi docker image"
+	@echo "  run   - Run the app locally in docker"
 
 release: push
 	git tag $(cat version.txt)
@@ -51,7 +51,7 @@ deb: update-deb-version update-versions
 ##
 .PHONY: uwsgi
 uwsgi: update-versions
-	docker-compose build
+	docker-compose build uwsgi
 
 .PHONY: push
 push: uwsgi
@@ -63,12 +63,12 @@ push: uwsgi
 # Run application
 ##
 .PHONY: run-docker
-run-docker: update-versions
+run: update-versions
 	docker-compose up
 
 .PHONY: down
 down:
-	docker-compose down
+	docker-compose down --volumes
 
 
 ##

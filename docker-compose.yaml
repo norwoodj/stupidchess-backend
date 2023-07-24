@@ -1,9 +1,5 @@
 version: "3.7"
 
-volumes:
-  frontend-public-volume:
-  socket-volume:
-
 services:
   mongo:
     image: mongo:6.0-jammy@sha256:aefae4865d1a803f4ffc543bc9b26694025c4faa3517b6dc45c4065e89b6cc7c
@@ -11,19 +7,11 @@ services:
       - target: 27017
         published: 27017
 
-  nginx:
-    image: jnorwood/stupidchess-nginx:23.0621.0
-    volumes:
-      - type: volume
-        source: socket-volume
-        target: /run/stupidchess
-    ports:
-      - target: 23080
-        published: 80
-
   uwsgi:
     image: jnorwood/stupidchess-uwsgi:current
-    build: .
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-uwsgi
     entrypoint:
       - uwsgi
       - --ini
@@ -33,7 +21,7 @@ services:
       JCONFIGURE_CONFIG_DIRECTORIES: /etc/stupidchess/config
     volumes:
       - type: volume
-        source: socket-volume
+        source: stupidchess-sockets
         target: /run/stupidchess
       - type: bind
         source: ./uwsgi.ini
@@ -43,3 +31,31 @@ services:
         source: ./config
         target: /etc/stupidchess/config
         read_only: true
+
+  nginx:
+    image: jnorwood/stupidchess-nginx:23.0724.0
+    volumes:
+      - type: volume
+        source: stupidchess-sockets
+        target: /run/stupidchess
+      - type: volume
+        source: stupidchess-nginx-runtime
+        target: /run/stupidchess-nginx
+
+  socat:
+    image: jnorwood/stupidchess-socat:current
+    build:
+      context: docker
+      dockerfile: Dockerfile-socat
+    ports:
+      - published: 80
+        target: 23080
+    volumes:
+      - type: volume
+        source: stupidchess-nginx-runtime
+        target: /run/stupidchess-nginx
+
+volumes:
+  frontend-public-volume:
+  stupidchess-nginx-runtime:
+  stupidchess-sockets:

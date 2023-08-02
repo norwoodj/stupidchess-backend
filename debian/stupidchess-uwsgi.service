@@ -8,7 +8,6 @@ ExecStart=/opt/venvs/stupidchess-uwsgi/bin/uwsgi --ini /etc/stupidchess/uwsgi.in
 Restart=always
 KillSignal=SIGQUIT
 Type=notify
-StandardError=syslog
 NotifyAccess=all
 Environment=JCONFIGURE_ACTIVE_PROFILES=RPI
 Environment=JCONFIGURE_CONFIG_DIRECTORIES=/etc/stupidchess/config

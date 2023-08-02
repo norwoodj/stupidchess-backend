@@ -1,1 +1,330 @@
-stupidchess-uwsgi (_VERSION) stable; urgency=low
+stupidchess-uwsgi (23.0724.0) unstable; urgency=low
+
+  * chore: Cleans up nginx and uwsgi configs a bit
+
+ -- John Norwood <norwood.john.m@gmail.com>  Mon, 24 Jul 2023 19:25:45 +0100
+
+stupidchess-uwsgi (23.0621.0) unstable; urgency=low
+
+  * Fixes docker run configuration, at least for the uwsgi container, need to fix nginx separately
+
+ -- John Norwood <jnorwood@cloudflare.com>  Wed, 21 Jun 2023 12:53:53 +0100
+
+stupidchess-uwsgi (21.1027.0) unstable; urgency=low
+
+  * fix: adds runtime directory for socket
+
+ -- John Norwood <norwood.john.m@gmail.com>  Wed, 27 Oct 2021 03:37:56 +0000
+
+stupidchess-uwsgi (21.1011.0) unstable; urgency=low
+
+  * fix: moves secrets path
+  * feat: cleans up deb installation a bit moving files to more sensible places
+
+ -- John Norwood <norwood.john.m@gmail.com>  Mon, 11 Oct 2021 15:18:50 +0000
+
+stupidchess-uwsgi (21.1006.0) unstable; urgency=low
+
+  * feat: runs uwsgi as non-root user
+
+ -- John Norwood <norwood.john.m@gmail.com>  Wed, 6 Oct 2021 21:49:46 +0000
+
+stupidchess-uwsgi (21.0828.0) unstable; urgency=low
+
+  * feat: adds systemd socket for uwsgi listen on
+
+ -- John Norwood <norwood.john.m@gmail.com>  Fri, 27 Aug 2021 19:10:51 +0000
+
+stupidchess-uwsgi (19.1220.0) unstable; urgency=low
+
+  * feat: fixes the licenses
+
+ -- John Norwood <norwood.john.m@gmail.com>  Thu, 19 Dec 2019 23:33:27 +0000
+
+stupidchess-uwsgi (19.1205.1) unstable; urgency=low
+
+  * fix: adds socket directory and updates to correct virtualenv name in debain file
+
+ -- John Norwood <norwood.john.m@gmail.com>  Thu, 5 Dec 2019 05:04:40 +0000
+
+stupidchess-uwsgi (19.1205.0) unstable; urgency=low
+
+  * chore: moves uwsgi.ini to top directory because why not
+  * feat: Properly building debian package for stupidchess-uwsgi now
+
+ -- John Norwood <norwood.john.m@gmail.com>  Thu, 5 Dec 2019 03:44:51 +0000
+
+stupidchess-uwsgi (19.1111.1) unstable; urgency=low
+
+  * fix: Fix uwsgi.ini path
+
+ -- John Norwood <norwood.john.m@gmail.com>  Mon, 11 Nov 2019 03:34:10 +0000
+
+stupidchess-uwsgi (19.1111.0) unstable; urgency=low
+
+  * fix: added needed environment variables to service, should work now
+
+ -- John Norwood <norwood.john.m@gmail.com>  Mon, 11 Nov 2019 02:32:40 +0000
+
+stupidchess-uwsgi (19.1110.3) unstable; urgency=low
+
+  * fix: moves stupidchess-uwsgi service file to the right place
+
+ -- John Norwood <norwood.john.m@gmail.com>  Sun, 10 Nov 2019 20:16:00 +0000
+
+stupidchess-uwsgi (19.1110.2) unstable; urgency=low
+
+  * fix: adds missing environment variable to deb package service
+
+ -- John Norwood <norwood.john.m@gmail.com>  Sun, 10 Nov 2019 19:51:27 +0000
+
+stupidchess-uwsgi (19.1110.1) unstable; urgency=low
+
+  * feat: create deb archive for deployment files
+
+ -- John Norwood <norwood.john.m@gmail.com>  Sun, 10 Nov 2019 17:14:54 +0000
+
+stupidchess-uwsgi (19.1110.0) unstable; urgency=low
+
+  * feat: adds debian packaging for stupidchess
+  * Updates to python 3.7
+
+ -- John Norwood <norwood.john.m@gmail.com>  Sun, 10 Nov 2019 14:49:18 +0000
+
+stupidchess-uwsgi (19.1109.0) unstable; urgency=low
+
+  * feat: back to python 3.6 image build and local run working
+  * feat: wip getting this working again with new packages
+  * feat: Converts this project to be backend only
+  * Updates socket locations
+  * feat: updates documentation on how to run and adds an image of the board
+  * feat: udpates to use pipfile, uses a makefile instead of bash scripts
+
+ -- John Norwood <norwood.john.m@gmail.com>  Sat, 9 Nov 2019 18:28:47 +0000
+
+stupidchess-uwsgi (18.0521.0) unstable; urgency=low
+
+  * Merge branch 'release/18.0521.0'
+  * [RELEASE] Bumping versions to release version 18.0521.0
+  * Adjusts memory limits for containers
+  * [RELEASE] Bumping versions to next development version 18.0519.0-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Mon, 21 May 2018 20:43:50 +0000
+
+stupidchess-uwsgi (18.0518.0) unstable; urgency=low
+
+  * Merge branch 'release/18.0518.0'
+  * [RELEASE] Bumping versions to release version 18.0518.0
+  * Bumps chart versions
+  * [RELEASE] Bumping versions to next development version 18.0518.0-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Fri, 18 May 2018 16:28:33 +0000
+
+stupidchess-uwsgi (18.0517.0) unstable; urgency=low
+
+  * Merge branch 'release/18.0517.0'
+  * Changes image names to use new versions
+  * Adds necessary deps for uwsgi image
+  * Fixes the deployment object in the helm config
+  * [RELEASE] Bumping versions to release version 18.0517.0
+  * Switched to using official images for local run and deploy
+  * Upgrades the dependency charts to 18.0517
+  * [RELEASE] Bumping versions to next development version 18.0407.0-dev
+  * Added GPLv3 license
+
+ -- John Norwood <norwood.john.m@gmail.com>  Thu, 17 May 2018 16:43:36 +0000
+
+stupidchess-uwsgi (18.0405.0) unstable; urgency=low
+
+  * Merge branch 'release/18.0405.0'
+  * Fixed small issue in record service
+  * [RELEASE] Bumping versions to release version 18.0405.0
+  * Added the ability to retrieve game records for one player games as well
+  * [RELEASE] Bumping versions to next development version 18.0131.0-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Tue, 30 Jan 2018 23:17:08 +0000
+
+stupidchess-uwsgi (18.0130.0) unstable; urgency=low
+
+  * Merge branch 'release/18.0130.0'
+  * [RELEASE] Bumping versions to release version 18.0130.0
+  * Added remember_me for logins, hopefully won't have to log in so much?
+  * [RELEASE] Bumping versions to next development version 18.0131.0-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Tue, 30 Jan 2018 23:17:01 +0000
+
+stupidchess-uwsgi (18.0128.0) unstable; urgency=low
+
+  * Merge branch 'release/18.0128.0'
+  * Removed requirement that was breaking the build
+  * [RELEASE] Bumping versions to release version 18.0128.0
+  * Fixed theme color for android
+  * [RELEASE] Bumping versions to next development version 18.0129.0-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Tue, 30 Jan 2018 17:16:05 +0000
+
+stupidchess-uwsgi (18.0127.0) unstable; urgency=low
+
+  * Merge branch 'release/18.0127.0'
+  * Fixed an issue with how I was setting up resource limits on the web deployment
+  * [RELEASE] Bumping versions to release version 18.0127.0
+  * Fixed package.json
+  * Added resource limits and requests for stupidchess web and mongo
+  * Fixed bug where if one side sets up their pieces completely before the other, the page crashes until the other player finishes
+  * Added favicons finally
+  * [RELEASE] Bumping versions to next development version 18.0123-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Sun, 28 Jan 2018 18:29:35 +0000
+
+stupidchess-uwsgi (18.0121.0) unstable; urgency=low
+
+  * Merge branch 'release/18.0121.0'
+  * Updated two chart dependencies
+  * [RELEASE] Bumping versions to release version 18.0121.0
+  * Updated everything to the new DNS name
+  * Made liveness probes less frequent, hoping that it doesn't strain my rpis as much
+  * Updated jscripts to work with some fixes I made
+  * Added a script to print a textual version of a game
+  * [RELEASE] Bumping versions to next development version 17.1028.0-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Mon, 22 Jan 2018 14:30:09 -0600
+
+stupidchess-uwsgi (17.1028.0) unstable; urgency=low
+
+  * Merge branch 'release/17.1028.0'
+  * Small chart fix
+  * Small jscripts fix
+  * [RELEASE] Bumping versions to release version 17.1028.0
+  * Adding authorization for users now
+  * [RELEASE] Bumping versions to next development version 17.1017.0-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Fri, 27 Oct 2017 14:45:44 -0500
+
+stupidchess-uwsgi (17.1015.0) unstable; urgency=low
+
+  * Merge branch 'release/17.1015.0'
+  * Fixed a last issue with the nginx config to serve _version.json
+  * Including the templates in the build now
+  * Fixed deploy setting to deploy to my dockerhub repo
+  * Updated mongo chart dependency and deployment
+  * [RELEASE] Bumping versions to release version 17.1015.0
+  * Adding a way to access mongo from a nodeport
+  * Documentation done
+  * Updated to a new version of jscripts and made some changes so they work. Added most of the necessary readmes, but I still need to write the big main one
+  * Added a bash script for setting up a stupidchess game without having to start a uwsgi container or exec into one
+  * Added configuration to read in the database password for mongo, also added a bunch of READMEs that I need to fill out before releaseing
+  * Fixed a small issue with the updating select component
+  * Added how-to-play page to teach people the wonderful game of stupidchess. Also fixed the issue with highlighted squares for the other player and both colors showing up in board setup select for two player games
+  * Big refactor of my service and database code   - Added daos to handle direct interactions with the DB   - Adapted the existing services to work with daos instead of the mongoengine models directly   - Adapted the existing services to work with daos instead of the mongoengine models directly
+  * Highlighting pieces that need to be placed in board setup mode now, as well as changed the shapes of the piece select grids
+  * Fixed a couple remaining bugs with the checker, checker kings can move twice on their first move I've decided as well.
+  * Cleaned up the UI a bit. The footer sticks to the bottom now. Added a homepage as well
+  * Added pawn promotion, only a homepage away from releasing the next version
+  * Added a move list on the game page so you can look at the list of the last few moves that have occurred. Required some new APIs and refactoring of the paged table stuff
+  * Added an API to retrieve moves, which required a bit of refactoring of the game and move services
+  * Cleaned up a bunch of js imports and exports, and also fixed a couple of small remaining bugs in how we were showing game results
+  * Added proper error handling on all API calls, displaying an error message when one fails
+  * Added kinging checkers, refactoring the move_application_service a bit in the process, also added a help text element on the game screen to explain to people how to play because the UX is so bad
+  * Using the React table for the player records now as well
+  * Cleaned up UI a bit
+  * Added new themes! There's a christmas and a michigan theme now
+  * Gzipping all of my frontend assets now, and also added the module hoisting plugin for webpack, made my frontend code MUCH smaller
+  * Added color on active games when it's your turn to move, also added a new eslint rule to check for semicolons and added a ton of semicolons that were missing
+  * Added pagination on game lists on the profile page
+  * Added a create game button on the profile and finally fixed the stupid checker issue
+  * A lot more done   - Added authorization on possible moves and apply moves so only the user who controls a color in a game can get a list of possible moves or apply a move   - Updated lists on profile pages to only show games that a user is involved in   - Cleaned up imports to use only relative imports   - Fixed one checker bug, but there's still another issue
+  * Finished fairly large refactor   - All pages rendered server side now   - Added error messages when either a profile or game page is retrieved with an invalid uuid   - Got redirecting on login working properly   - Cleaned up how our select elements work in a few places   - Creating games with a form now, and doing proper form validation on the request
+  * Massive refactor   - Rendering templates with flask now, which enables me to not have to request the current user information on every page load   - Also refactored the forms to have server-side validation, and have them rendered partially server-side, using wtforms   - Also made a couple chnages to the record service   - Changed up a few links as well. Getting rid of the '.html' suffix on all of my pages
+  * Added a change password page, tried to get rememberme working, but still having issues. Got better player record metrics set up using aggregations
+  * Cleaned up the setup script a bit and added logging to it. Changed the moves API to return the moves that it creates
+  * Made uuid links fixed-width
+  * [RELEASE] Bumping versions to next development version 17.0920.0-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Sun, 15 Oct 2017 19:57:15 -0500
+
+stupidchess-uwsgi (17.0919.0) unstable; urgency=low
+
+  * Merge branch 'release/17.0919.0'
+  * Updated mongo chart dependency
+  * Using a new babel preset to get rid of a warning, also updated to new mongo chart
+  * [RELEASE] Bumping versions to release version 17.0919.0
+  * Made the uuids better and also added a script to create an already setup stupidchess game
+  * Surprisingly good stopping point, added a ridiculous amount of stuff, way more than is right for one commit   - Added the profile page finally, showing your active and historical games   - Ability to view other players (limited) profiles   - Added some authorization around games, removing moves and pieces that players ought not be privy to   - Added limiting game search results as well so only users can see their own active games
+  * Added a profile page that's a little broken still, and changed a bunch of APIs to only return data that a user is allowed to see
+  * Refactored the forms a lot, added a create account form
+  * Refactored how the application is configured a bit and added logging config so that the two packages this project log at DEBUG level
+  * [RELEASE] Bumping versions to next development version 17.0914.0-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Tue, 19 Sep 2017 14:15:13 -0500
+
+stupidchess-uwsgi (17.0913.0) unstable; urgency=low
+
+  * Merge branch 'release/17.0913.0'
+  * Fixed versioning scheme
+  * Removed unnecessary command
+  * Forgot to add the config to the app object
+  * [RELEASE] Bumping versions to release version 17.0913.0
+  * Fixed the last issue
+  * Changed how the uwsgi build works a bit so that hopefully docker builds can go faster
+  * Fixed volume path
+  * Added a configuration library so that we can store secrets as secrets in the RPI env
+  * [RELEASE] Bumping versions to next development version 17.0906-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Wed, 13 Sep 2017 13:21:12 -0500
+
+stupidchess-uwsgi (17.0905) unstable; urgency=low
+
+  * Merge branch 'release/17.0905'
+  * [RELEASE] Bumping versions to release version 17.0905
+  * Updated dependency on the web_service chart to the newest version
+  * Updated dependency on the web_service chart to the newest version
+  * Added to the pre-build hook for the nginx image to add a _version.json file that shows some info about the build that produced the release
+  * Bumped dependency on web_service chart to version 17.0831
+  * [RELEASE] Bumping versions to next development version 17.0901-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Tue, 5 Sep 2017 14:28:22 -0500
+
+stupidchess-uwsgi (17.0831) unstable; urgency=low
+
+  * Merge branch 'release/17.0831'
+  * Forgot to update the healthcheck endpoint in the chart
+  * [RELEASE] Bumping versions to release version 17.0831
+  * Changed the healthcheck endpoint to just be /health
+  * Added a new option to the jscripts release scripts to allow for specifying a particular release version
+  * Using some new official images
+  * [RELEASE] Bumping versions to next development version 17.0831-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Thu, 31 Aug 2017 11:27:25 -0500
+
+stupidchess-uwsgi (17.0830) unstable; urgency=low
+
+  * Merge branch 'release/17.0830'
+  * [RELEASE] Bumping versions to release version 17.0830
+  * Now pulling required charts from a charts repository
+  * Added a better deep healthcheck
+  * Fixed a couple issues in the jscripts
+  * [RELEASE] Bumping versions to next development version 17.0825-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Wed, 30 Aug 2017 00:26:11 -0500
+
+stupidchess-uwsgi (17.0824) unstable; urgency=low
+
+  * Merge branch 'release/17.0824'
+  * [RELEASE] Bumping versions to release version 17.0824
+  * [SC-8] Pulling jscripts out of the individual repos, so they all point at a common set of scripts
+  * [RELEASE] Pinned version to development version 17.0824-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Thu, 24 Aug 2017 21:11:36 -0500
+
+stupidchess-uwsgi (17.0823) unstable; urgency=low
+
+  * Merge branch '17.0823'
+  * [RELEASE] Pinned version to release version 17.0823
+  * [SC-15] Refactored a bit to use the new web service chart I wrote in another project, also added a readinessProbe and a livenessProbe
+  * [RELEASE] Bumped version to development version 17.0823-dev
+
+ -- John Norwood <norwood.john.m@gmail.com>  Wed, 23 Aug 2017 17:35:08 -0500
+
+stupidchess-uwsgi (17.0822) unstable; urgency=low
+
+ -- John Norwood <norwood.john.m@gmail.com>  Wed, 23 Aug 2017 17:35:08 -0500

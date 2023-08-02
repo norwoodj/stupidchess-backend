@@ -4,6 +4,6 @@ Maintainer: John Norwood <norwood.john.m@gmail.com>
 Package: stupidchess-uwsgi
 Priority: extra
 Architecture: any
-Depends: python3.7
+Depends: python3
 Description: stupidchess webapp
  stupidchess uwsgi instance

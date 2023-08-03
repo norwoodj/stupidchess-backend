@@ -46,3 +46,26 @@ You can then go to a browser window and open [localhost](http://localhost) to vi
 This is setup to include local code changes in the running docker containers as volumes and to use auto-reload
 for the flask python server and --watch for webpack. In this way your code will get rebuilt and the server
 reloaded as you make changes.
+
+### Releasing
+There's a make target for releasing
+```
+make release
+```
+
+This is only tested on linux and requires you have installed some dependencies with:
+```
+sudo apt install git-dch
+```
+
+### Building Debian Package
+There's a make target for building this project's debian package
+```
+make deb
+```
+
+This is only tested on linux and requires you have installed some dependencies with:
+```
+sudo apt install devscripts debhelper dh-virtualenv
+```
+

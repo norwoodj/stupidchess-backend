@@ -7,7 +7,7 @@ function main {
 	echo "Releasing version ${new_release}"
 
 	sed -i "s|${last_release}|${new_release}|g" setup.py
-	EMAIL=$(git config --global user.email) gbp dch --auto --release --new-version=${new_release}
+	EMAIL=$(git config --global user.email) gbp dch --release --new-version=${new_release}
 
 	git commit -am "Release version ${new_release}"
 	git tag "${new_release}"

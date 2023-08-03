@@ -1,11 +1,5 @@
 DOCKER_REPOSITORY := jnorwood
-VERSION_PLACEHOLDER := _VERSION
-VERSION_FILES := setup.py
 
-
-##
-# Build targets
-##
 .PHONY: help
 help:
 	@echo "Available Targets:"

@@ -1,3 +1,10 @@
+stupidchess-uwsgi (23.0803.0) jammy; urgency=medium
+
+  * chore: add some documentation to the readme for releasing and building the debian package
+  * chore: Updates docker push process as well
+
+ -- John Norwood <norwood.john.m@gmail.com>  Thu, 03 Aug 2023 02:14:35 +0100
+
 stupidchess-uwsgi (23.0724.0) unstable; urgency=low
 
   * chore: Cleans up nginx and uwsgi configs a bit

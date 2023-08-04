@@ -52,20 +52,28 @@ def profile():
 @login_required
 def game():
     if "gameUuid" not in request.args:
-        return render_template(
-            "game.html",
-            current_user=current_user,
-            error=f"Must provide 'gameUuid' query parameter when requesting game page!",
-        ), 400
+        return (
+            render_template(
+                "game.html",
+                current_user=current_user,
+                error=f"Must provide 'gameUuid' query parameter when requesting game page!",
+            ),
+            400,
+        )
 
     game_uuid = request.args["gameUuid"]
 
-    if not current_app.context.game_service.game_with_uuid_for_user_exists(game_uuid, current_user.get_id()):
-        return render_template(
-            "game.html",
-            current_user=current_user,
-            error=f"No Game with ID {game_uuid} exists!",
-        ), 400
+    if not current_app.context.game_service.game_with_uuid_for_user_exists(
+        game_uuid, current_user.get_id()
+    ):
+        return (
+            render_template(
+                "game.html",
+                current_user=current_user,
+                error=f"No Game with ID {game_uuid} exists!",
+            ),
+            400,
+        )
 
     return render_template("game.html", game_uuid=game_uuid, current_user=current_user)
 

@@ -12,7 +12,7 @@ class PossibleMoveGameState:
         board_middle_section,
         can_capture_own_pieces,
         check,
-        can_checkers_move_twice_on_first_move
+        can_checkers_move_twice_on_first_move,
     ):
         self.__game = game
         self.__pieces_by_square = {piece.square: piece for piece in game.pieces}
@@ -21,7 +21,9 @@ class PossibleMoveGameState:
         self.__middle_board_section = board_middle_section
         self.__can_capture_own_pieces = can_capture_own_pieces
         self.__check = check
-        self.__can_checkers_move_twice_on_first_move = can_checkers_move_twice_on_first_move
+        self.__can_checkers_move_twice_on_first_move = (
+            can_checkers_move_twice_on_first_move
+        )
 
     def get_last_move_index(self):
         return self.__game.lastMove
@@ -33,13 +35,19 @@ class PossibleMoveGameState:
         return self.__game.currentTurn == self.__piece_being_moved.color
 
     def can_piece_move_twice(self):
-        return all([
-            not self.has_piece_moved(),
-            any([
-                self.__piece_being_moved.type == PieceType.PAWN,
-                self.__piece_being_moved.type in (PieceType.CHECKER, PieceType.CHECKER_KING) and self.__can_checkers_move_twice_on_first_move,
-            ]),
-        ])
+        return all(
+            [
+                not self.has_piece_moved(),
+                any(
+                    [
+                        self.__piece_being_moved.type == PieceType.PAWN,
+                        self.__piece_being_moved.type
+                        in (PieceType.CHECKER, PieceType.CHECKER_KING)
+                        and self.__can_checkers_move_twice_on_first_move,
+                    ]
+                ),
+            ]
+        )
 
     def has_piece_moved(self):
         return self.__piece_being_moved.firstMove is not None
@@ -78,18 +86,27 @@ class PossibleMoveGameState:
         if piece_on_square is None:
             return False
 
-        return self.__can_capture_own_pieces or piece_on_square.color != self.__piece_being_moved.color
+        return (
+            self.__can_capture_own_pieces
+            or piece_on_square.color != self.__piece_being_moved.color
+        )
 
     def get_move_to_square(self, new_square, additional_captures=None):
         if not self.is_square_on_board(new_square):
             return None
 
-        if self.is_piece_on_square(new_square) and not self.can_capture_on_square(new_square):
+        if self.is_piece_on_square(new_square) and not self.can_capture_on_square(
+            new_square
+        ):
             return None
 
         piece_on_square = self.get_piece_on_square(new_square)
         if piece_on_square is not None:
-            captures = [piece_on_square, *additional_captures] if additional_captures is not None else [piece_on_square]
+            captures = (
+                [piece_on_square, *additional_captures]
+                if additional_captures is not None
+                else [piece_on_square]
+            )
         else:
             captures = additional_captures
 

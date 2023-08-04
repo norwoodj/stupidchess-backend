@@ -3,7 +3,7 @@ from collections import defaultdict
 
 
 class Dictable:
-    def to_dict(self, *keys, delimiter='.'):
+    def to_dict(self, *keys, delimiter="."):
         """
         Specify a list of keys to pull out of the Dictable object, and this will convert the object to a dictionary
         containing those fields. Allows for nested fields to be specified by passing dotted fields:
@@ -53,10 +53,16 @@ class Dictable:
         if prefix_object is None:
             return None
         if isinstance(prefix_object, list):
-            return [self.__convert_prefix_object(o, sub_keys, delimiter) for o in prefix_object]
+            return [
+                self.__convert_prefix_object(o, sub_keys, delimiter)
+                for o in prefix_object
+            ]
         if isinstance(prefix_object, dict):
             return {k: prefix_object[k] for k in sub_keys}
         elif isinstance(prefix_object, Dictable):
             return prefix_object.to_dict(*sub_keys, delimiter=delimiter)
         else:
-            return [self.__convert_prefix_object(o, sub_keys, delimiter) for o in prefix_object]
+            return [
+                self.__convert_prefix_object(o, sub_keys, delimiter)
+                for o in prefix_object
+            ]

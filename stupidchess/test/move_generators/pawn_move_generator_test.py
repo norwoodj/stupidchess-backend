@@ -24,8 +24,18 @@ class PawnMoveGeneratorTest(TestCase):
 
     def test_black_cant_capture_own_piece(self):
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=0, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=11, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=0,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=11,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -41,7 +51,14 @@ class PawnMoveGeneratorTest(TestCase):
         self.assertIsNone(moves[0].captures)
 
     def test_black_no_captures_no_middle_board_second_move(self):
-        pieces = [Piece(type=PieceType.PAWN, color=Color.BLACK, square=0, firstMove=PawnMoveGeneratorTest.FIRST_MOVE)]
+        pieces = [
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=0,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            )
+        ]
         game_state = test_utils.get_game_state(
             pieces=pieces,
         )
@@ -55,7 +72,12 @@ class PawnMoveGeneratorTest(TestCase):
     def test_black_no_captures_no_middle_board_first_move_second_move_blocked(self):
         pieces = [
             Piece(type=PieceType.PAWN, color=Color.BLACK, square=0),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=20, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=20,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -71,7 +93,12 @@ class PawnMoveGeneratorTest(TestCase):
     def test_black_no_captures_no_middle_board_first_move_first_move_blocked(self):
         pieces = [
             Piece(type=PieceType.PAWN, color=Color.BLACK, square=0),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=10, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=10,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -85,8 +112,18 @@ class PawnMoveGeneratorTest(TestCase):
 
     def test_black_one_capture_no_middle_board(self):
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=0, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=11, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=0,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=11,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -112,10 +149,30 @@ class PawnMoveGeneratorTest(TestCase):
 
     def test_black_two_captures_no_middle_board(self):
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=11, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=22, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=20, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=2, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=11,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=22,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=20,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=2,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -132,7 +189,9 @@ class PawnMoveGeneratorTest(TestCase):
 
         capture_moves = filter(lambda move: move.destinationSquare in {20, 22}, moves)
 
-        for non_cm in filter(lambda move: move.destinationSquare not in {20, 22}, moves):
+        for non_cm in filter(
+            lambda move: move.destinationSquare not in {20, 22}, moves
+        ):
             self.assertIsNone(non_cm.captures)
 
         for cm in capture_moves:
@@ -142,7 +201,12 @@ class PawnMoveGeneratorTest(TestCase):
 
     def test_black_no_captures_middle_board(self):
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=10, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=10,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -161,10 +225,30 @@ class PawnMoveGeneratorTest(TestCase):
 
     def test_black_captures_middle_board(self):
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=11, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=20, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=22, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=2, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=11,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=20,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=22,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=2,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -177,9 +261,13 @@ class PawnMoveGeneratorTest(TestCase):
         moves = move_generator.get_possible_moves(game_state)
 
         self.assertEqual(len(moves), 5)
-        capture_moves = list(filter(lambda move: move.destinationSquare in {20, 22, 2}, moves))
+        capture_moves = list(
+            filter(lambda move: move.destinationSquare in {20, 22, 2}, moves)
+        )
 
-        for non_cm in filter(lambda move: move.destinationSquare not in {20, 22, 2}, moves):
+        for non_cm in filter(
+            lambda move: move.destinationSquare not in {20, 22, 2}, moves
+        ):
             self.assertIsNone(non_cm.captures)
 
         self.assertEqual(len(capture_moves), 3)
@@ -190,10 +278,22 @@ class PawnMoveGeneratorTest(TestCase):
             self.assertEqual(cm.captures[0].type, PieceType.PAWN)
 
     def test_black_en_passant_right(self):
-        en_passant_first_move = FirstMove(startSquare=20, destinationSquare=0, gameMoveIndex=0)
+        en_passant_first_move = FirstMove(
+            startSquare=20, destinationSquare=0, gameMoveIndex=0
+        )
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=1, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=0, firstMove=en_passant_first_move),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=1,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=0,
+                firstMove=en_passant_first_move,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -214,15 +314,27 @@ class PawnMoveGeneratorTest(TestCase):
         self.assertEqual(en_passant.captures[0].color, Color.WHITE)
 
     def test_black_en_passant_left(self):
-        en_passant_first_move = FirstMove(startSquare=22, destinationSquare=2, gameMoveIndex=0)
+        en_passant_first_move = FirstMove(
+            startSquare=22, destinationSquare=2, gameMoveIndex=0
+        )
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=1, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=2, firstMove=en_passant_first_move),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=1,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=2,
+                firstMove=en_passant_first_move,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
-                pieces=pieces,
-                square=1,
+            pieces=pieces,
+            square=1,
         )
 
         move_generator = PawnMoveGenerator()
@@ -238,10 +350,22 @@ class PawnMoveGeneratorTest(TestCase):
         self.assertEqual(en_passant.captures[0].color, Color.WHITE)
 
     def test_black_no_en_passant_wasnt_last_move(self):
-        en_passant_first_move = FirstMove(startSquare=20, destinationSquare=0, gameMoveIndex=0)
+        en_passant_first_move = FirstMove(
+            startSquare=20, destinationSquare=0, gameMoveIndex=0
+        )
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=1, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=0, firstMove=en_passant_first_move),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=1,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=0,
+                firstMove=en_passant_first_move,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -257,16 +381,33 @@ class PawnMoveGeneratorTest(TestCase):
         self.assertIsNone(moves[0].captures)
 
     def test_black_no_en_passant_capture_on_destination(self):
-        en_passant_first_move = FirstMove(startSquare=22, destinationSquare=2, gameMoveIndex=0)
+        en_passant_first_move = FirstMove(
+            startSquare=22, destinationSquare=2, gameMoveIndex=0
+        )
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=1, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=0, firstMove=en_passant_first_move),
-            Piece(type=PieceType.CASTLE, color=Color.WHITE, square=10, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=1,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=0,
+                firstMove=en_passant_first_move,
+            ),
+            Piece(
+                type=PieceType.CASTLE,
+                color=Color.WHITE,
+                square=10,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
-                pieces=pieces,
-                square=1,
+            pieces=pieces,
+            square=1,
         )
 
         move_generator = PawnMoveGenerator()
@@ -281,12 +422,23 @@ class PawnMoveGeneratorTest(TestCase):
         self.assertEqual(capture_move.captures[0].type, PieceType.CASTLE)
         self.assertEqual(capture_move.captures[0].color, Color.WHITE)
 
-
     def test_black_no_en_passant_is_not_pawn(self):
-        en_passant_first_move = FirstMove(startSquare=20, destinationSquare=0, gameMoveIndex=0)
+        en_passant_first_move = FirstMove(
+            startSquare=20, destinationSquare=0, gameMoveIndex=0
+        )
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=1, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.CASTLE, color=Color.WHITE, square=0, firstMove=en_passant_first_move),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=1,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.CASTLE,
+                color=Color.WHITE,
+                square=0,
+                firstMove=en_passant_first_move,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -317,7 +469,14 @@ class PawnMoveGeneratorTest(TestCase):
         self.assertIn(moves[1].destinationSquare, {0, 10})
 
     def test_white_no_captures_no_middle_board_second_move(self):
-        pieces = [Piece(type=PieceType.PAWN, color=Color.WHITE, square=20, firstMove=PawnMoveGeneratorTest.FIRST_MOVE)]
+        pieces = [
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=20,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            )
+        ]
         game_state = test_utils.get_game_state(
             pieces=pieces,
             square=20,
@@ -332,7 +491,12 @@ class PawnMoveGeneratorTest(TestCase):
     def test_white_no_captures_no_middle_board_first_move_second_move_blocked(self):
         pieces = [
             Piece(type=PieceType.PAWN, color=Color.WHITE, square=20),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=0, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=0,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -349,7 +513,12 @@ class PawnMoveGeneratorTest(TestCase):
     def test_white_no_captures_no_middle_board_first_move_first_move_blocked(self):
         pieces = [
             Piece(type=PieceType.PAWN, color=Color.WHITE, square=20),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=10, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=10,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -364,8 +533,18 @@ class PawnMoveGeneratorTest(TestCase):
 
     def test_white_one_capture_no_middle_board(self):
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=11, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=0, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=11,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=0,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -393,10 +572,30 @@ class PawnMoveGeneratorTest(TestCase):
 
     def test_white_two_captures_no_middle_board(self):
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=11, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=2, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=0, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=20, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=11,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=2,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=0,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=20,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -423,7 +622,12 @@ class PawnMoveGeneratorTest(TestCase):
 
     def test_white_no_captures_middle_board(self):
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=11, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=11,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -442,10 +646,30 @@ class PawnMoveGeneratorTest(TestCase):
 
     def test_white_captures_middle_board(self):
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=11, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=2, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=0, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=20, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=11,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=2,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=0,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=20,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -459,10 +683,14 @@ class PawnMoveGeneratorTest(TestCase):
 
         self.assertEqual(len(moves), 5)
 
-        for non_cm in filter(lambda move: move.destinationSquare not in {20, 0, 2}, moves):
+        for non_cm in filter(
+            lambda move: move.destinationSquare not in {20, 0, 2}, moves
+        ):
             self.assertIsNone(non_cm.captures)
 
-        capture_moves = list(filter(lambda move: move.destinationSquare in {20, 0, 2}, moves))
+        capture_moves = list(
+            filter(lambda move: move.destinationSquare in {20, 0, 2}, moves)
+        )
         self.assertEqual(len(capture_moves), 3)
 
         for cm in capture_moves:
@@ -471,10 +699,22 @@ class PawnMoveGeneratorTest(TestCase):
             self.assertEqual(cm.captures[0].type, PieceType.PAWN)
 
     def test_white_en_passant_left(self):
-        en_passant_first_move = FirstMove(startSquare=1, destinationSquare=21, gameMoveIndex=0)
+        en_passant_first_move = FirstMove(
+            startSquare=1, destinationSquare=21, gameMoveIndex=0
+        )
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=22, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=21, firstMove=en_passant_first_move),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=22,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=21,
+                firstMove=en_passant_first_move,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
@@ -495,15 +735,27 @@ class PawnMoveGeneratorTest(TestCase):
         self.assertEqual(en_passant.captures[0].color, Color.BLACK)
 
     def test_white_en_passant_right(self):
-        en_passant_first_move = FirstMove(startSquare=3, destinationSquare=23, gameMoveIndex=0)
+        en_passant_first_move = FirstMove(
+            startSquare=3, destinationSquare=23, gameMoveIndex=0
+        )
         pieces = [
-            Piece(type=PieceType.PAWN, color=Color.WHITE, square=22, firstMove=PawnMoveGeneratorTest.FIRST_MOVE),
-            Piece(type=PieceType.PAWN, color=Color.BLACK, square=23, firstMove=en_passant_first_move),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.WHITE,
+                square=22,
+                firstMove=PawnMoveGeneratorTest.FIRST_MOVE,
+            ),
+            Piece(
+                type=PieceType.PAWN,
+                color=Color.BLACK,
+                square=23,
+                firstMove=en_passant_first_move,
+            ),
         ]
 
         game_state = test_utils.get_game_state(
-                pieces=pieces,
-                square=22,
+            pieces=pieces,
+            square=22,
         )
 
         move_generator = PawnMoveGenerator()

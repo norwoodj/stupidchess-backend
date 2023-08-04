@@ -14,7 +14,12 @@ from ..blueprints.game_blueprint import game_blueprint, apply_move_to_game
 from ..blueprints.record_blueprint import record_blueprint
 from ..blueprints.template_blueprint import template_blueprint
 from ..daos.mongo_dao import MongoDao
-from ..exceptions import InvalidMoveException, InvalidGameParameterException, ForbiddenMoveException, DuplicateMoveException
+from ..exceptions import (
+    InvalidMoveException,
+    InvalidGameParameterException,
+    ForbiddenMoveException,
+    DuplicateMoveException,
+)
 from ..models.game import Game
 from ..models.move import Move
 from ..models.user import User
@@ -52,7 +57,9 @@ class ApplicationContext:
         self.__register_error_handlers(app)
 
     def __initialize_app(self, app):
-        self.config["REMEMBER_COOKIE_DURATION"] = timedelta(days=self.config.get('remember_cookie_duration_days', 365))
+        self.config["REMEMBER_COOKIE_DURATION"] = timedelta(
+            days=self.config.get("remember_cookie_duration_days", 365)
+        )
         app.config.update(self.config)
 
     def __initialize_healthcheck(self, app):
@@ -63,7 +70,12 @@ class ApplicationContext:
         def mongo_okay():
             db = get_db()
             stats = db.command("dbstats")
-            return bool(stats["ok"]), "Mongo Database is UP" if stats["ok"] else "ERROR: Mongo Database is DOWN"
+            return (
+                bool(stats["ok"]),
+                "Mongo Database is UP"
+                if stats["ok"]
+                else "ERROR: Mongo Database is DOWN",
+            )
 
         health.add_check(mongo_okay)
 
@@ -116,16 +128,23 @@ class ApplicationContext:
 
     def __register_blueprints(self, app):
         for name, blueprint in ApplicationContext.BLUEPRINTS:
-            LOGGER.debug(f"Registering {name} blueprint with prefix '{self.config['endpoint_prefixes'][name]}'")
-            app.register_blueprint(blueprint, url_prefix=self.config["endpoint_prefixes"][name])
+            LOGGER.debug(
+                f"Registering {name} blueprint with prefix '{self.config['endpoint_prefixes'][name]}'"
+            )
+            app.register_blueprint(
+                blueprint, url_prefix=self.config["endpoint_prefixes"][name]
+            )
 
     def __register_error_handlers(self, app):
         @app.errorhandler(InvalidMoveException)
         def handle_invalid_move_error(error):
-            return jsonify(
-                message=f"Failed to apply invalid move ({error.move}), reason: {error.reason}",
-                move=error.move.to_dict("startSquare", "destinationSquare", "type"),
-            ), 400
+            return (
+                jsonify(
+                    message=f"Failed to apply invalid move ({error.move}), reason: {error.reason}",
+                    move=error.move.to_dict("startSquare", "destinationSquare", "type"),
+                ),
+                400,
+            )
 
         @app.errorhandler(InvalidGameParameterException)
         def handle_invalid_game_parameter_error(error):
@@ -133,11 +152,19 @@ class ApplicationContext:
 
         @app.errorhandler(ForbiddenMoveException)
         def handle_forbidden_move_error(error):
-            return jsonify(
-                message=f"User '{current_user.username}' is not authorized to perform move ({error.move})",
-                move=error.move.to_dict("startSquare", "destinationSquare", "type"),
-            ), 403
+            return (
+                jsonify(
+                    message=f"User '{current_user.username}' is not authorized to perform move ({error.move})",
+                    move=error.move.to_dict("startSquare", "destinationSquare", "type"),
+                ),
+                403,
+            )
 
         @app.errorhandler(DuplicateMoveException)
         def handle_duplicate_move_exception(_):
-            return jsonify(message=f"Failed to persist move to game state that has already had a move applied"), 400
+            return (
+                jsonify(
+                    message=f"Failed to persist move to game state that has already had a move applied"
+                ),
+                400,
+            )

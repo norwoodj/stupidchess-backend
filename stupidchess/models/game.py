@@ -53,7 +53,9 @@ class Game(BaseDocument, Dictable):
     pieces = EmbeddedDocumentListField(document_type=Piece, default=list)
     captures = EmbeddedDocumentListField(document_type=Piece, default=list)
     currentTurn = StringField(required=True, regex=COLOR_REGEX)
-    possiblePiecesToBePlaced = EmbeddedDocumentListField(document_type=Piece, default=list)
+    possiblePiecesToBePlaced = EmbeddedDocumentListField(
+        document_type=Piece, default=list
+    )
     squaresToBePlaced = ListField(field=IntField(), default=list)
     blackPlayerUuid = StringField(required=True, regex=UUID_REGEX)
     whitePlayerUuid = StringField(required=True, regex=UUID_REGEX)

@@ -28,9 +28,19 @@ class RecordService:
                     "$cond": {
                         "if": {
                             "$or": [
-                                {"$and": [{"$eq": ["$blackPlayerUuid", user_uuid]}, {"$eq": ["$whitePlayerScore", 0]}]},
-                                {"$and": [not_one_player, {"$eq": ["$whitePlayerUuid", user_uuid]}, {"$eq": ["$blackPlayerScore", 0]}]},
-
+                                {
+                                    "$and": [
+                                        {"$eq": ["$blackPlayerUuid", user_uuid]},
+                                        {"$eq": ["$whitePlayerScore", 0]},
+                                    ]
+                                },
+                                {
+                                    "$and": [
+                                        not_one_player,
+                                        {"$eq": ["$whitePlayerUuid", user_uuid]},
+                                        {"$eq": ["$blackPlayerScore", 0]},
+                                    ]
+                                },
                             ],
                         },
                         "then": GameResult.WIN,
@@ -48,7 +58,9 @@ class RecordService:
                     "$concat": ["$type", ".", "$gameResult"],
                 },
                 "count": {"$sum": 1},
-                "pointDifferential": {"$sum": {"$add": ["$blackPlayerScore", "$whitePlayerScore"]}},
+                "pointDifferential": {
+                    "$sum": {"$add": ["$blackPlayerScore", "$whitePlayerScore"]}
+                },
             }
         }
 
@@ -59,7 +71,8 @@ class RecordService:
                 "wins": 0,
                 "losses": 0,
                 "pointDifferential": 0,
-            } for game_type in GameType.all()
+            }
+            for game_type in GameType.all()
         }
 
         for r in results_for_game_type_and_result:
@@ -67,15 +80,19 @@ class RecordService:
 
             multiplier = -1 if game_result == GameResult.LOSS else 1
             result_key = "losses" if game_result == GameResult.LOSS else "wins"
-            records[game_type]["pointDifferential"] += multiplier * r["pointDifferential"]
+            records[game_type]["pointDifferential"] += (
+                multiplier * r["pointDifferential"]
+            )
             records[game_type][result_key] = r["count"]
 
         return records
 
     def get_user_records(self, user_uuid, include_one_player_games):
-        query_games_method = self.__game_service.query_completed_games_for_user \
-            if include_one_player_games \
+        query_games_method = (
+            self.__game_service.query_completed_games_for_user
+            if include_one_player_games
             else self.__game_service.query_completed_two_player_games_for_user
+        )
 
         results_for_game_type_and_result = query_games_method(
             user_uuid,
@@ -84,4 +101,6 @@ class RecordService:
             RecordService.__get_game_type_and_result_group(),
         )
 
-        return RecordService.__convert_to_per_game_type_records(results_for_game_type_and_result)
+        return RecordService.__convert_to_per_game_type_records(
+            results_for_game_type_and_result
+        )

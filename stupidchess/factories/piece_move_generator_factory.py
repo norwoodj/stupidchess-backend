@@ -64,7 +64,9 @@ PIECE_MOVE_GENERATOR_FOR_PIECE_TYPE = {
     PieceType.CASTLE: DirectionalMoveGenerator(CASTLE_DIRECTIONS),
     PieceType.PONY: OffsetListMoveGenerator(PONY_OFFSETS),
     PieceType.CHECKER_KING: CheckerMoveGenerator(CHECKER_KING_OFFSETS),
-    PieceType.CHECKER: CheckerMoveGenerator(CHECKER_OFFSETS, middle_board_offset=Offsets.LEFT_BACKWARD_OFFSET),
+    PieceType.CHECKER: CheckerMoveGenerator(
+        CHECKER_OFFSETS, middle_board_offset=Offsets.LEFT_BACKWARD_OFFSET
+    ),
     PieceType.PAWN: PawnMoveGenerator(),
 }
 

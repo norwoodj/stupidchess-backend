@@ -16,22 +16,37 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
 
     def get_moves_to_apply(self, move, game, user_uuid):
         if move.destinationSquare not in game.squaresToBePlaced:
-            raise InvalidMoveException(move, f"Square {move.destinationSquare} is not available to be placed!")
+            raise InvalidMoveException(
+                move, f"Square {move.destinationSquare} is not available to be placed!"
+            )
 
         if not any(p == move.piece for p in game.possiblePiecesToBePlaced):
-            LOGGER.error(f"Attempted to apply invalid PLACE move {m} on game {game.get_id()}, no matching piece in possiblePiecesToBePlaced")
+            LOGGER.error(
+                f"Attempted to apply invalid PLACE move {m} on game {game.get_id()}, no matching piece in possiblePiecesToBePlaced"
+            )
             raise InvalidMoveException(move, "No such piece available to replace!")
 
-        if not is_square_in_setup_zone_for_color(move.piece.color, move.destinationSquare):
-            raise InvalidMoveException(move, f"{move.piece.color} pieces cannot be placed at {move.destinationSquare}!")
+        if not is_square_in_setup_zone_for_color(
+            move.piece.color, move.destinationSquare
+        ):
+            raise InvalidMoveException(
+                move,
+                f"{move.piece.color} pieces cannot be placed at {move.destinationSquare}!",
+            )
 
-        additional_necessary_placements = self.__get_additional_necessary_placements(move, game)
+        additional_necessary_placements = self.__get_additional_necessary_placements(
+            move, game
+        )
         return [move, *additional_necessary_placements]
 
     def apply_game_updates_for_moves(self, moves, game):
         square_removals = [move.destinationSquare for move in moves]
-        piece_removals = PlaceMoveUpdateService.__get_piece_removal_for_place_moves(moves, moves[0].piece.color)
-        piece_additions = [PlaceMoveUpdateService.__get_piece_addition_for_move(move) for move in moves]
+        piece_removals = PlaceMoveUpdateService.__get_piece_removal_for_place_moves(
+            moves, moves[0].piece.color
+        )
+        piece_additions = [
+            PlaceMoveUpdateService.__get_piece_addition_for_move(move) for move in moves
+        ]
 
         updates = {
             "$pull": {
@@ -66,9 +81,7 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
         return {
             "$and": [
                 {"color": color},
-                {"$or": [
-                    move.piece.to_dict("type", "index") for move in moves
-                ]},
+                {"$or": [move.piece.to_dict("type", "index") for move in moves]},
             ],
         }
 
@@ -92,12 +105,17 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
         piece_color = last_move.piece.color
 
         players_other_pieces = [
-            p for p in game.possiblePiecesToBePlaced if p.color == piece_color and p.index != last_move.piece.index
+            p
+            for p in game.possiblePiecesToBePlaced
+            if p.color == piece_color and p.index != last_move.piece.index
         ]
 
         players_other_squares = [
-            s for s in game.squaresToBePlaced if (
-                s != last_move.destinationSquare and is_square_in_setup_zone_for_color(piece_color, s)
+            s
+            for s in game.squaresToBePlaced
+            if (
+                s != last_move.destinationSquare
+                and is_square_in_setup_zone_for_color(piece_color, s)
             )
         ]
 
@@ -108,7 +126,9 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
         if not all(p.type == piece_type for p in players_other_pieces):
             return []
 
-        return PlaceMoveUpdateService.__build_place_moves_for_pieces(players_other_pieces, players_other_squares)
+        return PlaceMoveUpdateService.__build_place_moves_for_pieces(
+            players_other_pieces, players_other_squares
+        )
 
     @staticmethod
     def __build_place_moves_for_pieces(placers_other_pieces, players_other_squares):
@@ -122,4 +142,3 @@ class PlaceMoveUpdateService(AbstractMoveUpdateService):
         return [
             build_move(idx, piece) for idx, piece in enumerate(placers_other_pieces)
         ]
-

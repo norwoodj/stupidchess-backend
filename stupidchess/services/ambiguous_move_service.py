@@ -10,7 +10,9 @@ class AmbiguousMoveService:
             moves_by_destination[m.destinationSquare].append(m)
 
         return [
-            AmbiguousMoveService.__generate_ambiguous_move(destination_square, move_list)
+            AmbiguousMoveService.__generate_ambiguous_move(
+                destination_square, move_list
+            )
             for destination_square, move_list in moves_by_destination.items()
             if len(move_list) > 1 and all(m.captures is not None for m in move_list)
         ]
@@ -26,10 +28,12 @@ class AmbiguousMoveService:
                     capture_in_other_move[capture.square] = False
 
         disambiguating_squares = [
-            capture_square for capture_square, in_other_move in capture_in_other_move.items() if not in_other_move
+            capture_square
+            for capture_square, in_other_move in capture_in_other_move.items()
+            if not in_other_move
         ]
 
         return {
-            'destinationSquare': destination_square,
-            'disambiguatingCaptures': disambiguating_squares,
+            "destinationSquare": destination_square,
+            "disambiguatingCaptures": disambiguating_squares,
         }

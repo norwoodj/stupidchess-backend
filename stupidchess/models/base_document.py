@@ -14,4 +14,4 @@ class BaseDocument(Document):
     def get_id(self):
         return self._id
 
-    meta = {'abstract': True}
+    meta = {"abstract": True}

@@ -22,16 +22,18 @@ class PieceType:
     PAWN = "PAWN"
 
 
-PIECE_TYPE_REGEX = "|".join([
-    PieceType.KING,
-    PieceType.QUEEN,
-    PieceType.BISHOP,
-    PieceType.PONY,
-    PieceType.CASTLE,
-    PieceType.CHECKER,
-    PieceType.CHECKER_KING,
-    PieceType.PAWN,
-])
+PIECE_TYPE_REGEX = "|".join(
+    [
+        PieceType.KING,
+        PieceType.QUEEN,
+        PieceType.BISHOP,
+        PieceType.PONY,
+        PieceType.CASTLE,
+        PieceType.CHECKER,
+        PieceType.CHECKER_KING,
+        PieceType.PAWN,
+    ]
+)
 
 
 class FirstMove(EmbeddedDocument, Dictable):
@@ -48,12 +50,14 @@ class Piece(EmbeddedDocument, Dictable):
     firstMove = EmbeddedDocumentField(FirstMove)
 
     def __eq__(self, other):
-        return all([
-            self.type == other.type,
-            self.color == other.color,
-            self.square == other.square,
-            self.index == other.index,
-        ])
+        return all(
+            [
+                self.type == other.type,
+                self.color == other.color,
+                self.square == other.square,
+                self.index == other.index,
+            ]
+        )
 
     def __str__(self):
         return f"{self.color} {self.type} at {self.square}"

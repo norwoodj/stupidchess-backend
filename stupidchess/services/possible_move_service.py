@@ -6,7 +6,12 @@ from ..utils.game_rules import is_in_board_setup_mode, is_players_turn
 
 
 class PossibleMoveService:
-    def __init__(self, game_service, board_squares_for_game_type, board_middle_section_for_game_type):
+    def __init__(
+        self,
+        game_service,
+        board_squares_for_game_type,
+        board_middle_section_for_game_type,
+    ):
         self.__game_service = game_service
         self.__board_squares_for_game_type = board_squares_for_game_type
         self.__board_middle_section_for_game_type = board_middle_section_for_game_type
@@ -18,13 +23,17 @@ class PossibleMoveService:
         game_uuid=None,
         user_uuid=None,
     ):
-        game = game or self.__game_service.get_game_for_game_uuid_and_user(game_uuid, user_uuid)
+        game = game or self.__game_service.get_game_for_game_uuid_and_user(
+            game_uuid, user_uuid
+        )
 
         if not is_players_turn(game, user_uuid) or is_in_board_setup_mode(game):
             return []
 
         board_square_set = self.__board_squares_for_game_type.get(game.type, set())
-        board_middle_square_set = self.__board_middle_section_for_game_type.get(game.type, set())
+        board_middle_square_set = self.__board_middle_section_for_game_type.get(
+            game.type, set()
+        )
         can_capture_own_pieces = game.type == GameType.STUPID_CHESS
         check = game.type == GameType.CHESS
         can_checkers_move_twice_on_first_move = game.type == GameType.STUPID_CHESS

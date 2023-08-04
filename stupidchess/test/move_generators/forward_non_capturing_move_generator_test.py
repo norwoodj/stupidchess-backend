@@ -27,7 +27,9 @@ class ForwardNonCapturingMoveGeneratorTest(TestCase):
             square=70,
         )
 
-        move_generator = ForwardNonCapturingMoveGenerator([Offsets.FORWARD_OFFSET], Offsets.LEFT_OFFSET)
+        move_generator = ForwardNonCapturingMoveGenerator(
+            [Offsets.FORWARD_OFFSET], Offsets.LEFT_OFFSET
+        )
         moves = move_generator.get_possible_moves(game_state)
 
         self.assertEqual(len(moves), 0)
@@ -46,7 +48,9 @@ class ForwardNonCapturingMoveGeneratorTest(TestCase):
             pieces=pieces,
         )
 
-        move_generator = ForwardNonCapturingMoveGenerator([Offsets.FORWARD_OFFSET], Offsets.LEFT_OFFSET)
+        move_generator = ForwardNonCapturingMoveGenerator(
+            [Offsets.FORWARD_OFFSET], Offsets.LEFT_OFFSET
+        )
         moves = move_generator.get_possible_moves(game_state)
 
         self.assertEqual(len(moves), 0)

@@ -48,10 +48,14 @@ class Move(BaseDocument, Dictable):
 
     def __str__(self):
         prefix = "<" + (f"[{self.index}]" if self.index is not None else "")
-        piece_component = f"{self.piece.color} {self.piece.type}" if self.piece is not None else ""
+        piece_component = (
+            f"{self.piece.color} {self.piece.type}" if self.piece is not None else ""
+        )
 
         if self.type == MoveType.PLACE:
-            return f"{prefix} {self.type} {piece_component} at {self.destinationSquare}>"
+            return (
+                f"{prefix} {self.type} {piece_component} at {self.destinationSquare}>"
+            )
         if self.type == MoveType.MOVE:
             return f"{prefix} {self.type} {piece_component} to {self.destinationSquare} capturing [{', '.join(str(c) for c in self.captures or [])}]>"
         if self.type == MoveType.REPLACE:
@@ -66,5 +70,5 @@ class Move(BaseDocument, Dictable):
             type=json.get("type"),
             startSquare=json.get("startSquare"),
             destinationSquare=json.get("destinationSquare"),
-            piece=Piece.from_json(json.get("piece"))
+            piece=Piece.from_json(json.get("piece")),
         )

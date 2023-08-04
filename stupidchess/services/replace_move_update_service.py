@@ -16,24 +16,35 @@ class ReplaceMoveUpdateService(AbstractMoveUpdateService):
 
     def get_moves_to_apply(self, move, game, user_uuid):
         if move.destinationSquare not in game.squaresToBePlaced:
-            raise InvalidMoveException(move, f"Square {move.destinationSquare} is not available to be placed!")
+            raise InvalidMoveException(
+                move, f"Square {move.destinationSquare} is not available to be placed!"
+            )
 
         if not any(p == move.piece for p in game.possiblePiecesToBePlaced):
-            LOGGER.error(f"Attempted to apply invalid REPLACE move {m} on game {game.get_id()}, no matching piece in possiblePiecesToBePlaced")
+            LOGGER.error(
+                f"Attempted to apply invalid REPLACE move {m} on game {game.get_id()}, no matching piece in possiblePiecesToBePlaced"
+            )
             raise InvalidMoveException(move, "No such piece available to replace!")
 
-        if not any(p.color == move.piece.color and p.square == move.destinationSquare for p in game.pieces):
-            LOGGER.error(f"Attempted to apply invalid REPLACE move {m} on game {game.get_id()}, no piece for color at square being replaced")
+        if not any(
+            p.color == move.piece.color and p.square == move.destinationSquare
+            for p in game.pieces
+        ):
+            LOGGER.error(
+                f"Attempted to apply invalid REPLACE move {m} on game {game.get_id()}, no piece for color at square being replaced"
+            )
             raise InvalidMoveException(move, "No piece to be replaced at that square!")
 
         return [move]
 
     @staticmethod
     def __piece_affects_score(piece, game_type):
-        return all([
-            game_type in (GameType.CHESS, GameType.STUPID_CHESS),
-            piece.type in (PieceType.CHECKER_KING, PieceType.KING),
-        ])
+        return all(
+            [
+                game_type in (GameType.CHESS, GameType.STUPID_CHESS),
+                piece.type in (PieceType.CHECKER_KING, PieceType.KING),
+            ]
+        )
 
     def __apply_remove_piece_update(self, move, game):
         remove_piece_updates = {
@@ -46,7 +57,9 @@ class ReplaceMoveUpdateService(AbstractMoveUpdateService):
         self.__game_service.update_game(game.get_id(), remove_piece_updates)
 
     def __apply_replace_piece_update(self, move, game):
-        new_current_turn = Color.BLACK if game.currentTurn == Color.WHITE else Color.WHITE
+        new_current_turn = (
+            Color.BLACK if game.currentTurn == Color.WHITE else Color.WHITE
+        )
         replace_piece_updates = {
             "$set": {
                 "possiblePiecesToBePlaced": [],
@@ -56,7 +69,10 @@ class ReplaceMoveUpdateService(AbstractMoveUpdateService):
                 "squaresToBePlaced": move.destinationSquare,
             },
             "$push": {
-                "pieces": {"square": move.destinationSquare, **move.piece.to_dict("color", "type")},
+                "pieces": {
+                    "square": move.destinationSquare,
+                    **move.piece.to_dict("color", "type"),
+                },
             },
             "$inc": {"lastMove": 1},
             "$currentDate": {"lastUpdateTimestamp": True},

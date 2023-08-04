@@ -11,7 +11,7 @@ class MongoDao:
 
     @staticmethod
     def __apply_paging(queryset, offset, limit):
-        return queryset[offset:offset+limit]
+        return queryset[offset : offset + limit]
 
     @staticmethod
     def __only_fields(queryset, only_fields):
@@ -19,7 +19,9 @@ class MongoDao:
 
     @staticmethod
     def __order_by(queryset, order_by_fields):
-        return queryset if order_by_fields is None else queryset.order_by(*order_by_fields)
+        return (
+            queryset if order_by_fields is None else queryset.order_by(*order_by_fields)
+        )
 
     @staticmethod
     def insert(obj):

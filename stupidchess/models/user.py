@@ -4,10 +4,12 @@ from .base_document import BaseDocument
 
 class User(BaseDocument):
     meta = {
-        "indexes": [{
-            "fields": ["username"],
-            "unique": True,
-        }],
+        "indexes": [
+            {
+                "fields": ["username"],
+                "unique": True,
+            }
+        ],
     }
 
     username = StringField(required=True)

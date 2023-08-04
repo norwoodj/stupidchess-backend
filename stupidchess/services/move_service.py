@@ -17,7 +17,10 @@ class MoveService:
 
     @staticmethod
     def __should_limit_moves_returned(game):
-        return is_in_board_setup_mode(game) and game.whitePlayerUuid != game.blackPlayerUuid
+        return (
+            is_in_board_setup_mode(game)
+            and game.whitePlayerUuid != game.blackPlayerUuid
+        )
 
     @staticmethod
     def __get_default_ordering():
@@ -41,7 +44,9 @@ class MoveService:
         if not MoveService.__should_limit_moves_returned(game):
             return MoveService.__get_moves_for_game_criteria(game_uuid)
 
-        color_moves_to_retrieve = Color.BLACK if game.blackPlayerUuid == user_uuid else Color.WHITE
+        color_moves_to_retrieve = (
+            Color.BLACK if game.blackPlayerUuid == user_uuid else Color.WHITE
+        )
         return {
             "$and": [
                 MoveService.__get_moves_for_game_criteria(game_uuid),
@@ -52,7 +57,9 @@ class MoveService:
     def insert_many(self, moves):
         return self.__move_dao.insert_many(moves)
 
-    def get_moves_for_game_and_user(self, game_uuid, user_uuid, offset=DEFAULT_OFFSET, limit=DEFAULT_LIMIT):
+    def get_moves_for_game_and_user(
+        self, game_uuid, user_uuid, offset=DEFAULT_OFFSET, limit=DEFAULT_LIMIT
+    ):
         query = self.__get_moves_for_game_and_user_criteria(game_uuid, user_uuid)
         return self.__move_dao.find(
             query=query,

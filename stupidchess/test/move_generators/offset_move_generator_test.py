@@ -3,7 +3,9 @@ from unittest import TestCase
 
 from stupidchess.models.piece import Piece, PieceType, Color
 from stupidchess.move_generators.offsets import Offsets
-from stupidchess.move_generators.offset_list_move_generator import OffsetListMoveGenerator
+from stupidchess.move_generators.offset_list_move_generator import (
+    OffsetListMoveGenerator,
+)
 from stupidchess.test import test_utils
 
 
@@ -11,7 +13,7 @@ class OffsetMoveGeneratorTest(TestCase):
     def test_forward_two_left_and_right(self):
         offsets = (
             Offsets.FORWARD_OFFSET * 2 + Offsets.RIGHT_OFFSET,
-            Offsets.FORWARD_OFFSET * 2 + Offsets.LEFT_OFFSET
+            Offsets.FORWARD_OFFSET * 2 + Offsets.LEFT_OFFSET,
         )
 
         move_generator = OffsetListMoveGenerator(offsets)

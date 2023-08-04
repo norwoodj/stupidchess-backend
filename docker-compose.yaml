@@ -49,7 +49,7 @@ services:
       dockerfile: Dockerfile-socat
     ports:
       - published: 80
-        target: 23080
+        target: 23180
     volumes:
       - type: volume
         source: stupidchess-nginx-runtime

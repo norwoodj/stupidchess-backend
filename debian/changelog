@@ -5,7 +5,7 @@ stupidchess-uwsgi (2023.8.0) jammy; urgency=medium
   * chore: switches to new release tag format
   * chore: Specifies dependency versions better in Pipfile, updates requirements.txt file, adds a lint script and runs it
 
- -- John Norwood <jnorwood@cloudflare.com>  Fri, 04 Aug 2023 16:06:36 +0100
+ -- John Norwood <norwood.john.m@gmail.com>  Fri, 04 Aug 2023 16:06:36 +0100
 
 stupidchess-uwsgi (23.0803.0) jammy; urgency=medium
 
@@ -24,7 +24,7 @@ stupidchess-uwsgi (23.0621.0) unstable; urgency=low
 
   * Fixes docker run configuration, at least for the uwsgi container, need to fix nginx separately
 
- -- John Norwood <jnorwood@cloudflare.com>  Wed, 21 Jun 2023 12:53:53 +0100
+ -- John Norwood <norwood.john.m@gmail.com>  Wed, 21 Jun 2023 12:53:53 +0100
 
 stupidchess-uwsgi (21.1027.0) unstable; urgency=low
 

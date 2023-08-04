@@ -55,7 +55,7 @@ make release
 
 This is only tested on linux and requires you have installed some dependencies with:
 ```
-sudo apt install git-dch
+sudo apt install git-buildpackage
 ```
 
 ### Building Debian Package

@@ -1,3 +1,12 @@
+stupidchess-uwsgi (2023.8.0) jammy; urgency=medium
+
+  * chore: cleans up some unneeded make variables
+  * chore: Cleans up release script and Makefile a bit
+  * chore: switches to new release tag format
+  * chore: Specifies dependency versions better in Pipfile, updates requirements.txt file, adds a lint script and runs it
+
+ -- John Norwood <jnorwood@cloudflare.com>  Fri, 04 Aug 2023 16:06:36 +0100
+
 stupidchess-uwsgi (23.0803.0) jammy; urgency=medium
 
   * chore: add some documentation to the readme for releasing and building the debian package

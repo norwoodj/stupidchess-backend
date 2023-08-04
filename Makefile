@@ -5,7 +5,7 @@ build:
 	:
 
 release:
-	./release.sh
+	./scripts/release.sh
 
 deb:
 	debuild

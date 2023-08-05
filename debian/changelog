@@ -1,3 +1,10 @@
+stupidchess-uwsgi (2023.8.1) jammy; urgency=medium
+
+  * chore: updates docs to reflect new local run port
+  * feat: Adds a version file and serves it
+
+ -- John Norwood <norwood.john.m@gmail.com>  Sat, 05 Aug 2023 23:50:15 +0100
+
 stupidchess-uwsgi (2023.8.0) jammy; urgency=medium
 
   * chore: cleans up some unneeded make variables

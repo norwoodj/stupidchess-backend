@@ -33,7 +33,7 @@ services:
         read_only: true
 
   nginx:
-    image: jnorwood/stupidchess-nginx:2023.8.0
+    image: jnorwood/stupidchess-nginx:2023.8.1
     volumes:
       - type: volume
         source: stupidchess-sockets

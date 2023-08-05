@@ -31,17 +31,11 @@ as an indication of my skillset.
 
 
 ### Building and Developing Locally
-In order to build, run and develop this project locally you'll need a number of things installed:
-
-* docker - 17.06 or newer
-* docker-compose - 1.16.1 or newer
-
-To build the three docker images and start the application locally run:
+There is a docker-compose setup for running locally. To start run the following,
+then navigate to http://localhost:23180 in your browser.
 ```
 make run
 ```
-
-You can then go to a browser window and open [localhost](http://localhost) to view stupidchess running locally.
 
 This is setup to include local code changes in the running docker containers as volumes and to use auto-reload
 for the flask python server and --watch for webpack. In this way your code will get rebuilt and the server

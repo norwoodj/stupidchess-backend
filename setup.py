@@ -7,7 +7,7 @@ setup(
     packages=find_packages(),
     zip_safe=False,
     package_data={
-        "stupidchess": ["templates/*.html"],
+        "stupidchess": ["templates/*.html", "*.json"],
     },
     install_requires=[
         "bcrypt",

@@ -16,6 +16,5 @@ debian/stupidchess/
 stupidchess-deployment/opt/stupidchess/config
 stupidchess-deployment/opt/stupidchess/uwsgi.ini
 stupidchess-deployment.deb
-update-versions
-update-deb-version
-version.txt
+version.json
+stupidchess/version.json

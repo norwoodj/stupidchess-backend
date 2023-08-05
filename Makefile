@@ -7,10 +7,15 @@ build:
 release:
 	./scripts/release.sh
 
-deb:
+deb: version.json
+	mv version.json stupidchess
 	debuild
 
-uwsgi:
+version.json:
+	echo '{"build_timestamp": "$(shell date --utc --iso-8601=seconds)", "git_revision": "$(shell git rev-parse HEAD)", "version": "$(shell git describe)"}' | jq . > version.json
+
+uwsgi: version.json
+	mv version.json stupidchess
 	docker-compose build uwsgi
 
 push: uwsgi
@@ -22,3 +27,6 @@ run:
 
 down:
 	docker-compose down --volumes
+
+clean:
+	rm -vf version.json stupidchess/version.json

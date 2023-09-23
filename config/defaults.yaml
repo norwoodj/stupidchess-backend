@@ -20,3 +20,6 @@ MONGODB_SETTINGS:
 
 SESSION_PROTECTION: strong
 REMEMBER_COOKIE_HTTPONLY: true
+REMEMBER_COOKIE_SECURE: true
+remember_cookie_duration_days: 30
+

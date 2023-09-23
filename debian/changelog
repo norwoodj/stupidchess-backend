@@ -1,3 +1,9 @@
+stupidchess-uwsgi (2023.9.1) jammy; urgency=medium
+
+  * feat: Removes no longer needed service and socket files from debian package,as well as moves RPI config to salt
+
+ -- John Norwood <norwood.john.m@gmail.com>  Sat, 23 Sep 2023 17:15:42 +0100
+
 stupidchess-uwsgi (2023.9.0) jammy; urgency=medium
 
   * chore: updates image versions from frontend repo

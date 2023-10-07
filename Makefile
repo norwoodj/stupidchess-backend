@@ -19,7 +19,7 @@ uwsgi: version.json
 	docker-compose build uwsgi
 
 push: uwsgi
-	docker tag $(DOCKER_REPOSITORY)/stupidchess-uwsgi:current $(DOCKER_REPOSITORY)/stupidchess-uwsgi:$(shell git tag -l | tail -n1)
+	docker tag $(DOCKER_REPOSITORY)/stupidchess-uwsgi $(DOCKER_REPOSITORY)/stupidchess-uwsgi:$(shell git tag -l | tail -n1)
 	docker push $(DOCKER_REPOSITORY)/stupidchess-uwsgi:$(shell git tag -l | tail -n1)
 
 run:

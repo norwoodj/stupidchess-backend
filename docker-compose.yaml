@@ -3,12 +3,9 @@ version: "3.7"
 services:
   mongo:
     image: mongo:4.4-focal@sha256:0032f4a04bf96ca9c69665a553198148bdd8ec8caf556eb6281a464d3cb32470
-    ports:
-      - target: 27017
-        published: 27017
 
   uwsgi:
-    image: jnorwood/stupidchess-uwsgi:current
+    image: jnorwood/stupidchess-uwsgi
     build:
       context: .
       dockerfile: docker/Dockerfile-uwsgi
@@ -43,7 +40,7 @@ services:
         target: /run/stupidchess-nginx
 
   socat:
-    image: jnorwood/stupidchess-socat:current
+    image: jnorwood/stupidchess-socat
     build:
       context: docker
       dockerfile: Dockerfile-socat

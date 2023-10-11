@@ -38,6 +38,19 @@ services:
       - type: volume
         source: stupidchess-nginx-runtime
         target: /run/stupidchess-nginx
+      - type: volume
+        source: stupidchess-nginx-logs
+        target: /run/systemd/journal
+
+  journald:
+    image: jnorwood/stupidchess-journald
+    build:
+      context: docker
+      dockerfile: Dockerfile-journald
+    volumes:
+      - type: volume
+        source: stupidchess-nginx-logs
+        target: /run/systemd/journal
 
   socat:
     image: jnorwood/stupidchess-socat
@@ -54,5 +67,6 @@ services:
 
 volumes:
   frontend-public-volume:
+  stupidchess-nginx-logs:
   stupidchess-nginx-runtime:
   stupidchess-sockets:

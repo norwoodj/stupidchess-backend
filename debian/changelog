@@ -1,3 +1,13 @@
+stupidchess-uwsgi (2023.10.0) jammy; urgency=medium
+
+  * chore: Updates docker images in docker-compose to better reflect what will soon be deployed
+  * chore: removes socket from uwsgi config file to use systemd socket activation
+  * fix: Small local fixes and fixes issue where remember me functionality didn't work
+  * chore: adds a couple common-sense uwsgi config parameters
+  * fix: Makes docker changes to accomodate nginx now access logging to journal
+
+ -- John Norwood <norwood.john.m@gmail.com>  Wed, 11 Oct 2023 21:39:00 +0100
+
 stupidchess-uwsgi (2023.9.1) jammy; urgency=medium
 
   * feat: Removes no longer needed service and socket files from debian package,as well as moves RPI config to salt

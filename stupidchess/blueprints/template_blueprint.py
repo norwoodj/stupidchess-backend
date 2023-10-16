@@ -72,7 +72,7 @@ def game():
                 current_user=current_user,
                 error=f"No Game with ID {game_uuid} exists!",
             ),
-            400,
+            404,
         )
 
     return render_template("game.html", game_uuid=game_uuid, current_user=current_user)

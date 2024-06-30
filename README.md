@@ -6,13 +6,13 @@ Stupid Chess
 From the Stupid Chess homepage:
 
 ```
-This is a web-based board game running on a python-flask/mongo backend with a react frontend.
-It is deployed on a raspberry pi cluster running kubernetes. Visit my github to view the salt-stack
-configuration, build tools, and custom docker images I've built to deploy this and other projects
-on this platform.
+This is a web-based board game running on a python-flask/mongo backend with a react frontend. It
+is deployed on a raspberry pi running in my house. Here's the salt configuration used to do that:
+https://github.com/norwoodj/rpi-salt.
 
-You can see this particular project at https://github.com/norwoodj/stupidchess
-You might also visit my other project https://hashbash.jmn23.com
+You can see the code for this project at https://github.com/norwoodj/stupidchess
+You might also visit my other projects https://hashbash.jmn23.com and https://bolas.jmn23.com.
+You can see my personal website at https://jmn23.com.
 
 Stupid Chess is a variant on the popular Chess and checkers board games that John Norwood (that's me)
 and some of his college friends invented when we stumbled across a chess board that had been ripped
@@ -20,7 +20,6 @@ in half and an incomplete set of pieces. It has a number of delightful rule chan
 inferior games, and you can learn how to play on this page
 https://stupidchess.jmn23.com/how-to-play
 ```
-
 
 ### This Codebase
 This code was largely written as an exploration of how to effectively build and deploy flask/mongo/react

@@ -1,3 +1,10 @@
+stupidchess-uwsgi (2024.7.0) jammy; urgency=medium
+
+  * chore: Updates README with updated deployment information
+  * fix: minor color change
+
+ -- John Norwood <norwood.john.m@gmail.com>  Sun, 21 Jul 2024 23:26:09 +0100
+
 stupidchess-uwsgi (2023.10.1) jammy; urgency=medium
 
   * chore: Updates nginx image to 2023.10.0

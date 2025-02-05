@@ -5,7 +5,6 @@ from flask_auth_utils.initialize_authentication import initialize_authentication
 from flask_login import current_user
 from flask_mongoengine import MongoEngine
 from flask_wtf import CSRFProtect
-from healthcheck import HealthCheck
 from jconfigure import configure
 from mongoengine.connection import get_db
 
@@ -48,7 +47,6 @@ class ApplicationContext:
 
         self.__initialize_app(app)
         self.__initialize_csrf(app)
-        self.__initialize_healthcheck(app)
         self.__initialize_mongo(app)
         self.__initialize_daos()
         self.__initialize_services()
@@ -61,23 +59,6 @@ class ApplicationContext:
             days=self.config.get("remember_cookie_duration_days", 365)
         )
         app.config.update(self.config)
-
-    def __initialize_healthcheck(self, app):
-        healthcheck_endpoint = self.config["endpoint_prefixes"]["healthcheck"]
-        LOGGER.debug(f"Setting up healthcheck endpoint at {healthcheck_endpoint}")
-        health = HealthCheck(app, healthcheck_endpoint)
-
-        def mongo_okay():
-            db = get_db()
-            stats = db.command("dbstats")
-            return (
-                bool(stats["ok"]),
-                "Mongo Database is UP"
-                if stats["ok"]
-                else "ERROR: Mongo Database is DOWN",
-            )
-
-        health.add_check(mongo_okay)
 
     def __initialize_csrf(self, app):
         self.csrf = CSRFProtect(app)

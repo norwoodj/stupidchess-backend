@@ -14,7 +14,6 @@ setup(
         "flask",
         "flask-auth-utils",
         "flask-mongoengine",
-        "healthcheck",
         "jconfigure",
         "nose",
     ],

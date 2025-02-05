@@ -1,7 +1,6 @@
 environment: !EnvVar {name: "JCONFIGURE_ACTIVE_PROFILES", default: "none"}
 
 endpoint_prefixes:
-  healthcheck: /health
   auth: ""
   game: /api/game
   record: /api/record

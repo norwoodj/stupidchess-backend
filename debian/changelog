@@ -1,3 +1,9 @@
+stupidchess-uwsgi (2025.2.1) noble; urgency=medium
+
+  * fix: removes healthcheck library that broke in python 3.12
+
+ -- John Norwood <norwood.john.m@gmail.com>  Wed, 05 Feb 2025 18:15:16 +0000
+
 stupidchess-uwsgi (2025.2.0) noble; urgency=medium
 
   * chore: updates to mongo 8 now that my server uses it

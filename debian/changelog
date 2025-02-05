@@ -1,3 +1,10 @@
+stupidchess-uwsgi (2025.2.0) noble; urgency=medium
+
+  * chore: updates to mongo 8 now that my server uses it
+  * fix: updates uwsgi version to fix stupidchess build
+
+ -- John Norwood <norwood.john.m@gmail.com>  Wed, 05 Feb 2025 17:32:46 +0000
+
 stupidchess-uwsgi (2024.7.0) jammy; urgency=medium
 
   * chore: Updates README with updated deployment information

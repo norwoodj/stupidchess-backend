@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   mongo:
-    image: mongo:4.4-focal@sha256:0032f4a04bf96ca9c69665a553198148bdd8ec8caf556eb6281a464d3cb32470
+    image: mongo:8.0-noble@sha256:6fe103ae60b5929989ec6d6e2f5eb159e8b3c53685b26b9fb41cf2ca8bf279cf
 
   uwsgi:
     image: jnorwood/stupidchess-uwsgi

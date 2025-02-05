@@ -23,10 +23,10 @@ push: uwsgi
 	docker push $(DOCKER_REPOSITORY)/stupidchess-uwsgi:$(shell git tag -l | tail -n1)
 
 run:
-	docker-compose up
+	docker compose up
 
 down:
-	docker-compose down --volumes
+	docker compose down --volumes
 
 clean:
 	rm -vf version.json stupidchess/version.json
